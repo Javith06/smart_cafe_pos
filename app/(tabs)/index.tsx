@@ -17,22 +17,45 @@ export default function Index() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { width } = useWindowDimensions();
-  const containerWidth = Math.min(width - 40, 640); // 👈 SAME SIZE AS CATEGORY
-
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const containerWidth = Math.min(width - 40, 640);
 
   const handleLogin = () => {
+    const correctEmail = "unipro@gmail.com";
+    const correctPassword = "786";
+
+    // Empty check
     if (!email || !password) {
       Alert.alert("Error", "Please enter email and password");
       return;
     }
 
-    if (email === "unipro@gmail.com" && password === "786") {
-      Alert.alert("Success", "Login successful");
+    const isEmailCorrect = email === correctEmail;
+    const isPasswordCorrect = password === correctPassword;
+
+    // Both correct
+    if (isEmailCorrect && isPasswordCorrect) {
       router.replace("/(tabs)/category");
-    } else {
-      Alert.alert("Error", "Invalid email or password");
+      return;
+    }
+
+    // Both wrong
+    if (!isEmailCorrect && !isPasswordCorrect) {
+      Alert.alert("Error", "Email and password are wrong");
+      return;
+    }
+
+    // Only email wrong
+    if (!isEmailCorrect) {
+      Alert.alert("Error", "Email is wrong");
+      return;
+    }
+
+    // Only password wrong
+    if (!isPasswordCorrect) {
+      Alert.alert("Error", "Password is wrong");
+      return;
     }
   };
 
@@ -80,22 +103,25 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  background: { flex: 1 },
+  background: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
   },
-  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "#0000008c" },
-
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "#0000008c",
+  },
   loginBox: {
-   width: "75%",
-  maxWidth: 350,
-  alignSelf: "center",
-  backgroundColor: "#34432684",
-  borderRadius: 20,
-  padding: 20
+    backgroundColor: "#34432684",
+    borderRadius: 20,
+    padding: 20,
+    maxWidth: 350,
+    alignSelf: "center",
   },
   title: {
     color: "#97bc49",
