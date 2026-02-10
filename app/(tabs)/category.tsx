@@ -1,4 +1,6 @@
 import React from "react";
+import { useRouter } from "expo-router";
+
 import {
   StyleSheet,
   Text,
@@ -10,6 +12,7 @@ import {
 
 export default function Category() {
   const { width } = useWindowDimensions();
+  const router = useRouter();
 
   const isWeb = Platform.OS === "web";
 
@@ -21,6 +24,14 @@ export default function Category() {
   const boxHeight = boxWidth * (isWeb ? 0.75 : 1); // square on mobile
 
   const categories = ["Section 1", "Section 2", "Section 3", "Take Away"];
+
+  const handlePress = (item: string) => {
+    if (item === "Section 1") {
+      router.push("/sections/sectiom1"); // ✅ your path
+    } else {
+      alert(item + " clicked (page not added yet)");
+    }
+  };
 
   return (
     <View
@@ -38,11 +49,9 @@ export default function Category() {
         {categories.map((item) => (
           <TouchableOpacity
             key={item}
-            style={[
-              styles.box,
-              { width: boxWidth, height: boxHeight },
-            ]}
+            style={[styles.box, { width: boxWidth, height: boxHeight }]}
             activeOpacity={0.85}
+            onPress={() => handlePress(item)}   // ✅ click handler
           >
             <Text style={styles.boxText}>{item}</Text>
           </TouchableOpacity>
