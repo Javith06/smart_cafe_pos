@@ -10,30 +10,32 @@ import {
 export default function Category() {
   const { width } = useWindowDimensions();
 
-  const containerWidth = Math.min(width - 40, 640); // 👈 PC la neat size
-  const GAP = 20;
-  const boxSize = (containerWidth - GAP) / 2; // 2x2 grid
+  // Web-friendly sizing
+  const containerWidth = Math.min(width - 80, 520);
+  const GAP = 14;
+
+  const boxWidth = (containerWidth - GAP) / 2;
+  const boxHeight = boxWidth * 0.75; // rectangle to avoid "filled" look
+
+  const categories = ["Section 1", "Section 2", "Section 3", "Take Away"];
 
   return (
     <View style={styles.screen}>
       <Text style={styles.title}>Choose Your Category</Text>
 
       <View style={[styles.gridContainer, { width: containerWidth }]}>
-        <TouchableOpacity style={[styles.box, { width: boxSize, height: boxSize }]}>
-          <Text style={styles.boxText}>Section 1</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.box, { width: boxSize, height: boxSize }]}>
-          <Text style={styles.boxText}>Section 2</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.box, { width: boxSize, height: boxSize }]}>
-          <Text style={styles.boxText}>Section 3</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.box, { width: boxSize, height: boxSize }]}>
-          <Text style={styles.boxText}>Take Away</Text>
-        </TouchableOpacity>
+        {categories.map((item) => (
+          <TouchableOpacity
+            key={item}
+            style={[
+              styles.box,
+              { width: boxWidth, height: boxHeight },
+            ]}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.boxText}>{item}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
     </View>
   );
@@ -43,16 +45,14 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: "#0f172a",
-    padding: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    paddingTop: 40,          // push content upward
+    alignItems: "center",    // ❌ no justifyContent center
   },
   title: {
-    fontSize: 26,
+    fontSize: 22,
     color: "#97bc49",
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 24,
+    fontWeight: "700",
+    marginBottom: 20,
   },
   gridContainer: {
     flexDirection: "row",
@@ -61,14 +61,14 @@ const styles = StyleSheet.create({
   },
   box: {
     backgroundColor: "#1e293b",
-    borderRadius: 16,
+    borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 14,
   },
   boxText: {
-    color: "#fff",
-    fontSize: 18,
+    color: "#ffffff",
+    fontSize: 15,
     fontWeight: "600",
   },
 });
