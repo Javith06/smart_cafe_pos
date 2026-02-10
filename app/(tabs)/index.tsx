@@ -1,70 +1,43 @@
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  View,
+  Alert,
+  ImageBackground,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  ImageBackground,
-  StatusBar,
-  SafeAreaView,
+  View,
+  useWindowDimensions,
 } from "react-native";
 
 export default function Index() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-const STANDARD_EMAIL = "unipro@gmail.com";
-const STANDARD_PASSWORD = "786";
+  const { width } = useWindowDimensions();
+  const containerWidth = Math.min(width - 40, 640); // 👈 SAME SIZE AS CATEGORY
 
+  const router = useRouter();
 
   const handleLogin = () => {
-  if (!email && !password) {
-    alert("Please enter email and password");
-    return;
-  }
+    if (!email || !password) {
+      Alert.alert("Error", "Please enter email and password");
+      return;
+    }
 
-  if (!email) {
-    alert("Please enter email");
-    return;
-  }
-
-  if (!password) {
-    alert("Please enter password");
-    return;
-  }
-
-  const isEmailCorrect = email === STANDARD_EMAIL;
-  const isPasswordCorrect = password === STANDARD_PASSWORD;
-
-  if (isEmailCorrect && isPasswordCorrect) {
-    alert("Login successful");
-    return;
-  }
-
-  if (!isEmailCorrect && !isPasswordCorrect) {
-    alert("Email and password are incorrect");
-    return;
-  }
-
-  if (!isEmailCorrect) {
-    alert("Incorrect email");
-    return;
-  }
-
-  if (!isPasswordCorrect) {
-    alert("Incorrect password");
-    return;
-  }
-};
-
+    if (email === "unipro@gmail.com" && password === "786") {
+      Alert.alert("Success", "Login successful");
+      router.replace("/(tabs)/category");
+    } else {
+      Alert.alert("Error", "Invalid email or password");
+    }
+  };
 
   return (
     <ImageBackground
-      // IMPORTANT:
-      // Image location should be:
-      // RestaurantApp/assets/login-bg.jpg
-      // because this file is inside app/(tabs)/
       source={require("../../assets/images/1.avif")}
       style={styles.background}
       resizeMode="cover"
@@ -74,7 +47,7 @@ const STANDARD_PASSWORD = "786";
       <SafeAreaView style={styles.container}>
         <View style={styles.overlay} />
 
-        <View style={styles.loginBox}>
+        <View style={[styles.loginBox, { width: containerWidth }]}>
           <Text style={styles.title}>SMART CAFE</Text>
           <Text style={styles.subtitle}>Welcome Back</Text>
 
@@ -84,6 +57,8 @@ const STANDARD_PASSWORD = "786";
             style={styles.input}
             value={email}
             onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
           />
 
           <TextInput
@@ -105,55 +80,55 @@ const STANDARD_PASSWORD = "786";
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
+  background: { flex: 1 },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "#0000008c",
-  },
+  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "#0000008c" },
+
   loginBox: {
-  width: "75%",
+   width: "75%",
   maxWidth: 350,
   alignSelf: "center",
   backgroundColor: "#34432684",
   borderRadius: 20,
-  padding: 20,
-},
-
+  padding: 20
+  },
   title: {
     color: "#97bc49",
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 5,
+    marginBottom: 6,
   },
   subtitle: {
     color: "#fff",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 24,
+    fontSize: 16,
   },
   input: {
     backgroundColor: "rgba(255,255,255,0.15)",
     color: "#fff",
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 15,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    marginBottom: 16,
+    fontSize: 16,
   },
   loginButton: {
     backgroundColor: "#97bc49",
-    padding: 14,
-    borderRadius: 10,
+    paddingVertical: 16,
+    borderRadius: 12,
     alignItems: "center",
+    marginTop: 8,
   },
   loginText: {
     color: "#010101",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 18,
   },
 });
