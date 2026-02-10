@@ -5,22 +5,33 @@ import {
   TouchableOpacity,
   View,
   useWindowDimensions,
+  Platform,
 } from "react-native";
 
 export default function Category() {
   const { width } = useWindowDimensions();
 
-  // Web-friendly sizing
-  const containerWidth = Math.min(width - 80, 520);
+  const isWeb = Platform.OS === "web";
+
+  // Responsive sizing
+  const containerWidth = Math.min(width - 80, isWeb ? 520 : width - 40);
   const GAP = 14;
 
   const boxWidth = (containerWidth - GAP) / 2;
-  const boxHeight = boxWidth * 0.75; // rectangle to avoid "filled" look
+  const boxHeight = boxWidth * (isWeb ? 0.75 : 1); // square on mobile
 
   const categories = ["Section 1", "Section 2", "Section 3", "Take Away"];
 
   return (
-    <View style={styles.screen}>
+    <View
+      style={[
+        styles.screen,
+        {
+          justifyContent: isWeb ? "flex-start" : "center",
+          paddingTop: isWeb ? 40 : 0,
+        },
+      ]}
+    >
       <Text style={styles.title}>Choose Your Category</Text>
 
       <View style={[styles.gridContainer, { width: containerWidth }]}>
@@ -45,8 +56,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: "#0f172a",
-    paddingTop: 40,          // push content upward
-    alignItems: "center",    // ❌ no justifyContent center
+    alignItems: "center",
   },
   title: {
     fontSize: 22,
