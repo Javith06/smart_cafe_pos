@@ -1,6 +1,3 @@
-// React Native Login Screen (Expo Router)
-// File: app/(tabs)/index.jsx
-
 import React, { useState } from "react";
 import {
   View,
