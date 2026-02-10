@@ -14,19 +14,50 @@ export default function Index() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+const STANDARD_EMAIL = "unipro@gmail.com";
+const STANDARD_PASSWORD = "786";
+
+
   const handleLogin = () => {
-  if (!email || !password) {
+  if (!email && !password) {
     alert("Please enter email and password");
     return;
   }
 
-  if (email === "unipro@gmail.com" && password === "786") {
+  if (!email) {
+    alert("Please enter email");
+    return;
+  }
+
+  if (!password) {
+    alert("Please enter password");
+    return;
+  }
+
+  const isEmailCorrect = email === STANDARD_EMAIL;
+  const isPasswordCorrect = password === STANDARD_PASSWORD;
+
+  if (isEmailCorrect && isPasswordCorrect) {
     alert("Login successful");
-    // later you can navigate to dashboard here
-  } else {
-    alert("Invalid email or password");
+    return;
+  }
+
+  if (!isEmailCorrect && !isPasswordCorrect) {
+    alert("Email and password are incorrect");
+    return;
+  }
+
+  if (!isEmailCorrect) {
+    alert("Incorrect email");
+    return;
+  }
+
+  if (!isPasswordCorrect) {
+    alert("Incorrect password");
+    return;
   }
 };
+
 
   return (
     <ImageBackground
