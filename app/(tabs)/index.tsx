@@ -15,8 +15,18 @@ export default function Index() {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    alert("Login pressed");
-  };
+  if (!email || !password) {
+    alert("Please enter email and password");
+    return;
+  }
+
+  if (email === "unipro@gmail.com" && password === "786") {
+    alert("Login successful");
+    // later you can navigate to dashboard here
+  } else {
+    alert("Invalid email or password");
+  }
+};
 
   return (
     <ImageBackground
