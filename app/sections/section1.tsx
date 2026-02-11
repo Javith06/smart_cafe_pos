@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
+import { useRouter } from "expo-router";
 
 type TableItem = {
   id: string;
@@ -62,6 +63,7 @@ const TABLES: TableItem[] = [
 
 export default function Section1() {
   const { width, height } = useWindowDimensions();
+  const router = useRouter();
 
   const isLandscape = width > height;
   const numColumns = isLandscape ? 10 : 5;
@@ -98,7 +100,7 @@ export default function Section1() {
           },
         ]}
         activeOpacity={0.85}
-        onPress={() => alert("Table " + item.label + " clicked")}
+        onPress={() => router.push("/menu/dishes")}   // ✅ Menu page ku pogum
       >
         {item.status ? (
           <View style={styles.tableContent}>

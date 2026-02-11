@@ -31,7 +31,6 @@ export default function Category() {
   };
 
   const handleLogout = () => {
-    // 👇 Goes back to index.tsx (your login page)
     router.replace("/");
   };
 
@@ -97,10 +96,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  // 🔴 Logout styles
+
  logoutBtn: {
   position: "absolute",
-  top: 50,          // 👈 before: 20 → now: 50 (keezha varum)
+  top: 50,        
   right: 20,
   backgroundColor: "#dc2626", // RED
   paddingHorizontal: 14,
