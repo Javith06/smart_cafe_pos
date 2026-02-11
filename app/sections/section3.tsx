@@ -1,4 +1,3 @@
-// (Same logic, only data + header different)
 import React from "react";
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions } from "react-native";
 

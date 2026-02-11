@@ -1,5 +1,5 @@
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useRouter, useFocusEffect } from "expo-router";
+import React, { useState, useCallback } from "react";
 import {
   Alert,
   ImageBackground,
@@ -21,11 +21,18 @@ export default function Index() {
   const { width } = useWindowDimensions();
   const containerWidth = Math.min(width - 40, 640);
 
+  // ✅ Clear fields whenever this screen is focused (e.g., after logout)
+  useFocusEffect(
+    useCallback(() => {
+      setEmail("");
+      setPassword("");
+    }, [])
+  );
+
   const handleLogin = () => {
     const correctEmail = "unipro@gmail.com";
     const correctPassword = "786";
 
-    // Empty check
     if (!email || !password) {
       Alert.alert("Error", "Please enter email and password");
       return;
@@ -34,25 +41,25 @@ export default function Index() {
     const isEmailCorrect = email === correctEmail;
     const isPasswordCorrect = password === correctPassword;
 
-    // Both correct
     if (isEmailCorrect && isPasswordCorrect) {
+      // ✅ Clear before navigating
+      setEmail("");
+      setPassword("");
+
       router.replace("/(tabs)/category");
       return;
     }
 
-    // Both wrong
     if (!isEmailCorrect && !isPasswordCorrect) {
       Alert.alert("Error", "Email and password are wrong");
       return;
     }
 
-    // Only email wrong
     if (!isEmailCorrect) {
       Alert.alert("Error", "Email is wrong");
       return;
     }
 
-    // Only password wrong
     if (!isPasswordCorrect) {
       Alert.alert("Error", "Password is wrong");
       return;
