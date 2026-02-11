@@ -27,7 +27,7 @@ export default function Category() {
 
   const handlePress = (item: string) => {
     if (item === "Section 1") {
-      router.push("/sections/sectiom1"); // ✅ your path
+      router.push("/sections/section1"); // ✅ your path
     } else {
       alert(item + " clicked (page not added yet)");
     }

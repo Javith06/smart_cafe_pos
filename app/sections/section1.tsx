@@ -17,7 +17,7 @@ type TableItem = {
   amount?: string;
 };
 const TABLES: TableItem[] = [
-  { id: "1", label: "1", status: "active", time: "17:24 PM", order: "#1725", amount: "$31.00" },
+  { id: "1", label: "1", status: "active", time: "17:24 PM", order: "#1725", amount: "$31.00",  },
   { id: "2", label: "2" },
   { id: "3", label: "3" },
   { id: "4", label: "4" },
