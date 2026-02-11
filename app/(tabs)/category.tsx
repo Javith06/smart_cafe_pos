@@ -16,7 +16,6 @@ export default function Category() {
 
   const isWeb = Platform.OS === "web";
 
-  // Responsive sizing
   const containerWidth = Math.min(width - 80, isWeb ? 520 : width - 40);
   const GAP = 14;
 
@@ -28,9 +27,10 @@ export default function Category() {
   const handlePress = (item: string) => {
     if (item === "Section 1") {
       router.push("/sections/section1"); // ✅ your path
-    } else {
-      alert(item + " clicked (page not added yet)");
-    }
+    } 
+    if (item === "Section 2") {
+      router.push("/sections/section2");
+    } 
   };
 
   return (
