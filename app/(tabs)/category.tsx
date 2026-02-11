@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0f172a",
     alignItems: "center",
-    justifyContent: "center", // always center (tablet rotate pannalum)
+    justifyContent: "center", 
     padding: 20,
   },
   title: {
