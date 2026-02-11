@@ -30,7 +30,10 @@ export default function Category() {
     } 
     if (item === "Section 2") {
       router.push("/sections/section2");
-    } 
+    }
+    if (item === "Section 3") {
+      router.push("/sections/section3");
+    }  
   };
 
   return (
