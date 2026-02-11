@@ -1,6 +1,5 @@
 import React from "react";
 import { useRouter } from "expo-router";
-
 import {
   StyleSheet,
   Text,
@@ -11,41 +10,35 @@ import {
 } from "react-native";
 
 export default function Category() {
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const router = useRouter();
 
   const isWeb = Platform.OS === "web";
+  const isLandscape = width > height;
 
-  const containerWidth = Math.min(width - 80, isWeb ? 520 : width - 40);
+  // 🔒 Max width cap for tablet & PC (so oversize aagadhu)
+  const MAX_WIDTH = 520;
+
+  const containerWidth = Math.min(width - 40, MAX_WIDTH);
+
   const GAP = 14;
 
   const boxWidth = (containerWidth - GAP) / 2;
-  const boxHeight = boxWidth * (isWeb ? 0.75 : 1); // square on mobile
+
+  // 📐 Portrait la square, Landscape la konjam short (better fit)
+  const boxHeight = isLandscape ? boxWidth * 0.8 : boxWidth;
 
   const categories = ["Section 1", "Section 2", "Section 3", "Take Away"];
 
   const handlePress = (item: string) => {
-    if (item === "Section 1") {
-      router.push("/sections/section1"); // ✅ your path
-    } 
-    if (item === "Section 2") {
-      router.push("/sections/section2");
-    }
-    if (item === "Section 3") {
-      router.push("/sections/section3");
-    }  
+    if (item === "Section 1") router.push("/sections/section1");
+    if (item === "Section 2") router.push("/sections/section2");
+    if (item === "Section 3") router.push("/sections/section3");
+    if (item === "Take Away") router.push("/sections/takeaway");
   };
 
   return (
-    <View
-      style={[
-        styles.screen,
-        {
-          justifyContent: isWeb ? "flex-start" : "center",
-          paddingTop: isWeb ? 40 : 0,
-        },
-      ]}
-    >
+    <View style={styles.screen}>
       <Text style={styles.title}>Choose Your Category</Text>
 
       <View style={[styles.gridContainer, { width: containerWidth }]}>
@@ -54,7 +47,7 @@ export default function Category() {
             key={item}
             style={[styles.box, { width: boxWidth, height: boxHeight }]}
             activeOpacity={0.85}
-            onPress={() => handlePress(item)}   // ✅ click handler
+            onPress={() => handlePress(item)}
           >
             <Text style={styles.boxText}>{item}</Text>
           </TouchableOpacity>
@@ -69,6 +62,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0f172a",
     alignItems: "center",
+    justifyContent: "center", // always center (tablet rotate pannalum)
+    padding: 20,
   },
   title: {
     fontSize: 22,
@@ -83,14 +78,21 @@ const styles = StyleSheet.create({
   },
   box: {
     backgroundColor: "#1e293b",
-    borderRadius: 12,
+    borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 14,
+
+    // ✨ little premium feel
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   boxText: {
     color: "#ffffff",
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "600",
   },
 });
