@@ -14,9 +14,9 @@ export default function Category() {
   const router = useRouter();
 
   const isWeb = Platform.OS === "web";
+
   const isLandscape = width > height;
 
-  // 🔒 Max width cap for tablet & PC (so oversize aagadhu)
   const MAX_WIDTH = 520;
 
   const containerWidth = Math.min(width - 40, MAX_WIDTH);
@@ -25,7 +25,6 @@ export default function Category() {
 
   const boxWidth = (containerWidth - GAP) / 2;
 
-  // 📐 Portrait la square, Landscape la konjam short (better fit)
   const boxHeight = isLandscape ? boxWidth * 0.8 : boxWidth;
 
   const categories = ["Section 1", "Section 2", "Section 3", "Take Away"];
@@ -83,7 +82,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 14,
 
-    // ✨ little premium feel
     shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowRadius: 5,

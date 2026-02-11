@@ -16,8 +16,9 @@ type TableItem = {
   order?: string;
   amount?: string;
 };
+
 const TABLES: TableItem[] = [
-  { id: "1", label: "T1", status: "active", time: "17:24 PM", order: "#1725", amount: "$31.00",  },
+  { id: "1", label: "T1", status: "active", time: "17:24 PM", order: "#1725", amount: "$31.00" },
   { id: "2", label: "T2" },
   { id: "3", label: "T3" },
   { id: "4", label: "T4" },
@@ -56,29 +57,33 @@ const TABLES: TableItem[] = [
   { id: "37", label: "D17" },
   { id: "38", label: "D18" },
   { id: "39", label: "D19" },
-  { id: "40", label: "D20" }, 
+  { id: "40", label: "D20" },
 ];
 
-export default function takeaway() {
-  const { width } = useWindowDimensions();
-  let numColumns = 10;
-  if (width < 600) numColumns = 5;
+export default function Takeaway() {
+  const { width, height } = useWindowDimensions();
+
+  const isLandscape = width > height;
+  const numColumns = isLandscape ? 10 : 5;
 
   const GAP = 10;
-  const containerPadding = 20;
+  const SCREEN_PADDING = 20;
+
   const itemSize =
-    (width - containerPadding * 2 - GAP * (numColumns - 1)) / numColumns;
+    (width - SCREEN_PADDING * 2 - GAP * (numColumns - 1)) / numColumns;
+
+  const numberFont = Math.max(14, Math.min(18, itemSize * 0.28));
+  const smallFont = Math.max(10, Math.min(13, itemSize * 0.2));
 
   const renderItem = ({ item }: { item: TableItem }) => {
-
-    let bgColor = "#1f2a1f";        // dark green glass
-    let borderColor = "#2f3d2f";    // subtle border
+    let bgColor = "#1f2a1f";
+    let borderColor = "#2f3d2f";
     let textColor = "#e5f0e5";
 
     if (item.status === "active") {
-      bgColor = "#97bc49";          // brand green
+      bgColor = "#97bc49";
       borderColor = "#b6e06b";
-      textColor = "#0b1406";        // dark text on green
+      textColor = "#0b1406";
     }
 
     return (
@@ -93,21 +98,31 @@ export default function takeaway() {
           },
         ]}
         activeOpacity={0.85}
-        onPress={() => {
-          alert("Table " + item.label + " clicked");
-        }}
+        onPress={() => alert("Order " + item.label + " clicked")}
       >
         {item.status ? (
           <View style={styles.tableContent}>
-            <Text style={[styles.tableNumber, { color: textColor }]}>
+            <Text style={[styles.tableNumber, { color: textColor, fontSize: numberFont }]}>
               {item.label}
             </Text>
-            {item.time && <Text style={[styles.smallText, { color: textColor }]}>{item.time}</Text>}
-            {item.order && <Text style={[styles.smallText, { color: textColor }]}>{item.order}</Text>}
-            {item.amount && <Text style={[styles.smallText, { color: textColor }]}>{item.amount}</Text>}
+            {item.time && (
+              <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>
+                {item.time}
+              </Text>
+            )}
+            {item.order && (
+              <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>
+                {item.order}
+              </Text>
+            )}
+            {item.amount && (
+              <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>
+                {item.amount}
+              </Text>
+            )}
           </View>
         ) : (
-          <Text style={[styles.tableNumber, { color: textColor }]}>
+          <Text style={[styles.tableNumber, { color: textColor, fontSize: numberFont }]}>
             {item.label}
           </Text>
         )}
@@ -126,7 +141,7 @@ export default function takeaway() {
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         columnWrapperStyle={{ gap: GAP }}
-        contentContainerStyle={{ gap: GAP, padding: 20 }}
+        contentContainerStyle={{ gap: GAP, padding: SCREEN_PADDING }}
       />
     </View>
   );
@@ -135,7 +150,7 @@ export default function takeaway() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#0b120b", // deep dark green/black
+    backgroundColor: "#0b120b",
   },
   header: {
     color: "#97bc49",
@@ -151,8 +166,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1.5,
-
-    // 💎 Premium feel (shadow)
     shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowRadius: 6,
@@ -163,12 +176,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   tableNumber: {
-    fontSize: 14,
     fontWeight: "700",
     marginBottom: 2,
   },
   smallText: {
-    fontSize: 10,
     lineHeight: 14,
     opacity: 0.9,
   },

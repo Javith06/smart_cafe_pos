@@ -64,21 +64,16 @@ export default function Section1() {
   const { width, height } = useWindowDimensions();
 
   const isLandscape = width > height;
-
-  // Portrait -> 5 columns, Landscape/PC -> 10 columns
   const numColumns = isLandscape ? 10 : 5;
 
   const GAP = 10;
   const SCREEN_PADDING = 20;
 
-  // ✅ Use a centered container width (prevents side overflow on mobile)
-  const containerWidth = Math.min(width - SCREEN_PADDING * 2, 900);
-
   const itemSize =
-    (containerWidth - GAP * (numColumns - 1)) / numColumns;
+    (width - SCREEN_PADDING * 2 - GAP * (numColumns - 1)) / numColumns;
 
-  const numberFont = Math.max(12, Math.min(16, itemSize * 0.28));
-  const smallFont = Math.max(9, Math.min(12, itemSize * 0.2));
+  const numberFont = Math.max(14, Math.min(18, itemSize * 0.28));
+  const smallFont = Math.max(10, Math.min(13, itemSize * 0.2));
 
   const renderItem = ({ item }: { item: TableItem }) => {
     let bgColor = "#1f2a1f";
@@ -110,9 +105,21 @@ export default function Section1() {
             <Text style={[styles.tableNumber, { color: textColor, fontSize: numberFont }]}>
               {item.label}
             </Text>
-            {item.time && <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>{item.time}</Text>}
-            {item.order && <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>{item.order}</Text>}
-            {item.amount && <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>{item.amount}</Text>}
+            {item.time && (
+              <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>
+                {item.time}
+              </Text>
+            )}
+            {item.order && (
+              <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>
+                {item.order}
+              </Text>
+            )}
+            {item.amount && (
+              <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>
+                {item.amount}
+              </Text>
+            )}
           </View>
         ) : (
           <Text style={[styles.tableNumber, { color: textColor, fontSize: numberFont }]}>
@@ -127,18 +134,15 @@ export default function Section1() {
     <View style={styles.screen}>
       <Text style={styles.header}>SECTION 1 - TABLES</Text>
 
-      <View style={{ alignItems: "center" }}>
-        <FlatList
-          data={TABLES}
-          key={numColumns}
-          numColumns={numColumns}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          columnWrapperStyle={{ gap: GAP }}
-          contentContainerStyle={{ gap: GAP, padding: SCREEN_PADDING }}
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
+      <FlatList
+        data={TABLES}
+        key={numColumns}
+        numColumns={numColumns}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        columnWrapperStyle={{ gap: GAP }}
+        contentContainerStyle={{ gap: GAP, padding: SCREEN_PADDING }}
+      />
     </View>
   );
 }
