@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   View,
   useWindowDimensions,
+  ImageBackground,
 } from "react-native";
+import { BlurView } from "expo-blur";
 
 export default function Category() {
   const { width, height } = useWindowDimensions();
@@ -35,81 +37,132 @@ export default function Category() {
   };
 
   return (
-    <View style={styles.screen}>
-      {/* 🔴 Logout Button - Top Right */}
+    <ImageBackground
+      source={require("../../assets/images/11.jpg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      {/* 🔴 Logout Button (Glassy) */}
       <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-        <Text style={styles.logoutText}>Logout</Text>
+        <BlurView intensity={40} tint="dark" style={styles.glassBtnInner}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </BlurView>
       </TouchableOpacity>
 
-      <Text style={styles.title}>Choose Your Category</Text>
+      {/* Content */}
+      <View style={styles.contentWrapper}>
+        {/* Glassy Title */}
+        <BlurView intensity={50} tint="dark" style={styles.glassTitle}>
+          <Text style={styles.titleText}>Choose Your Category</Text>
+        </BlurView>
 
-      <View style={[styles.gridContainer, { width: containerWidth }]}>
-        {categories.map((item) => (
-          <TouchableOpacity
-            key={item}
-            style={[styles.box, { width: boxWidth, height: boxHeight }]}
-            activeOpacity={0.85}
-            onPress={() => handlePress(item)}
-          >
-            <Text style={styles.boxText}>{item}</Text>
-          </TouchableOpacity>
-        ))}
+        <View style={[styles.gridContainer, { width: containerWidth }]}>
+          {categories.map((item) => (
+            <TouchableOpacity
+              key={item}
+              style={[styles.box, { width: boxWidth, height: boxHeight }]}
+              activeOpacity={0.85}
+              onPress={() => handlePress(item)}
+            >
+              <BlurView intensity={40} tint="dark" style={styles.glassBoxInner}>
+                <Text style={styles.boxText}>{item}</Text>
+              </BlurView>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  background: {
     flex: 1,
-    backgroundColor: "#0f172a",
+    width: "100%",
+    height: "100%",
+  },
+
+  contentWrapper: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
+    backgroundColor: "rgba(0,0,0,0.25)", // slight dark overlay
   },
-  title: {
-    fontSize: 22,
-    color: "#97bc49",
-    fontWeight: "700",
+
+  /* ===== Title Glass ===== */
+  glassTitle: {
     marginBottom: 20,
+    borderRadius: 14,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.3)",
   },
+  titleText: {
+    fontSize: 22,
+    color: "#e5ff9a",
+    fontWeight: "800",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    textAlign: "center",
+  },
+
   gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
   },
+
+  /* ===== Glassy Box ===== */
   box: {
-    backgroundColor: "#1e293b",
-    borderRadius: 14,
+    borderRadius: 18,
+    overflow: "hidden",
+    marginBottom: 14,
+    shadowColor: "#00000004",
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0)",
+    backgroundColor: "rgba(255, 255, 255, 0)",
+  },
+
+  glassBoxInner: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 14,
-    shadowColor: "#000",
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
   },
+
   boxText: {
     color: "#ffffff",
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 20,
+    fontWeight: "800",
+    textShadowColor: "rgba(0, 0, 0, 0)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
 
+  /* ===== Logout Glass Button ===== */
+  logoutBtn: {
+    position: "absolute",
+    top: 50,
+    right: 20,
+    borderRadius: 12,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(20, 2, 2, 0.69)",
+    zIndex: 10,
+  },
 
- logoutBtn: {
-  position: "absolute",
-  top: 50,        
-  right: 20,
-  backgroundColor: "#dc2626", // RED
-  paddingHorizontal: 14,
-  paddingVertical: 8,
-  borderRadius: 8,
-  zIndex: 10,
-},
+  glassBtnInner: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+
   logoutText: {
-    color: "#ffffff",
-    fontWeight: "700",
+    color: "#fffcfd",
+    fontWeight: "800",
     fontSize: 14,
   },
 });
