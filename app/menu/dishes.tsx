@@ -2,9 +2,9 @@ import React from "react";
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
   TouchableOpacity,
+  StyleSheet,
   useWindowDimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -12,137 +12,79 @@ import { useRouter } from "expo-router";
 type Dish = {
   id: string;
   name: string;
-  route: string; // ✅ add route
-  tag?: "red" | "green" | "orange" | "blue" | "yellow";
+  route: string;
 };
 
 const DISHES: Dish[] = [
-  { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", tag: "green" },
-  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", tag: "green" },
-  { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian", tag: "green" },
-  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", tag: "green" },
-  { id: "5", name: "DRINKS", route: "/menu/drinks", tag: "green" },
+  { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen" },
+  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen" },
+  { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian" },
+  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen" },
+  { id: "5", name: "DRINKS", route: "/menu/drinks" },
 ];
 
 export default function Dishes() {
-  const { width, height } = useWindowDimensions();
   const router = useRouter();
+  const { width } = useWindowDimensions();
 
-  const isLandscape = width > height;
-
-  let numColumns = 5;
-  if (isLandscape && width < 1000) numColumns = 6;
-  if (width >= 1000) numColumns = 8;
-
+  const numColumns = width >= 1000 ? 8 : 5;
   const GAP = 10;
-  const SCREEN_PADDING = 16;
+  const PAD = 16;
 
-  const itemSize =
-    (width - SCREEN_PADDING * 2 - GAP * (numColumns - 1)) / numColumns;
-
-  const getColors = (tag?: Dish["tag"]) => {
-    switch (tag) {
-      default:
-        return { bg: "#8fc221", text: "#052b12" }; // green
-    }
-  };
-
-  const renderItem = ({ item }: { item: Dish }) => {
-    const { bg, text } = getColors(item.tag);
-
-    return (
-      <TouchableOpacity
-        style={[
-          styles.card,
-          {
-            width: itemSize,
-            height: itemSize,
-            backgroundColor: bg,
-          },
-        ]}
-        activeOpacity={0.85}
-        onPress={() => {
-          router.push("/menu/thai_kitchen"); 
-        }}
-      >
-        <Text style={[styles.cardText, { color: text }]} numberOfLines={2}>
-          {item.name}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
+  const size =
+    (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
   return (
     <View style={styles.screen}>
-      {/* Header */}
-      <View style={styles.headerBar}>
-        <Text style={styles.headerTitle}>SMART CAFE • MENU</Text>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
+      <View style={styles.header}>
+        <Text style={styles.title}>SMART CAFE • MENU</Text>
       </View>
 
       <FlatList
         data={DISHES}
-        key={numColumns}
         numColumns={numColumns}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
+        key={numColumns}
+        keyExtractor={(i) => i.id}
         columnWrapperStyle={{ gap: GAP }}
-        contentContainerStyle={{
-          gap: GAP,
-          padding: SCREEN_PADDING,
-          paddingBottom: 24,
-        }}
-        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ gap: GAP, padding: PAD }}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={[styles.tile, { width: size, height: size }]}
+            onPress={() =>
+              router.push(
+                (item.route +
+                  "?activeCuisine=" +
+                  encodeURIComponent(item.name)) as any
+              )
+            }
+          >
+            <Text style={styles.text}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: "#0b120b",
-  },
-  headerBar: {
+  screen: { flex: 1, backgroundColor: "#0b120b" },
+  header: {
     height: 56,
     backgroundColor: "#1f2933",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     paddingHorizontal: 16,
   },
-  headerTitle: {
-    color: "#97bc49",
-    fontSize: 18,
-    fontWeight: "700",
-    letterSpacing: 0.5,
-  },
-  backBtn: {
-    backgroundColor: "#dc2626",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-  },
-  backText: {
-    color: "#fff",
-    fontWeight: "700",
-  },
-  card: {
+  title: { color: "#97bc49", fontSize: 18, fontWeight: "700" },
+  tile: {
+    backgroundColor: "#8fc221",
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
     elevation: 4,
   },
-  cardText: {
-    fontSize: 14,
-    fontWeight: "700",
+  text: {
+    fontWeight: "800",
+    color: "#052b12",
     textAlign: "center",
-    paddingHorizontal: 6,
   },
 });
