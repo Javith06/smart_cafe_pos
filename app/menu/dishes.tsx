@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   useWindowDimensions,
+  Pressable,
 } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -36,8 +37,15 @@ export default function Dishes() {
 
   return (
     <View style={styles.screen}>
+      {/* ===== Top Bar ===== */}
       <View style={styles.header}>
+        <View style={{ width: 60 }} />
+
         <Text style={styles.title}>SMART CAFE • MENU</Text>
+
+        <Pressable onPress={() => router.back()} style={styles.backBtn}>
+          <Text style={styles.backText}>Back</Text>
+        </Pressable>
       </View>
 
       <FlatList
@@ -68,13 +76,35 @@ export default function Dishes() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: "#0b120b" },
+
   header: {
     height: 56,
     backgroundColor: "#1f2933",
-    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
   },
-  title: { color: "#97bc49", fontSize: 18, fontWeight: "700" },
+
+  title: {
+    color: "#97bc49",
+    fontSize: 18,
+    fontWeight: "700",
+  },
+
+  backBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: "rgba(255,255,255,0.15)",
+  },
+
+  backText: {
+    color: "#ffffff",
+    fontWeight: "700",
+    fontSize: 14,
+  },
+
   tile: {
     backgroundColor: "#8fc221",
     borderRadius: 10,
@@ -82,6 +112,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 4,
   },
+
   text: {
     fontWeight: "800",
     color: "#052b12",

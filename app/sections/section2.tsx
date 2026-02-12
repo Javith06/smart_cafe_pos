@@ -7,7 +7,9 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   ImageBackground,
+  Pressable,
 } from "react-native";
+import { useRouter } from "expo-router";
 import { BlurView } from "expo-blur";
 
 type TableItem = {
@@ -30,6 +32,8 @@ const TABLES: TableItem[] = [
 
 export default function Section2() {
   const { width, height } = useWindowDimensions();
+  const router = useRouter();
+
   const isLandscape = width > height;
   const numColumns = isLandscape ? 10 : 5;
 
@@ -116,9 +120,19 @@ export default function Section2() {
       style={styles.background}
       resizeMode="cover"
     >
+      {/* Dark overlay */}
       <View style={styles.overlay} />
 
-      <Text style={styles.header}>SECTION 2 - TABLES</Text>
+      {/* ===== Top Bar ===== */}
+      <View style={styles.topBar}>
+        <View style={{ width: 60 }} />
+
+        <Text style={styles.headerTitle}>SECTION 2</Text>
+
+        <Pressable onPress={() => router.back()} style={styles.backBtn}>
+          <Text style={styles.backText}>Back</Text>
+        </Pressable>
+      </View>
 
       <FlatList
         data={TABLES}
@@ -135,16 +149,40 @@ export default function Section2() {
 
 const styles = StyleSheet.create({
   background: { flex: 1, width: "100%", height: "100%" },
-  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.45)" },
 
-  header: {
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.45)",
+  },
+
+  /* ===== Top Bar ===== */
+  topBar: {
+    height: 56,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+
+  backBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: "rgba(255,255,255,0.15)",
+  },
+
+  backText: {
+    color: "#ffffff",
+    fontWeight: "700",
+    fontSize: 14,
+  },
+
+  headerTitle: {
     color: "#d7ff9a",
-    fontSize: 24,
-    fontWeight: "900",
-    textAlign: "center",
-    marginTop: 16,
-    marginBottom: 8,
-    letterSpacing: 0.6,
+    fontSize: 18,
+    fontWeight: "800",
+    letterSpacing: 0.5,
   },
 
   tableBox: {
@@ -160,6 +198,7 @@ const styles = StyleSheet.create({
   },
 
   glassInner: { flex: 1, justifyContent: "center", alignItems: "center" },
+
   tableContent: { alignItems: "center" },
 
   tableNumber: {
@@ -171,5 +210,10 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
 
-  smallText: { lineHeight: 14, opacity: 0.95, fontWeight: "600", color: "#eaeaea" },
+  smallText: {
+    lineHeight: 14,
+    opacity: 0.95,
+    fontWeight: "600",
+    color: "#eaeaea",
+  },
 });

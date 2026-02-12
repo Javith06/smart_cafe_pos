@@ -1,10 +1,25 @@
 import React from "react";
 import {
-  View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions, ImageBackground,
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  useWindowDimensions,
+  ImageBackground,
+  Pressable,
 } from "react-native";
+import { useRouter } from "expo-router";
 import { BlurView } from "expo-blur";
 
-type TableItem = { id: string; label: string; status?: "busy" | "active" | "free"; time?: string; order?: string; amount?: string; };
+type TableItem = {
+  id: string;
+  label: string;
+  status?: "busy" | "active" | "free";
+  time?: string;
+  order?: string;
+  amount?: string;
+};
 
 const TABLES: TableItem[] = [
   { id: "1", label: "D21", status: "active", time: "17:24 PM", order: "#1725", amount: "$31.00" },
@@ -17,12 +32,15 @@ const TABLES: TableItem[] = [
 
 export default function Section3() {
   const { width, height } = useWindowDimensions();
+  const router = useRouter();
+
   const isLandscape = width > height;
   const numColumns = isLandscape ? 10 : 5;
 
   const GAP = 10;
   const SCREEN_PADDING = 20;
-  const itemSize = (width - SCREEN_PADDING * 2 - GAP * (numColumns - 1)) / numColumns;
+  const itemSize =
+    (width - SCREEN_PADDING * 2 - GAP * (numColumns - 1)) / numColumns;
 
   const numberFont = Math.max(14, Math.min(18, itemSize * 0.28));
   const smallFont = Math.max(10, Math.min(13, itemSize * 0.2));
@@ -44,7 +62,11 @@ export default function Section3() {
         ]}
         activeOpacity={0.85}
       >
-        <BlurView intensity={isActive ? 45 : 35} tint="dark" style={styles.glassInner}>
+        <BlurView
+          intensity={isActive ? 45 : 35}
+          tint="dark"
+          style={styles.glassInner}
+        >
           <Text
             style={[
               styles.tableNumber,
@@ -55,7 +77,9 @@ export default function Section3() {
           </Text>
 
           {item.status && item.time && (
-            <Text style={[styles.smallText, { fontSize: smallFont }]}>{item.time}</Text>
+            <Text style={[styles.smallText, { fontSize: smallFont }]}>
+              {item.time}
+            </Text>
           )}
         </BlurView>
       </TouchableOpacity>
@@ -70,7 +94,16 @@ export default function Section3() {
     >
       <View style={styles.overlay} />
 
-      <Text style={styles.header}>SECTION 3 - TABLES</Text>
+      {/* ===== Top Bar ===== */}
+      <View style={styles.topBar}>
+        <View style={{ width: 60 }} />
+
+        <Text style={styles.headerTitle}>SECTION 3</Text>
+
+        <Pressable onPress={() => router.back()} style={styles.backBtn}>
+          <Text style={styles.backText}>Back</Text>
+        </Pressable>
+      </View>
 
       <FlatList
         data={TABLES}
@@ -87,19 +120,43 @@ export default function Section3() {
 
 const styles = StyleSheet.create({
   background: { flex: 1, width: "100%", height: "100%" },
-  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.45)" },
 
-  header: {
-    color: "#d7ff9a",
-    fontSize: 24,
-    fontWeight: "900",
-    textAlign: "center",
-    marginTop: 16,
-    marginBottom: 8,
-    letterSpacing: 0.6,
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.45)",
   },
 
-    tableBox: {
+  /* ===== Top Bar ===== */
+  topBar: {
+    height: 56,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+
+  backBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: "rgba(255,255,255,0.15)",
+  },
+
+  backText: {
+    color: "#ffffff",
+    fontWeight: "700",
+    fontSize: 14,
+  },
+
+  headerTitle: {
+    color: "#d7ff9a",
+    fontSize: 18,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+
+  tableBox: {
     borderRadius: 14,
     overflow: "hidden",
     borderWidth: 1.2,
@@ -121,5 +178,10 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
 
-  smallText: { lineHeight: 14, opacity: 0.95, fontWeight: "600", color: "#eaeaea" },
+  smallText: {
+    lineHeight: 14,
+    opacity: 0.95,
+    fontWeight: "600",
+    color: "#eaeaea",
+  },
 });
