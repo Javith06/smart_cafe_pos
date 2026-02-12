@@ -13,48 +13,17 @@ import { useRouter } from "expo-router";
 type Dish = {
   id: string;
   name: string;
-  tag?: "green" | "orange" | "blue" | "yellow";
+  tag?: "red"|"green" | "orange" | "blue" | "yellow";
 };
 
 // 👉 Sample categories + dishes (change later from API/DB)
 const DISHES: Dish[] = [
   { id: "1", name: "THAI KITCHEN", tag: "green" },
-  { id: "2", name: "INDIAN KITCHEN", tag: "orange" },
-  { id: "3", name: "WESTERN KITCHEN", tag: "yellow" },
-  { id: "4", name: "DRINKS", tag: "orange" },
-  { id: "5", name: "SOUTH INDIAN", tag: "blue" },
-
-  { id: "6", name: "SOUP", tag: "green" },
-  { id: "7", name: "Thai Veg", tag: "green" },
-  { id: "8", name: "Dishes", tag: "green" },
-  { id: "9", name: "Fishes", tag: "green" },
-  { id: "10", name: "Omelette", tag: "green" },
-  { id: "11", name: "Noodles", tag: "green" },
-
-  { id: "12", name: "Steam Rice", tag: "green" },
-  { id: "13", name: "Fried Rice", tag: "green" },
-
-  { id: "14", name: "Tomyam Seafood (S)", tag: "orange" },
-  { id: "15", name: "Tomyam Seafood (L)", tag: "green" },
-  { id: "16", name: "Tomyam Chicken (S)", tag: "orange" },
-  { id: "17", name: "Tomyam Chicken (L)", tag: "green" },
-  { id: "18", name: "Tomyam Beef (S)", tag: "orange" },
-  { id: "19", name: "Tomyam Beef (L)", tag: "green" },
-
-  { id: "20", name: "Fish Soup (S)", tag: "orange" },
-  { id: "21", name: "Fish Soup (L)", tag: "green" },
-  { id: "22", name: "Chicken Soup (S)", tag: "orange" },
-  { id: "23", name: "Chicken Soup (L)", tag: "green" },
-
-  { id: "24", name: "MISC", tag: "blue" },
-  { id: "25", name: "Free Delivery (NUS)", tag: "blue" },
-  { id: "26", name: "Delivery Charges", tag: "blue" },
-  { id: "27", name: "Prawn Crackers", tag: "green" },
-
-  { id: "28", name: "Veg Soup (S)", tag: "green" },
-  { id: "29", name: "Veg Soup (L)", tag: "green" },
-  { id: "30", name: "Free Delivery 12pm - 2pm", tag: "blue" },
-  { id: "31", name: "Tomyam Fish (S)", tag: "green" },
+  { id: "2", name: "INDIAN KITCHEN", tag: "green" },
+  { id: "5", name: "SOUTH INDIAN", tag: "green" },
+  { id: "3", name: "WESTERN KITCHEN", tag: "green" },
+  { id: "4", name: "DRINKS", tag: "green" },
+  
 ];
 
 export default function Dishes() {
@@ -63,10 +32,7 @@ export default function Dishes() {
 
   const isLandscape = width > height;
 
-  // 📱 Portrait (mobile/tab) -> 4
-  // 🔁 Landscape (tab rotate) -> 6
-  // 💻 Laptop/PC -> 8
-  let numColumns = 4;
+  let numColumns = 5;
   if (isLandscape && width < 1000) numColumns = 6;
   if (width >= 1000) numColumns = 8;
 
@@ -78,14 +44,8 @@ export default function Dishes() {
 
   const getColors = (tag?: Dish["tag"]) => {
     switch (tag) {
-      case "orange":
-        return { bg: "#f59e0b", text: "#1f1300" };
-      case "blue":
-        return { bg: "#38bdf8", text: "#001018" };
-      case "yellow":
-        return { bg: "#fde047", text: "#1a1400" };
       default:
-        return { bg: "#22c55e", text: "#052b12" }; // green
+        return { bg: "#8fc221", text: "#052b12" }; // green
     }
   };
 
