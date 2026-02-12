@@ -28,8 +28,8 @@ export default function Dishes() {
   const router = useRouter();
   const { width } = useWindowDimensions();
 
-  const numColumns = width >= 1000 ? 8 : 5;
-  const GAP = 10;
+  const numColumns = width >= 1000 ? 8 : width >= 600 ? 5 : 3;
+  const GAP = 12;
   const PAD = 16;
 
   const size =
@@ -39,8 +39,6 @@ export default function Dishes() {
     <View style={styles.screen}>
       {/* ===== Top Bar ===== */}
       <View style={styles.header}>
-        <View style={{ width: 60 }} />
-
         <Text style={styles.title}>SMART CAFE • MENU</Text>
 
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
@@ -65,8 +63,12 @@ export default function Dishes() {
                   encodeURIComponent(item.name)) as any
               )
             }
+            activeOpacity={0.85}
           >
-            <Text style={styles.text}>{item.name}</Text>
+            <View style={styles.cardInner}>
+              <Text style={styles.text}>{item.name}</Text>
+              <Text style={styles.subText}>Tap to open</Text>
+            </View>
           </TouchableOpacity>
         )}
       />
@@ -75,28 +77,34 @@ export default function Dishes() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#0b120b" },
+  screen: {
+    flex: 1,
+    backgroundColor: "#0e0f13", // modern dark background
+  },
 
   header: {
-    height: 56,
-    backgroundColor: "#1f2933",
+    height: 60,
+    backgroundColor: "#14161c",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,255,255,0.08)",
   },
 
   title: {
-    color: "#97bc49",
+    color: "#9ef01a",
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "800",
+    letterSpacing: 0.5,
   },
 
   backBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-    backgroundColor: "rgba(255,255,255,0.15)",
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 10,
+    backgroundColor: "rgba(255,255,255,0.1)",
   },
 
   backText: {
@@ -106,16 +114,36 @@ const styles = StyleSheet.create({
   },
 
   tile: {
-    backgroundColor: "#8fc221",
-    borderRadius: 10,
+    borderRadius: 16,
+    backgroundColor: "#1b1f2a",
+    overflow: "hidden",
+    elevation: 6, // Android shadow
+    shadowColor: "#000", // iOS shadow
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+  },
+
+  cardInner: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    elevation: 4,
+    padding: 12,
+    backgroundColor: "rgba(255,255,255,0.03)",
   },
 
   text: {
     fontWeight: "800",
-    color: "#052b12",
+    color: "#ffffff",
     textAlign: "center",
+    fontSize: 14,
+    letterSpacing: 0.5,
+  },
+
+  subText: {
+    marginTop: 6,
+    fontSize: 11,
+    color: "#9ef01a",
+    opacity: 0.9,
   },
 });
