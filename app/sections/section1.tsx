@@ -6,8 +6,10 @@ import {
   FlatList,
   TouchableOpacity,
   useWindowDimensions,
+  ImageBackground,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { BlurView } from "expo-blur";
 
 type TableItem = {
   id: string;
@@ -78,15 +80,7 @@ export default function Section1() {
   const smallFont = Math.max(10, Math.min(13, itemSize * 0.2));
 
   const renderItem = ({ item }: { item: TableItem }) => {
-    let bgColor = "#1f2a1f";
-    let borderColor = "#2f3d2f";
-    let textColor = "#e5f0e5";
-
-    if (item.status === "active") {
-      bgColor = "#97bc49";
-      borderColor = "#b6e06b";
-      textColor = "#0b1406";
-    }
+    const isActive = item.status === "active";
 
     return (
       <TouchableOpacity
@@ -95,45 +89,88 @@ export default function Section1() {
           {
             width: itemSize,
             height: itemSize,
-            backgroundColor: bgColor,
-            borderColor: borderColor,
+            borderColor: isActive
+              ? "rgba(190,255,120,0.8)"
+              : "rgba(255,255,255,0.35)",
           },
         ]}
         activeOpacity={0.85}
-        onPress={() => router.push("/menu/dishes")}   // ✅ Menu page ku pogum
+        onPress={() => router.push("/menu/dishes")}
       >
-        {item.status ? (
-          <View style={styles.tableContent}>
-            <Text style={[styles.tableNumber, { color: textColor, fontSize: numberFont }]}>
+        <BlurView
+          intensity={isActive ? 45 : 35}
+          tint="dark"
+          style={styles.glassInner}
+        >
+          {item.status ? (
+            <View style={styles.tableContent}>
+              <Text
+                style={[
+                  styles.tableNumber,
+                  {
+                    fontSize: numberFont,
+                    color: isActive ? "#d7ff9a" : "#ffffff",
+                  },
+                ]}
+              >
+                {item.label}
+              </Text>
+
+              {item.time && (
+                <Text
+                  style={[
+                    styles.smallText,
+                    { fontSize: smallFont, color: "#eaeaea" },
+                  ]}
+                >
+                  {item.time}
+                </Text>
+              )}
+              {item.order && (
+                <Text
+                  style={[
+                    styles.smallText,
+                    { fontSize: smallFont, color: "#eaeaea" },
+                  ]}
+                >
+                  {item.order}
+                </Text>
+              )}
+              {item.amount && (
+                <Text
+                  style={[
+                    styles.smallText,
+                    { fontSize: smallFont, color: "#eaeaea" },
+                  ]}
+                >
+                  {item.amount}
+                </Text>
+              )}
+            </View>
+          ) : (
+            <Text
+              style={[
+                styles.tableNumber,
+                { fontSize: numberFont, color: "#ffffff" },
+              ]}
+            >
               {item.label}
             </Text>
-            {item.time && (
-              <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>
-                {item.time}
-              </Text>
-            )}
-            {item.order && (
-              <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>
-                {item.order}
-              </Text>
-            )}
-            {item.amount && (
-              <Text style={[styles.smallText, { color: textColor, fontSize: smallFont }]}>
-                {item.amount}
-              </Text>
-            )}
-          </View>
-        ) : (
-          <Text style={[styles.tableNumber, { color: textColor, fontSize: numberFont }]}>
-            {item.label}
-          </Text>
-        )}
+          )}
+        </BlurView>
       </TouchableOpacity>
     );
   };
 
   return (
-    <View style={styles.screen}>
+    <ImageBackground
+      source={require("../../assets/images/11.jpg")}  // 👈 Same background as Category
+      style={styles.background}
+      resizeMode="cover"
+    >
+      {/* Dark overlay for readability */}
+      <View style={styles.overlay} />
+
       <Text style={styles.header}>SECTION 1 - TABLES</Text>
 
       <FlatList
@@ -143,46 +180,68 @@ export default function Section1() {
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         columnWrapperStyle={{ gap: GAP }}
-        contentContainerStyle={{ gap: GAP, padding: SCREEN_PADDING }}
+        contentContainerStyle={{ gap: GAP, padding: SCREEN_PADDING, paddingBottom: 30 }}
       />
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  background: {
     flex: 1,
-    backgroundColor: "#0b120b",
+    width: "100%",
+    height: "100%",
   },
+
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.45)", // movie-style dark overlay
+  },
+
   header: {
-    color: "#97bc49",
+    color: "#d7ff9a",
     fontSize: 24,
-    fontWeight: "700",
+    fontWeight: "900",
     textAlign: "center",
     marginTop: 16,
     marginBottom: 8,
-    letterSpacing: 0.5,
+    letterSpacing: 0.6,
   },
+
   tableBox: {
-    borderRadius: 12,
+    borderRadius: 14,
+    overflow: "hidden",
+    borderWidth: 1.2,
+    shadowColor: "#00000000",
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 6,
+    backgroundColor: "rgba(255,255,255,0.08)", // glass base
+  },
+
+  glassInner: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 1.5,
-    shadowColor: "#000",
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 4,
   },
+
   tableContent: {
     alignItems: "center",
   },
+
   tableNumber: {
-    fontWeight: "700",
+    fontWeight: "900",
     marginBottom: 2,
+    textShadowColor: "rgba(0,0,0,0.7)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+    letterSpacing: 0.3,
   },
+
   smallText: {
     lineHeight: 14,
-    opacity: 0.9,
+    opacity: 0.95,
+    fontWeight: "600",
   },
 });

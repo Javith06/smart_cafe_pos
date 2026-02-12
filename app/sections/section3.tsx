@@ -1,29 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions } from "react-native";
+import {
+  View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions, ImageBackground,
+} from "react-native";
+import { BlurView } from "expo-blur";
 
 type TableItem = { id: string; label: string; status?: "busy" | "active" | "free"; time?: string; order?: string; amount?: string; };
 
 const TABLES: TableItem[] = [
   { id: "1", label: "D21", status: "active", time: "17:24 PM", order: "#1725", amount: "$31.00" },
-  { id: "2", label: "D22" },
-  { id: "3", label: "D23" }, 
-  { id: "4", label: "D24" }, 
-  { id: "5", label: "D25" },
-  { id: "6", label: "D26" },
-  { id: "7", label: "D27" },
-  { id: "8", label: "D28" },
-  { id: "9", label: "D29" },
-  { id: "10", label: "D30" }, 
-  { id: "11", label: "D31" }, 
-  { id: "12", label: "D32" }, 
-  { id: "13", label: "D33" },
-  { id: "14", label: "D34" }, 
-  { id: "15", label: "D35" }, 
-  { id: "16", label: "D36" }, 
-  { id: "17", label: "D37" },
-  { id: "18", label: "D38" }, 
-  { id: "19", label: "D39" },
-  { id: "20", label: "D40" },
+  { id: "2", label: "D22" }, { id: "3", label: "D23" }, { id: "4", label: "D24" }, { id: "5", label: "D25" },
+  { id: "6", label: "D26" }, { id: "7", label: "D27" }, { id: "8", label: "D28" }, { id: "9", label: "D29" },
+  { id: "10", label: "D30" }, { id: "11", label: "D31" }, { id: "12", label: "D32" }, { id: "13", label: "D33" },
+  { id: "14", label: "D34" }, { id: "15", label: "D35" }, { id: "16", label: "D36" }, { id: "17", label: "D37" },
+  { id: "18", label: "D38" }, { id: "19", label: "D39" }, { id: "20", label: "D40" },
 ];
 
 export default function Section3() {
@@ -39,28 +28,98 @@ export default function Section3() {
   const smallFont = Math.max(10, Math.min(13, itemSize * 0.2));
 
   const renderItem = ({ item }: { item: TableItem }) => {
-    let bgColor = "#1f2a1f"; let borderColor = "#2f3d2f"; let textColor = "#e5f0e5";
-    if (item.status === "active") { bgColor = "#97bc49"; borderColor = "#b6e06b"; textColor = "#0b1406"; }
+    const isActive = item.status === "active";
 
     return (
-      <TouchableOpacity style={[styles.tableBox,{ width: itemSize, height: itemSize, backgroundColor: bgColor, borderColor }]} activeOpacity={0.85}>
-        <Text style={[styles.tableNumber,{ color: textColor, fontSize: numberFont }]}>{item.label}</Text>
+      <TouchableOpacity
+        style={[
+          styles.tableBox,
+          {
+            width: itemSize,
+            height: itemSize,
+            borderColor: isActive
+              ? "rgba(190,255,120,0.8)"
+              : "rgba(255,255,255,0.35)",
+          },
+        ]}
+        activeOpacity={0.85}
+      >
+        <BlurView intensity={isActive ? 45 : 35} tint="dark" style={styles.glassInner}>
+          <Text
+            style={[
+              styles.tableNumber,
+              { fontSize: numberFont, color: isActive ? "#d7ff9a" : "#ffffff" },
+            ]}
+          >
+            {item.label}
+          </Text>
+
+          {item.status && item.time && (
+            <Text style={[styles.smallText, { fontSize: smallFont }]}>{item.time}</Text>
+          )}
+        </BlurView>
       </TouchableOpacity>
     );
   };
 
   return (
-    <View style={styles.screen}>
+    <ImageBackground
+      source={require("../../assets/images/11.jpg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={styles.overlay} />
+
       <Text style={styles.header}>SECTION 3 - TABLES</Text>
-      <FlatList data={TABLES} key={numColumns} numColumns={numColumns} keyExtractor={(i)=>i.id} renderItem={renderItem}
-        columnWrapperStyle={{ gap: GAP }} contentContainerStyle={{ gap: GAP, padding: SCREEN_PADDING }} />
-    </View>
+
+      <FlatList
+        data={TABLES}
+        key={numColumns}
+        numColumns={numColumns}
+        keyExtractor={(i) => i.id}
+        renderItem={renderItem}
+        columnWrapperStyle={{ gap: GAP }}
+        contentContainerStyle={{ gap: GAP, padding: SCREEN_PADDING, paddingBottom: 30 }}
+      />
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  screen:{ flex:1, backgroundColor:"#0b120b" },
-  header:{ color:"#97bc49", fontSize:24, fontWeight:"700", textAlign:"center", marginTop:16, marginBottom:8 },
-  tableBox:{ borderRadius:12, justifyContent:"center", alignItems:"center", borderWidth:1.5, elevation:4 },
-  tableNumber:{ fontWeight:"700" },
+  background: { flex: 1, width: "100%", height: "100%" },
+  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.45)" },
+
+  header: {
+    color: "#d7ff9a",
+    fontSize: 24,
+    fontWeight: "900",
+    textAlign: "center",
+    marginTop: 16,
+    marginBottom: 8,
+    letterSpacing: 0.6,
+  },
+
+    tableBox: {
+    borderRadius: 14,
+    overflow: "hidden",
+    borderWidth: 1.2,
+    shadowColor: "#00000000",
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 6,
+    backgroundColor: "rgba(255,255,255,0.08)",
+  },
+
+  glassInner: { flex: 1, justifyContent: "center", alignItems: "center" },
+
+  tableNumber: {
+    fontWeight: "900",
+    textShadowColor: "rgba(0,0,0,0.7)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+    letterSpacing: 0.3,
+  },
+
+  smallText: { lineHeight: 14, opacity: 0.95, fontWeight: "600", color: "#eaeaea" },
 });
