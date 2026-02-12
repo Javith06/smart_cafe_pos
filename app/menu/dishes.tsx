@@ -6,24 +6,22 @@ import {
   FlatList,
   TouchableOpacity,
   useWindowDimensions,
-  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 
 type Dish = {
   id: string;
   name: string;
-  tag?: "red"|"green" | "orange" | "blue" | "yellow";
+  tag?: "red" | "green" | "orange" | "blue" | "yellow";
 };
 
-// 👉 Sample categories + dishes (change later from API/DB)
+// Cuisine tiles
 const DISHES: Dish[] = [
   { id: "1", name: "THAI KITCHEN", tag: "green" },
   { id: "2", name: "INDIAN KITCHEN", tag: "green" },
   { id: "3", name: "SOUTH INDIAN", tag: "green" },
   { id: "4", name: "WESTERN KITCHEN", tag: "green" },
   { id: "5", name: "DRINKS", tag: "green" },
-  
 ];
 
 export default function Dishes() {
@@ -43,10 +41,7 @@ export default function Dishes() {
     (width - SCREEN_PADDING * 2 - GAP * (numColumns - 1)) / numColumns;
 
   const getColors = (tag?: Dish["tag"]) => {
-    switch (tag) {
-      default:
-        return { bg: "#8fc221", text: "#052b12" }; // green
-    }
+    return { bg: "#8fc221", text: "#052b12" };
   };
 
   const renderItem = ({ item }: { item: Dish }) => {
@@ -64,8 +59,14 @@ export default function Dishes() {
         ]}
         activeOpacity={0.85}
         onPress={() => {
-          // 👉 later: open item list / add to cart
-          alert(item.name);
+          if (item.name === "THAI KITCHEN") {
+            router.push({
+              pathname: "/menu/thai_kitchen",
+              params: { activeCuisine: "THAI KITCHEN" },
+            });
+          } else {
+            alert(item.name);
+          }
         }}
       >
         <Text style={[styles.cardText, { color: text }]} numberOfLines={2}>
@@ -88,6 +89,7 @@ export default function Dishes() {
         </TouchableOpacity>
       </View>
 
+      {/* Cuisine Grid */}
       <FlatList
         data={DISHES}
         key={numColumns}
@@ -139,8 +141,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-
-    // premium shadow
     shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowRadius: 6,
