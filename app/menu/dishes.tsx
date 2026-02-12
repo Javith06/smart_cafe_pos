@@ -12,16 +12,16 @@ import { useRouter } from "expo-router";
 type Dish = {
   id: string;
   name: string;
+  route: string; // ✅ add route
   tag?: "red" | "green" | "orange" | "blue" | "yellow";
 };
 
-// Cuisine tiles
 const DISHES: Dish[] = [
-  { id: "1", name: "THAI KITCHEN", tag: "green" },
-  { id: "2", name: "INDIAN KITCHEN", tag: "green" },
-  { id: "3", name: "SOUTH INDIAN", tag: "green" },
-  { id: "4", name: "WESTERN KITCHEN", tag: "green" },
-  { id: "5", name: "DRINKS", tag: "green" },
+  { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", tag: "green" },
+  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", tag: "green" },
+  { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian", tag: "green" },
+  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", tag: "green" },
+  { id: "5", name: "DRINKS", route: "/menu/drinks", tag: "green" },
 ];
 
 export default function Dishes() {
@@ -41,7 +41,10 @@ export default function Dishes() {
     (width - SCREEN_PADDING * 2 - GAP * (numColumns - 1)) / numColumns;
 
   const getColors = (tag?: Dish["tag"]) => {
-    return { bg: "#8fc221", text: "#052b12" };
+    switch (tag) {
+      default:
+        return { bg: "#8fc221", text: "#052b12" }; // green
+    }
   };
 
   const renderItem = ({ item }: { item: Dish }) => {
@@ -59,14 +62,7 @@ export default function Dishes() {
         ]}
         activeOpacity={0.85}
         onPress={() => {
-          if (item.name === "THAI KITCHEN") {
-            router.push({
-              pathname: "/menu/thai_kitchen",
-              params: { activeCuisine: "THAI KITCHEN" },
-            });
-          } else {
-            alert(item.name);
-          }
+          router.push("/menu/thai_kitchen"); 
         }}
       >
         <Text style={[styles.cardText, { color: text }]} numberOfLines={2}>
@@ -81,15 +77,11 @@ export default function Dishes() {
       {/* Header */}
       <View style={styles.headerBar}>
         <Text style={styles.headerTitle}>SMART CAFE • MENU</Text>
-        <TouchableOpacity
-          style={styles.backBtn}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Cuisine Grid */}
       <FlatList
         data={DISHES}
         key={numColumns}
