@@ -20,9 +20,9 @@ type Dish = {
 const DISHES: Dish[] = [
   { id: "1", name: "THAI KITCHEN", tag: "green" },
   { id: "2", name: "INDIAN KITCHEN", tag: "green" },
-  { id: "5", name: "SOUTH INDIAN", tag: "green" },
-  { id: "3", name: "WESTERN KITCHEN", tag: "green" },
-  { id: "4", name: "DRINKS", tag: "green" },
+  { id: "3", name: "SOUTH INDIAN", tag: "green" },
+  { id: "4", name: "WESTERN KITCHEN", tag: "green" },
+  { id: "5", name: "DRINKS", tag: "green" },
   
 ];
 
