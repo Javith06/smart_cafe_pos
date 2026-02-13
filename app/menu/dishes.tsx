@@ -7,6 +7,7 @@ import {
   StyleSheet,
   useWindowDimensions,
   Pressable,
+  ImageBackground,
 } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -36,75 +37,93 @@ export default function Dishes() {
     (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
   return (
-    <View style={styles.screen}>
-      {/* ===== Top Bar ===== */}
-      <View style={styles.header}>
-        <Text style={styles.title}>SMART CAFE • MENU</Text>
+    <ImageBackground
+      source={require("../../assets/images/11.jpg")}
+      style={styles.bg}
+      resizeMode="cover"
+    >
+      {/* Light transparent overlay */}
+      <View style={styles.overlay}>
+        {/* ===== Top Bar ===== */}
+        <View style={styles.header}>
+          <Text style={styles.title}>SMART CAFE • MENU</Text>
 
-        <Pressable onPress={() => router.back()} style={styles.backBtn}>
-          <Text style={styles.backText}>Back</Text>
-        </Pressable>
-      </View>
-
-      <FlatList
-        data={DISHES}
-        numColumns={numColumns}
-        key={numColumns}
-        keyExtractor={(i) => i.id}
-        columnWrapperStyle={{ gap: GAP }}
-        contentContainerStyle={{ gap: GAP, padding: PAD }}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[styles.tile, { width: size, height: size }]}
-            onPress={() =>
-              router.push(
-                (item.route +
-                  "?activeCuisine=" +
-                  encodeURIComponent(item.name)) as any
-              )
-            }
-            activeOpacity={0.85}
+          <Pressable
+            onPress={() => router.push("/(tabs)/category")}
+            style={styles.backBtn}
           >
-            <View style={styles.cardInner}>
-              <Text style={styles.text}>{item.name}</Text>
-              <Text style={styles.subText}>Tap to open</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+            <Text style={styles.backText}>Back</Text>
+          </Pressable>
+        </View>
+
+        <FlatList
+          data={DISHES}
+          numColumns={numColumns}
+          key={numColumns}
+          keyExtractor={(i) => i.id}
+          columnWrapperStyle={{ gap: GAP }}
+          contentContainerStyle={{ gap: GAP, padding: PAD }}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={[styles.tile, { width: size, height: size }]}
+              onPress={() =>
+                router.push(
+                  (item.route +
+                    "?activeCuisine=" +
+                    encodeURIComponent(item.name)) as any
+                )
+              }
+              activeOpacity={0.85}
+            >
+              <View style={styles.cardInner}>
+                <Text style={styles.text}>{item.name}</Text>
+                <Text style={styles.subText}>Tap to open</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  bg: {
     flex: 1,
-    backgroundColor: "#0e0f13", // modern dark background
+  },
+
+  // 🌫️ Very light overlay (almost transparent)
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
   },
 
   header: {
     height: 60,
-    backgroundColor: "#14161c",
+    backgroundColor: "rgba(0,0,0,0.25)",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,255,255,0.08)",
+    borderBottomColor: "rgba(255,255,255,0.2)",
   },
 
   title: {
-    color: "#9ef01a",
+    color: "#d7ff9a",
     fontSize: 18,
     fontWeight: "800",
     letterSpacing: 0.5,
   },
 
+
   backBtn: {
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 10,
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "rgba(255,255,255,0.15)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.3)",
   },
 
   backText: {
@@ -115,13 +134,11 @@ const styles = StyleSheet.create({
 
   tile: {
     borderRadius: 16,
-    backgroundColor: "#1b1f2a",
+    backgroundColor: "rgb(11, 10, 10)", 
     overflow: "hidden",
-    elevation: 6, // Android shadow
-    shadowColor: "#000", // iOS shadow
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
+    elevation: 6,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.46)",
   },
 
   cardInner: {
@@ -129,7 +146,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 12,
-    backgroundColor: "rgba(255,255,255,0.03)",
   },
 
   text: {
@@ -143,7 +159,7 @@ const styles = StyleSheet.create({
   subText: {
     marginTop: 6,
     fontSize: 11,
-    color: "#9ef01a",
+    color: "#d7ff9a",
     opacity: 0.9,
   },
 });
