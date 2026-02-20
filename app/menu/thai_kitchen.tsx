@@ -1,3 +1,5 @@
+import { addToCartGlobal, getCart, removeFromCartGlobal } from "../cartStore";
+
 import { useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
 import {
@@ -12,9 +14,7 @@ import {
   View,
 } from "react-native";
 
-type CartItem = { id: string; name: string; qty: number };
-
-// ADD ABOVE FOODS
+/* ================= CUISINES ================= */
 const CUISINES = [
   { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen" },
   { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen" },
@@ -25,12 +25,12 @@ const CUISINES = [
 
 const ACTIVE_CUISINE = "THAI KITCHEN";
 
-/* ✅ ONLY THAI DISHES HERE */
+/* ================= FOODS ================= */
 const FOODS = [
-  { id: "1", name: "Tomyam Seafood (S)" },
-  { id: "2", name: "Tomyam Chicken (L)" },
-  { id: "3", name: "OX Tail (S)" },
-  { id: "4", name: "Thai Fried Chicken" },
+  { id: "1", name: "Tom Yum Soup" },
+  { id: "2", name: "Pad Thai" },
+  { id: "3", name: "Thai Fried Rice" },
+  { id: "4", name: "Green Curry" },
 ];
 
 export default function ThaiKitchen() {
@@ -43,45 +43,21 @@ export default function ThaiKitchen() {
   const PAD = 16;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [showCart, setShowCart] = useState(false);
-  const [flashIds, setFlashIds] = useState<Set<string>>(new Set());
+  /* ⭐ FIX — store cart in state */
+  const [cart, setCart] = useState(getCart());
 
+  /* ⭐ FIX — update UI immediately */
   const addToCart = (item: { id: string; name: string }) => {
-    setCart((prev) => {
-      const found = prev.find((p) => p.id === item.id);
-      if (found) {
-        return prev.map((p) =>
-          p.id === item.id ? { ...p, qty: p.qty + 1 } : p,
-        );
-      }
-      return [...prev, { ...item, qty: 1 }];
-    });
-
-    setFlashIds((prev) => new Set(prev).add(item.id));
-    setTimeout(() => {
-      setFlashIds((prev) => {
-        const n = new Set(prev);
-        n.delete(item.id);
-        return n;
-      });
-    }, 1000);
+    addToCartGlobal(item);
+    setCart([...getCart()]);
   };
 
   const removeFromCart = (id: string) => {
-    setCart((prev) => {
-      const found = prev.find((p) => p.id === id);
-      if (!found) return prev;
-      if (found.qty > 1) {
-        return prev.map((p) => (p.id === id ? { ...p, qty: p.qty - 1 } : p));
-      }
-      return prev.filter((p) => p.id !== id);
-    });
+    removeFromCartGlobal(id);
+    setCart([...getCart()]);
   };
 
   const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
-
-  const isFlashing = (id: string) => flashIds.has(id);
 
   return (
     <View style={{ flex: 1 }}>
@@ -90,27 +66,24 @@ export default function ThaiKitchen() {
         style={{ width: SCREEN_W, height: SCREEN_H }}
       >
         <View style={styles.overlay}>
-          {/* HEADER */}
+          {/* ===== HEADER ===== */}
           <View style={styles.header}>
-            <Text style={styles.title}>
-              {showCart ? "YOUR CART" : "THAI KITCHEN"}
-            </Text>
+            <Text style={styles.title}>THAI KITCHEN</Text>
 
             <View style={{ flexDirection: "row", gap: 8 }}>
               <Pressable
-                onPress={() =>
-                  showCart ? setShowCart(false) : router.replace("/menu/dishes")
-                }
+                onPress={() => router.replace("/menu/dishes")}
                 style={styles.headerBtn}
               >
                 <Text style={styles.headerBtnText}>Back</Text>
               </Pressable>
 
               <Pressable
-                onPress={() => setShowCart((s) => !s)}
+                onPress={() => router.push("/cart")}
                 style={styles.cartBtn}
               >
                 <Text style={styles.cartText}>Cart</Text>
+
                 {totalItems > 0 && (
                   <View style={styles.badge}>
                     <Text style={styles.badgeText}>{totalItems}</Text>
@@ -119,6 +92,7 @@ export default function ThaiKitchen() {
               </Pressable>
             </View>
           </View>
+
           {/* ===== CUISINE BAR ===== */}
           <FlatList
             data={CUISINES}
@@ -149,86 +123,31 @@ export default function ThaiKitchen() {
             }}
           />
 
-          {/* CART VIEW */}
-          {showCart ? (
-            <FlatList
-              data={cart}
-              keyExtractor={(i) => i.id}
-              contentContainerStyle={{ padding: PAD, gap: 10 }}
-              ListEmptyComponent={
-                <Text
-                  style={{ color: "#eee", textAlign: "center", marginTop: 40 }}
-                >
-                  Cart is empty
-                </Text>
-              }
-              renderItem={({ item }) => (
-                <View style={styles.cartRow}>
-                  <View>
-                    <Text style={styles.cartItemText}>{item.name}</Text>
-                    <Text style={{ color: "#9ef01a", fontWeight: "800" }}>
-                      Qty: {item.qty}
-                    </Text>
-                  </View>
-
-                  <View style={{ flexDirection: "row", gap: 8 }}>
-                    <Pressable
-                      onPress={() => addToCart(item)}
-                      style={styles.qtyBtnPlus}
-                    >
-                      <Text style={styles.qtyText}>+</Text>
-                    </Pressable>
-
-                    <Pressable
-                      onPress={() => removeFromCart(item.id)}
-                      style={styles.qtyBtnMinus}
-                    >
-                      <Text style={styles.qtyText}>−</Text>
-                    </Pressable>
-                  </View>
-                </View>
-              )}
-            />
-          ) : (
-            <FlatList
-              data={FOODS}
-              numColumns={numColumns}
-              key={numColumns}
-              keyExtractor={(i) => i.id}
-              columnWrapperStyle={{ gap: GAP }}
-              contentContainerStyle={{ gap: GAP, padding: PAD }}
-              renderItem={({ item }) => {
-                const flashing = isFlashing(item.id);
-
-                return (
-                  <TouchableOpacity
-                    style={[
-                      styles.foodTile,
-                      {
-                        width: size,
-                        height: size,
-                        backgroundColor: flashing
-                          ? "rgba(34,197,94,0.9)"
-                          : "rgba(0,0,0,0.7)",
-                      },
-                    ]}
-                    onPress={() => addToCart(item)}
-                  >
-                    <Text style={styles.foodText}>{item.name}</Text>
-                    <Text style={styles.addHint}>
-                      {flashing ? "Added ✓" : "Tap to add"}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          )}
+          {/* ===== FOOD GRID ===== */}
+          <FlatList
+            data={FOODS}
+            numColumns={numColumns}
+            key={numColumns}
+            keyExtractor={(i) => i.id}
+            columnWrapperStyle={{ gap: GAP }}
+            contentContainerStyle={{ gap: GAP, padding: PAD }}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[styles.foodTile, { width: size, height: size }]}
+                onPress={() => addToCart(item)}
+              >
+                <Text style={styles.foodText}>{item.name}</Text>
+                <Text style={styles.addHint}>Tap to add</Text>
+              </TouchableOpacity>
+            )}
+          />
         </View>
       </ImageBackground>
     </View>
   );
 }
 
+/* ================= STYLES ================= */
 const styles = StyleSheet.create({
   overlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.45)" },
 
@@ -281,6 +200,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#fff",
+    backgroundColor: "rgba(0,0,0,0.7)",
   },
 
   foodText: {
@@ -291,36 +211,6 @@ const styles = StyleSheet.create({
   },
 
   addHint: { marginTop: 6, fontSize: 11, color: "#9ef01a" },
-
-  cartRow: {
-    backgroundColor: "rgba(0,0,0,0.5)",
-    borderRadius: 12,
-    padding: 12,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-
-  cartItemText: { color: "#fff", fontWeight: "700" },
-
-  qtyBtnPlus: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "#22c55e",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  qtyBtnMinus: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "#ef4444",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  qtyText: { color: "#fff", fontSize: 20, fontWeight: "900" },
 
   cuisineTile: {
     paddingHorizontal: 16,
