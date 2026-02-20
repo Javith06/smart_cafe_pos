@@ -14,6 +14,17 @@ import {
 
 type CartItem = { id: string; name: string; qty: number };
 
+// ADD ABOVE FOODS
+const CUISINES = [
+  { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen" },
+  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen" },
+  { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian" },
+  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen" },
+  { id: "5", name: "DRINKS", route: "/menu/drinks" },
+];
+
+const ACTIVE_CUISINE = "INDIAN KITCHEN";
+
 const FOODS = [
   { id: "1", name: "Butter Chicken" },
   { id: "2", name: "Paneer Butter Masala" },
@@ -103,6 +114,36 @@ export default function IndianKitchen() {
               </Pressable>
             </View>
           </View>
+
+          {/* ===== CUISINE BAR ===== */}
+          <FlatList
+            data={CUISINES}
+            horizontal
+            keyExtractor={(i) => i.id}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 12, padding: 16 }}
+            renderItem={({ item }) => {
+              const active = item.name === ACTIVE_CUISINE;
+
+              return (
+                <TouchableOpacity
+                  style={[
+                    styles.cuisineTile,
+                    {
+                      backgroundColor: active
+                        ? "rgba(34,197,94,0.7)"
+                        : "rgba(50,48,48,0.76)",
+                    },
+                  ]}
+                  onPress={() => {
+                    if (!active) router.push(item.route as any);
+                  }}
+                >
+                  <Text style={styles.cuisineText}>{item.name}</Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
 
           {showCart ? (
             <FlatList
@@ -257,4 +298,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   qtyText: { color: "#fff", fontSize: 20, fontWeight: "900" },
+
+  cuisineTile: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.3)",
+  },
+
+  cuisineText: {
+    color: "#fff",
+    fontWeight: "800",
+    fontSize: 12,
+  },
 });

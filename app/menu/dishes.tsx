@@ -1,15 +1,15 @@
+import { useRouter } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
   FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  useWindowDimensions,
-  Pressable,
   ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
 
 type Dish = {
   id: string;
@@ -33,8 +33,7 @@ export default function Dishes() {
   const GAP = 12;
   const PAD = 16;
 
-  const size =
-    (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
+  const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
   return (
     <ImageBackground
@@ -70,7 +69,7 @@ export default function Dishes() {
                 router.push(
                   (item.route +
                     "?activeCuisine=" +
-                    encodeURIComponent(item.name)) as any
+                    encodeURIComponent(item.name)) as any,
                 )
               }
               activeOpacity={0.85}
@@ -116,7 +115,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 
-
   backBtn: {
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -134,7 +132,7 @@ const styles = StyleSheet.create({
 
   tile: {
     borderRadius: 16,
-    backgroundColor: "rgb(11, 10, 10)", 
+    backgroundColor: "rgb(11, 10, 10)",
     overflow: "hidden",
     elevation: 6,
     borderWidth: 1,
