@@ -1,7 +1,8 @@
-import { addToCartGlobal, getCart, removeFromCartGlobal } from "../cartStore";
-
 import { useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
+
+import { addToCartGlobal, getCart } from "../cartStore";
+
 import {
   Dimensions,
   FlatList,
@@ -49,11 +50,6 @@ export default function Drinks() {
   /* ⭐ FIX — update UI immediately */
   const addToCart = (item: { id: string; name: string }) => {
     addToCartGlobal(item);
-    setCart([...getCart()]);
-  };
-
-  const removeFromCart = (id: string) => {
-    removeFromCartGlobal(id);
     setCart([...getCart()]);
   };
 

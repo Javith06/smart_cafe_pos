@@ -1,7 +1,8 @@
-import { addToCartGlobal, getCart, removeFromCartGlobal } from "../cartStore";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useMemo, useState } from "react";
 
-import { useRouter } from "expo-router";
-import React, { useMemo, useState } from "react";
+import { addToCartGlobal, getCart } from "../cartStore";
+
 import {
   Dimensions,
   FlatList,
@@ -45,16 +46,15 @@ export default function SouthIndian() {
 
   /* ⭐ FIX 1 — cart stored in state */
   const [cart, setCart] = useState(getCart());
+  useFocusEffect(
+    useCallback(() => {
+      setCart([...getCart()]);
+    }, []),
+  );
 
   /* ⭐ FIX 2 — update UI immediately */
   const addToCart = (item: { id: string; name: string }) => {
     addToCartGlobal(item);
-    setCart([...getCart()]);
-  };
-
-  /* ⭐ FIX 3 — update UI after remove */
-  const removeFromCart = (id: string) => {
-    removeFromCartGlobal(id);
     setCart([...getCart()]);
   };
 
