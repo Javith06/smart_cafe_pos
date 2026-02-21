@@ -67,7 +67,7 @@ export default function Takeaway() {
           },
         ]}
         activeOpacity={0.85}
-        onPress={() => alert("Order " + item.label + " clicked")}
+        onPress={() => router.push("/menu/dishes")}   // ✅ Navigate to next page
       >
         <BlurView
           intensity={isActive ? 45 : 35}
@@ -145,7 +145,11 @@ export default function Takeaway() {
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         columnWrapperStyle={{ gap: GAP }}
-        contentContainerStyle={{ gap: GAP, padding: SCREEN_PADDING, paddingBottom: 30 }}
+        contentContainerStyle={{
+          gap: GAP,
+          padding: SCREEN_PADDING,
+          paddingBottom: 30,
+        }}
       />
     </ImageBackground>
   );

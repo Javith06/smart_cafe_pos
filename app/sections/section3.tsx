@@ -39,6 +39,7 @@ export default function Section3() {
 
   const GAP = 10;
   const SCREEN_PADDING = 20;
+
   const itemSize =
     (width - SCREEN_PADDING * 2 - GAP * (numColumns - 1)) / numColumns;
 
@@ -61,6 +62,7 @@ export default function Section3() {
           },
         ]}
         activeOpacity={0.85}
+        onPress={() => router.push("/menu/dishes")}   // ✅ Navigate to next page
       >
         <BlurView
           intensity={isActive ? 45 : 35}
@@ -112,7 +114,11 @@ export default function Section3() {
         keyExtractor={(i) => i.id}
         renderItem={renderItem}
         columnWrapperStyle={{ gap: GAP }}
-        contentContainerStyle={{ gap: GAP, padding: SCREEN_PADDING, paddingBottom: 30 }}
+        contentContainerStyle={{
+          gap: GAP,
+          padding: SCREEN_PADDING,
+          paddingBottom: 30,
+        }}
       />
     </ImageBackground>
   );

@@ -62,7 +62,7 @@ export default function Section2() {
           },
         ]}
         activeOpacity={0.85}
-        onPress={() => alert("Table " + item.label + " clicked")}
+        onPress={() => router.push("../menu/dishes")}
       >
         <BlurView
           intensity={isActive ? 45 : 35}
