@@ -9,6 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
+
 import { addToCartGlobal, getCart, removeFromCartGlobal } from "./cartStore";
 
 export default function CartScreen() {
@@ -21,7 +22,6 @@ export default function CartScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* ⭐ SAME BACKGROUND */}
       <ImageBackground
         source={require("../assets/images/11.jpg")}
         style={{ width: SCREEN_W, height: SCREEN_H }}
@@ -32,7 +32,7 @@ export default function CartScreen() {
 
           <FlatList
             data={cart}
-            keyExtractor={(i) => i.id}
+            keyExtractor={(i, index) => i.id + index}
             ListEmptyComponent={
               <Text style={{ color: "#fff", textAlign: "center" }}>
                 Cart Empty
@@ -41,10 +41,31 @@ export default function CartScreen() {
             renderItem={({ item }) => (
               <View style={styles.row}>
                 <Text style={styles.name}>{item.name}</Text>
+
+                {/* ⭐ CUSTOMIZATIONS */}
+                {item.spicy && item.spicy !== "Medium" && (
+                  <Text style={styles.sub}>Spicy: {item.spicy}</Text>
+                )}
+
+                {item.oil && item.oil !== "Normal" && (
+                  <Text style={styles.sub}>Oil: {item.oil}</Text>
+                )}
+
+                {item.salt && item.salt !== "Normal" && (
+                  <Text style={styles.sub}>Salt: {item.salt}</Text>
+                )}
+
+                {/* ⭐ FIXED — sugar display */}
+                {item.sugar && item.sugar !== "Normal" && (
+                  <Text style={styles.sub}>Sugar: {item.sugar}</Text>
+                )}
+
+                {item.note && <Text style={styles.sub}>Note: {item.note}</Text>}
+
                 <Text style={styles.qty}>Qty: {item.qty}</Text>
 
+                {/* + - buttons */}
                 <View style={{ flexDirection: "row", gap: 10 }}>
-                  {/* + */}
                   <Pressable
                     style={styles.plus}
                     onPress={() => {
@@ -55,7 +76,6 @@ export default function CartScreen() {
                     <Text style={styles.btnText}>+</Text>
                   </Pressable>
 
-                  {/* - */}
                   <Pressable
                     style={styles.minus}
                     onPress={() => {
@@ -80,7 +100,6 @@ export default function CartScreen() {
 }
 
 const styles = StyleSheet.create({
-  /* ⭐ same dark overlay like kitchens */
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.45)",
@@ -103,8 +122,23 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.2)",
   },
 
-  name: { color: "#fff", fontWeight: "bold" },
-  qty: { color: "#9ef01a", marginBottom: 8 },
+  name: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+
+  sub: {
+    color: "#ccc",
+    marginTop: 2,
+  },
+
+  qty: {
+    color: "#9ef01a",
+    marginTop: 8,
+    marginBottom: 8,
+    fontWeight: "bold",
+  },
 
   plus: {
     backgroundColor: "#22c55e",
@@ -118,7 +152,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 
-  btnText: { color: "#fff", fontWeight: "bold" },
+  btnText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
 
   back: {
     marginTop: 20,

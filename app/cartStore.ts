@@ -1,54 +1,50 @@
-// ===== GLOBAL CART STORAGE =====
-
-// Structure of cart item
 export type CartItem = {
   id: string;
   name: string;
+  price?: number; // ✅ allow price
   qty: number;
+
+  // optional customizations
+  spicy?: string;
+  oil?: string;
+  salt?: string;
+  sugar?: string;
+  note?: string;
 };
 
-// Global cart (shared across app)
 let cart: CartItem[] = [];
 
-/* =========================
-   GET CART
-========================= */
-export const getCart = (): CartItem[] => {
-  return cart;
-};
+export const getCart = (): CartItem[] => cart;
 
-/* =========================
-   ADD ITEM TO CART
-========================= */
-export const addToCartGlobal = (item: { id: string; name: string }) => {
-  const found = cart.find((p) => p.id === item.id);
+/* ADD ITEM */
+export const addToCartGlobal = (item: Omit<CartItem, "qty">) => {
+  const existing = cart.find(
+    (p) =>
+      p.id === item.id &&
+      p.spicy === item.spicy &&
+      p.oil === item.oil &&
+      p.salt === item.salt &&
+      p.sugar === item.sugar &&
+      p.note === item.note,
+  );
 
-  if (found) {
-    // increase quantity if already exists
-    cart = cart.map((p) => (p.id === item.id ? { ...p, qty: p.qty + 1 } : p));
+  if (existing) {
+    existing.qty += 1;
   } else {
-    // add new item
     cart.push({ ...item, qty: 1 });
   }
 };
 
-/* =========================
-   REMOVE ITEM FROM CART
-========================= */
+/* REMOVE ITEM */
 export const removeFromCartGlobal = (id: string) => {
-  const found = cart.find((p) => p.id === id);
-  if (!found) return;
+  const item = cart.find((p) => p.id === id);
+  if (!item) return;
 
-  if (found.qty > 1) {
-    cart = cart.map((p) => (p.id === id ? { ...p, qty: p.qty - 1 } : p));
-  } else {
-    cart = cart.filter((p) => p.id !== id);
-  }
+  if (item.qty > 1) item.qty -= 1;
+  else cart = cart.filter((p) => p !== item);
 };
 
-/* =========================
-   CLEAR CART (optional)
-========================= */
+/* CLEAR CART */
 export const clearCart = () => {
   cart = [];
 };
