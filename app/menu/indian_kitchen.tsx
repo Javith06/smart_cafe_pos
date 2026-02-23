@@ -13,38 +13,57 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   View,
+  Modal,
+  TextInput,
 } from "react-native";
 
 /* ================= CUISINES ================= */
 const CUISINES = [
-  { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen" },
-  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen" },
-  { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian" },
-  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen" },
-  { id: "5", name: "DRINKS", route: "/menu/drinks" },
+  { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", emoji: "🍜" },
+  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", emoji: "🍛" },
+  { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian", emoji: "🥞" },
+  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", emoji: "🍔" },
+  { id: "5", name: "DRINKS", route: "/menu/drinks", emoji: "🥤" },
 ];
 
 const ACTIVE_CUISINE = "INDIAN KITCHEN";
 
-/* ================= FOODS ================= */
-const FOODS = [
-  { id: "1", name: "Butter Chicken" },
-  { id: "2", name: "Paneer Butter Masala" },
-  { id: "3", name: "Dal Tadka" },
-  { id: "4", name: "Chicken Biryani" },
+/* ================= GROUPS ================= */
+const GROUPS = [
+  { id: "g1", name: "Biryani" },
+  { id: "g2", name: "Gravy" },
+  { id: "g3", name: "Starters" },
 ];
+
+/* ================= ITEMS BY GROUP ================= */
+const ITEMS_BY_GROUP: Record<string, { id: string; name: string; price: number }[]> = {
+  Biryani: [
+    { id: "b1", name: "Chicken Biryani", price: 220 },
+    { id: "b2", name: "Mutton Biryani", price: 260 },
+    { id: "b3", name: "Egg Biryani", price: 160 },
+    { id: "b4", name: "Plain Biryani", price: 120 },
+  ],
+  Gravy: [
+    { id: "g1", name: "Butter Chicken", price: 240 },
+    { id: "g2", name: "Paneer Butter Masala", price: 190 },
+  ],
+  Starters: [
+    { id: "s1", name: "Chicken 65", price: 180 },
+    { id: "s2", name: "Gobi Manchurian", price: 150 },
+  ],
+};
 
 export default function IndianKitchen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 
-  const numColumns = width >= 1000 ? 8 : width >= 600 ? 5 : 3;
+  const numColumns = width >= 1000 ? 5 : width >= 600 ? 4 : 2;
   const GAP = 12;
   const PAD = 16;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
-  /* ⭐ FIX — store cart in state */
+  /* ================= CART ================= */
   const [cart, setCart] = useState(getCart());
   useFocusEffect(
     useCallback(() => {
@@ -52,13 +71,42 @@ export default function IndianKitchen() {
     }, []),
   );
 
-  /* ⭐ FIX — update UI immediately */
-  const addToCart = (item: { id: string; name: string }) => {
-    addToCartGlobal(item);
-    setCart([...getCart()]);
+  const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
+
+  /* ================= GROUP ================= */
+  const [selectedGroup, setSelectedGroup] = useState<string>("Biryani");
+  const items = ITEMS_BY_GROUP[selectedGroup] || [];
+
+  /* ================= CUSTOMIZE MODAL ================= */
+  const [showCustomize, setShowCustomize] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+
+  const [spicy, setSpicy] = useState<"Less" | "Medium" | "Extra">("Medium");
+  const [oil, setOil] = useState<"Less" | "Normal">("Normal");
+  const [salt, setSalt] = useState<"Less" | "Normal">("Normal");
+  const [note, setNote] = useState("");
+
+  const openCustomize = (item: any) => {
+    setSelectedItem(item);
+    setSpicy("Medium");
+    setOil("Normal");
+    setSalt("Normal");
+    setNote("");
+    setShowCustomize(true);
   };
 
-  const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
+  const confirmAdd = () => {
+    if (!selectedItem) return;
+    addToCartGlobal({
+      ...selectedItem,
+      spicy,
+      oil,
+      salt,
+      note,
+    });
+    setCart([...getCart()]);
+    setShowCustomize(false);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -84,7 +132,6 @@ export default function IndianKitchen() {
                 style={styles.cartBtn}
               >
                 <Text style={styles.cartText}>Cart</Text>
-
                 {totalItems > 0 && (
                   <View style={styles.badge}>
                     <Text style={styles.badgeText}>{totalItems}</Text>
@@ -100,49 +147,203 @@ export default function IndianKitchen() {
             horizontal
             keyExtractor={(i) => i.id}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 12, padding: 16 }}
+            contentContainerStyle={{ gap: 12, paddingHorizontal: 12, paddingVertical: 10 }}
             renderItem={({ item }) => {
               const active = item.name === ACTIVE_CUISINE;
-
               return (
                 <TouchableOpacity
                   style={[
-                    styles.cuisineTile,
-                    {
-                      backgroundColor: active
-                        ? "rgba(34,197,94,0.7)"
-                        : "rgba(50,48,48,0.76)",
-                    },
+                    styles.cuisineCard,
+                    active ? styles.cuisineActive : styles.cuisineInactive,
                   ]}
                   onPress={() => {
                     if (!active) router.push(item.route as any);
                   }}
                 >
-                  <Text style={styles.cuisineText}>{item.name}</Text>
+                  <Text style={styles.cuisineEmoji}>{item.emoji}</Text>
+                  <Text
+                    style={[
+                      styles.cuisineText,
+                      { color: active ? "#052b12" : "#ffffff" },
+                    ]}
+                    numberOfLines={2}
+                  >
+                    {item.name}
+                  </Text>
                 </TouchableOpacity>
               );
             }}
           />
 
-          {/* ===== FOOD GRID ===== */}
+          {/* ===== GROUP BAR ===== */}
           <FlatList
-            data={FOODS}
+            data={GROUPS}
+            horizontal
+            keyExtractor={(i) => i.id}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 10, paddingHorizontal: 12, paddingBottom: 6 }}
+            renderItem={({ item }) => {
+              const active = item.name === selectedGroup;
+              return (
+                <TouchableOpacity
+                  style={[
+                    styles.groupChip,
+                    active ? styles.groupActive : styles.groupInactive,
+                  ]}
+                  onPress={() => setSelectedGroup(item.name)}
+                >
+                  <Text style={{ color: active ? "#052b12" : "#fff", fontWeight: "800" }}>
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+
+          {/* ===== ITEMS GRID ===== */}
+          <FlatList
+            data={items}
             numColumns={numColumns}
-            key={numColumns}
+            key={numColumns + selectedGroup}
             keyExtractor={(i) => i.id}
             columnWrapperStyle={{ gap: GAP }}
             contentContainerStyle={{ gap: GAP, padding: PAD }}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={[styles.foodTile, { width: size, height: size }]}
-                onPress={() => addToCart(item)}
+                style={[styles.foodCard, { width: size, height: size * 1.1 }]}
+                onPress={() => openCustomize(item)}
+                activeOpacity={0.85}
               >
-                <Text style={styles.foodText}>{item.name}</Text>
-                <Text style={styles.addHint}>Tap to add</Text>
+                <View style={styles.foodImageBox}>
+                  <Text style={{ fontSize: 28 }}>🍽️</Text>
+                </View>
+                <View style={styles.foodInfo}>
+                  <Text style={styles.foodName} numberOfLines={2}>
+                    {item.name}
+                  </Text>
+                  <Text style={styles.foodPrice}>₹ {item.price}</Text>
+                  <View style={styles.addBtn}>
+                    <Text style={styles.addBtnText}>Customize</Text>
+                  </View>
+                </View>
               </TouchableOpacity>
             )}
           />
         </View>
+
+        {/* ===== CUSTOMIZE MODAL ===== */}
+        <Modal visible={showCustomize} transparent animationType="slide">
+          <View style={styles.modalBackdrop}>
+            <View style={styles.modalBox}>
+              <Text style={styles.modalTitle}>
+                Customize: {selectedItem?.name}
+              </Text>
+
+              {/* Spicy */}
+              <Text style={styles.modalLabel}>Spicy</Text>
+              <View style={styles.optionRow}>
+                {["Less", "Medium", "Extra"].map((v) => (
+                  <TouchableOpacity
+                    key={v}
+                    onPress={() => setSpicy(v as any)}
+                    style={[
+                      styles.optionBtn,
+                      spicy === v && styles.optionActive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.optionText,
+                        spicy === v && styles.optionTextActive,
+                      ]}
+                    >
+                      {v}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Oil */}
+              <Text style={styles.modalLabel}>Oil</Text>
+              <View style={styles.optionRow}>
+                {["Less", "Normal"].map((v) => (
+                  <TouchableOpacity
+                    key={v}
+                    onPress={() => setOil(v as any)}
+                    style={[
+                      styles.optionBtn,
+                      oil === v && styles.optionActive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.optionText,
+                        oil === v && styles.optionTextActive,
+                      ]}
+                    >
+                      {v}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Salt */}
+              <Text style={styles.modalLabel}>Salt</Text>
+              <View style={styles.optionRow}>
+                {["Less", "Normal"].map((v) => (
+                  <TouchableOpacity
+                    key={v}
+                    onPress={() => setSalt(v as any)}
+                    style={[
+                      styles.optionBtn,
+                      salt === v && styles.optionActive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.optionText,
+                        salt === v && styles.optionTextActive,
+                      ]}
+                    >
+                      {v}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Note */}
+              <Text style={styles.modalLabel}>Special Note</Text>
+              <TextInput
+                placeholder="e.g. No onion, extra masala..."
+                placeholderTextColor="#888"
+                value={note}
+                onChangeText={setNote}
+                style={styles.noteInput}
+              />
+
+              {/* Buttons */}
+              <View style={{ flexDirection: "row", gap: 10, marginTop: 16 }}>
+                <TouchableOpacity
+                  onPress={() => setShowCustomize(false)}
+                  style={[styles.modalBtn, { backgroundColor: "#444" }]}
+                >
+                  <Text style={{ color: "#fff", fontWeight: "800", textAlign: "center" }}>
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={confirmAdd}
+                  style={[styles.modalBtn, { backgroundColor: "#22c55e" }]}
+                >
+                  <Text style={{ color: "#052b12", fontWeight: "900", textAlign: "center" }}>
+                    Add to Cart
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ImageBackground>
     </View>
   );
@@ -195,37 +396,162 @@ const styles = StyleSheet.create({
 
   badgeText: { color: "#fff", fontSize: 12, fontWeight: "800" },
 
-  foodTile: {
-    borderRadius: 16,
+  cuisineCard: {
+    width: 120,
+    height: 90,
+    borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#fff",
-    backgroundColor: "rgba(0,0,0,0.7)",
+    padding: 8,
   },
 
-  foodText: {
-    fontSize: 13,
+  cuisineActive: {
+    backgroundColor: "rgba(34,197,94,0.9)",
+    borderColor: "rgba(255,255,255,0.6)",
+  },
+
+  cuisineInactive: {
+    backgroundColor: "rgba(20,20,20,0.7)",
+    borderColor: "rgba(255,255,255,0.25)",
+  },
+
+  cuisineEmoji: { fontSize: 26, marginBottom: 4 },
+
+  cuisineText: {
     fontWeight: "800",
-    color: "#fff",
+    fontSize: 12,
     textAlign: "center",
   },
 
-  addHint: { marginTop: 6, fontSize: 11, color: "#9ef01a" },
-
-  cuisineTile: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 14,
-    justifyContent: "center",
-    alignItems: "center",
+  groupChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.3)",
   },
 
-  cuisineText: {
+  groupActive: {
+    backgroundColor: "rgba(34,197,94,0.9)",
+    borderColor: "rgba(255,255,255,0.6)",
+  },
+
+  groupInactive: {
+    backgroundColor: "rgba(0,0,0,0.6)",
+    borderColor: "rgba(255,255,255,0.25)",
+  },
+
+  foodCard: {
+    borderRadius: 18,
+    overflow: "hidden",
+    backgroundColor: "rgba(0,0,0,0.75)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.25)",
+  },
+
+  foodImageBox: {
+    flex: 1,
+    backgroundColor: "rgba(255,255,255,0.08)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  foodInfo: { padding: 10 },
+
+  foodName: {
     color: "#fff",
     fontWeight: "800",
+    fontSize: 13,
+  },
+
+  foodPrice: {
+    color: "#9ef01a",
+    fontWeight: "700",
+    marginTop: 4,
     fontSize: 12,
+  },
+
+  addBtn: {
+    marginTop: 8,
+    backgroundColor: "rgba(34,197,94,0.9)",
+    paddingVertical: 6,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  addBtnText: {
+    color: "#052b12",
+    fontWeight: "900",
+    fontSize: 12,
+  },
+
+  /* ===== MODAL ===== */
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalBox: {
+    width: "90%",
+    backgroundColor: "#111",
+    borderRadius: 16,
+    padding: 16,
+  },
+
+  modalTitle: {
+    color: "#9ef01a",
+    fontSize: 16,
+    fontWeight: "900",
+    marginBottom: 8,
+  },
+
+  modalLabel: {
+    color: "#fff",
+    marginTop: 10,
+    fontWeight: "700",
+  },
+
+  optionRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 6,
+    flexWrap: "wrap",
+  },
+
+  optionBtn: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: "#333",
+  },
+
+  optionActive: {
+    backgroundColor: "#22c55e",
+  },
+
+  optionText: {
+    color: "#fff",
+    fontWeight: "700",
+  },
+
+  optionTextActive: {
+    color: "#052b12",
+  },
+
+  noteInput: {
+    borderWidth: 1,
+    borderColor: "#444",
+    borderRadius: 8,
+    padding: 8,
+    color: "#fff",
+    marginTop: 6,
+  },
+
+  modalBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 10, 
   },
 });

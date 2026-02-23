@@ -1,5 +1,5 @@
-import { useRouter } from "expo-router";
-import React, { useMemo, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { addToCartGlobal, getCart } from "../cartStore";
 
@@ -17,43 +17,66 @@ import {
 
 /* ================= CUISINES ================= */
 const CUISINES = [
-  { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen" },
-  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen" },
-  { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian" },
-  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen" },
-  { id: "5", name: "DRINKS", route: "/menu/drinks" },
+  { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", emoji: "🍜" },
+  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", emoji: "🍛" },
+  { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian", emoji: "🥞" },
+  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", emoji: "🍔" },
+  { id: "5", name: "DRINKS", route: "/menu/drinks", emoji: "🥤" },
 ];
 
 const ACTIVE_CUISINE = "DRINKS";
 
-/* ================= DRINKS ================= */
-const FOODS = [
-  { id: "1", name: "Lime Juice" },
-  { id: "2", name: "Cold Coffee" },
-  { id: "3", name: "Milkshake" },
-  { id: "4", name: "Soft Drink" },
+/* ================= GROUPS ================= */
+const GROUPS = [
+  { id: "g1", name: "Cold" },
+  { id: "g2", name: "Hot" },
+  { id: "g3", name: "Shakes" },
 ];
+
+/* ================= ITEMS BY GROUP ================= */
+const ITEMS_BY_GROUP: Record<string, { id: string; name: string; price: number }[]> = {
+  Cold: [
+    { id: "c1", name: "Lime Juice", price: 60 },
+    { id: "c2", name: "Soft Drink", price: 50 },
+  ],
+  Hot: [
+    { id: "h1", name: "Tea", price: 25 },
+    { id: "h2", name: "Coffee", price: 40 },
+  ],
+  Shakes: [
+    { id: "s1", name: "Chocolate Milkshake", price: 120 },
+    { id: "s2", name: "Strawberry Milkshake", price: 120 },
+  ],
+};
 
 export default function Drinks() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 
-  const numColumns = width >= 1000 ? 8 : width >= 600 ? 5 : 3;
+  const numColumns = width >= 1000 ? 5 : width >= 600 ? 4 : 2;
   const GAP = 12;
   const PAD = 16;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
-  /* ⭐ FIX — store cart in state */
+  /* Cart */
   const [cart, setCart] = useState(getCart());
+  useFocusEffect(
+    useCallback(() => {
+      setCart([...getCart()]);
+    }, []),
+  );
 
-  /* ⭐ FIX — update UI immediately */
   const addToCart = (item: { id: string; name: string }) => {
     addToCartGlobal(item);
     setCart([...getCart()]);
   };
 
   const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
+
+  /* Selected group */
+  const [selectedGroup, setSelectedGroup] = useState<string>("Cold");
+  const items = ITEMS_BY_GROUP[selectedGroup] || [];
 
   return (
     <View style={{ flex: 1 }}>
@@ -79,7 +102,6 @@ export default function Drinks() {
                 style={styles.cartBtn}
               >
                 <Text style={styles.cartText}>Cart</Text>
-
                 {totalItems > 0 && (
                   <View style={styles.badge}>
                     <Text style={styles.badgeText}>{totalItems}</Text>
@@ -95,45 +117,85 @@ export default function Drinks() {
             horizontal
             keyExtractor={(i) => i.id}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 12, padding: 16 }}
+            contentContainerStyle={{ gap: 12, paddingHorizontal: 12, paddingVertical: 10 }}
             renderItem={({ item }) => {
               const active = item.name === ACTIVE_CUISINE;
-
               return (
                 <TouchableOpacity
                   style={[
-                    styles.cuisineTile,
-                    {
-                      backgroundColor: active
-                        ? "rgba(34,197,94,0.7)"
-                        : "rgba(50,48,48,0.76)",
-                    },
+                    styles.cuisineCard,
+                    active ? styles.cuisineActive : styles.cuisineInactive,
                   ]}
                   onPress={() => {
                     if (!active) router.push(item.route as any);
                   }}
                 >
-                  <Text style={styles.cuisineText}>{item.name}</Text>
+                  <Text style={styles.cuisineEmoji}>{item.emoji}</Text>
+                  <Text
+                    style={[
+                      styles.cuisineText,
+                      { color: active ? "#052b12" : "#ffffff" },
+                    ]}
+                    numberOfLines={2}
+                  >
+                    {item.name}
+                  </Text>
                 </TouchableOpacity>
               );
             }}
           />
 
-          {/* ===== DRINKS GRID ===== */}
+          {/* ===== GROUP BAR ===== */}
           <FlatList
-            data={FOODS}
+            data={GROUPS}
+            horizontal
+            keyExtractor={(i) => i.id}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 10, paddingHorizontal: 12, paddingBottom: 6 }}
+            renderItem={({ item }) => {
+              const active = item.name === selectedGroup;
+              return (
+                <TouchableOpacity
+                  style={[
+                    styles.groupChip,
+                    active ? styles.groupActive : styles.groupInactive,
+                  ]}
+                  onPress={() => setSelectedGroup(item.name)}
+                >
+                  <Text style={{ color: active ? "#052b12" : "#fff", fontWeight: "800" }}>
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+
+          {/* ===== ITEMS GRID ===== */}
+          <FlatList
+            data={items}
             numColumns={numColumns}
-            key={numColumns}
+            key={numColumns + selectedGroup}
             keyExtractor={(i) => i.id}
             columnWrapperStyle={{ gap: GAP }}
             contentContainerStyle={{ gap: GAP, padding: PAD }}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={[styles.foodTile, { width: size, height: size }]}
+                style={[styles.foodCard, { width: size, height: size * 1.1 }]}
                 onPress={() => addToCart(item)}
+                activeOpacity={0.85}
               >
-                <Text style={styles.foodText}>{item.name}</Text>
-                <Text style={styles.addHint}>Tap to add</Text>
+                <View style={styles.foodImageBox}>
+                  <Text style={{ fontSize: 28 }}>🥤</Text>
+                </View>
+                <View style={styles.foodInfo}>
+                  <Text style={styles.foodName} numberOfLines={2}>
+                    {item.name}
+                  </Text>
+                  <Text style={styles.foodPrice}>₹ {item.price}</Text>
+                  <View style={styles.addBtn}>
+                    <Text style={styles.addBtnText}>+ Add</Text>
+                  </View>
+                </View>
               </TouchableOpacity>
             )}
           />
@@ -190,37 +252,92 @@ const styles = StyleSheet.create({
 
   badgeText: { color: "#fff", fontSize: 12, fontWeight: "800" },
 
-  foodTile: {
-    borderRadius: 16,
+  cuisineCard: {
+    width: 120,
+    height: 90,
+    borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#fff",
-    backgroundColor: "rgba(0,0,0,0.7)",
+    padding: 8,
   },
 
-  foodText: {
-    fontSize: 13,
+  cuisineActive: {
+    backgroundColor: "rgba(34,197,94,0.9)",
+    borderColor: "rgba(255,255,255,0.6)",
+  },
+
+  cuisineInactive: {
+    backgroundColor: "rgba(20,20,20,0.7)",
+    borderColor: "rgba(255,255,255,0.25)",
+  },
+
+  cuisineEmoji: { fontSize: 26, marginBottom: 4 },
+
+  cuisineText: {
     fontWeight: "800",
-    color: "#fff",
+    fontSize: 12,
     textAlign: "center",
   },
 
-  addHint: { marginTop: 6, fontSize: 11, color: "#9ef01a" },
-
-  cuisineTile: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 14,
-    justifyContent: "center",
-    alignItems: "center",
+  groupChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.3)",
   },
 
-  cuisineText: {
+  groupActive: {
+    backgroundColor: "rgba(34,197,94,0.9)",
+    borderColor: "rgba(255,255,255,0.6)",
+  },
+
+  groupInactive: {
+    backgroundColor: "rgba(0,0,0,0.6)",
+    borderColor: "rgba(255,255,255,0.25)",
+  },
+
+  foodCard: {
+    borderRadius: 18,
+    overflow: "hidden",
+    backgroundColor: "rgba(0,0,0,0.75)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.25)",
+  },
+
+  foodImageBox: {
+    flex: 1,
+    backgroundColor: "rgba(255,255,255,0.08)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  foodInfo: { padding: 10 },
+
+  foodName: {
     color: "#fff",
     fontWeight: "800",
+    fontSize: 13,
+  },
+
+  foodPrice: {
+    color: "#9ef01a",
+    fontWeight: "700",
+    marginTop: 4,
+    fontSize: 12,
+  },
+
+  addBtn: {
+    marginTop: 8,
+    backgroundColor: "rgba(34,197,94,0.9)",
+    paddingVertical: 6,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  addBtnText: {
+    color: "#052b12",
+    fontWeight: "900",
     fontSize: 12,
   },
 });

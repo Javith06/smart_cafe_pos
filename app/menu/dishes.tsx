@@ -94,17 +94,17 @@ const styles = StyleSheet.create({
   // 🌫️ Very light overlay (almost transparent)
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    backgroundColor: "rgba(0, 0, 0, 0)",
   },
 
   header: {
     height: 60,
-    backgroundColor: "rgba(0,0,0,0.25)",
+    backgroundColor: "rgba(0, 0, 0, 0.41)",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
+    borderBottomWidth: 1, 
     borderBottomColor: "rgba(255,255,255,0.2)",
   },
 
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
 
   tile: {
     borderRadius: 16,
-    backgroundColor: "rgb(11, 10, 10)",
+    backgroundColor: "rgba(11, 10, 10, 0.62)",
     overflow: "hidden",
     elevation: 6,
     borderWidth: 1,
