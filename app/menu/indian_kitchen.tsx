@@ -7,22 +7,32 @@ import {
   Dimensions,
   FlatList,
   ImageBackground,
+  Modal,
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   useWindowDimensions,
   View,
-  Modal,
-  TextInput,
 } from "react-native";
 
 /* ================= CUISINES ================= */
 const CUISINES = [
   { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", emoji: "🍜" },
-  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", emoji: "🍛" },
+  {
+    id: "2",
+    name: "INDIAN KITCHEN",
+    route: "/menu/indian_kitchen",
+    emoji: "🍛",
+  },
   { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian", emoji: "🥞" },
-  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", emoji: "🍔" },
+  {
+    id: "4",
+    name: "WESTERN KITCHEN",
+    route: "/menu/western_kitchen",
+    emoji: "🍔",
+  },
   { id: "5", name: "DRINKS", route: "/menu/drinks", emoji: "🥤" },
 ];
 
@@ -36,7 +46,10 @@ const GROUPS = [
 ];
 
 /* ================= ITEMS BY GROUP ================= */
-const ITEMS_BY_GROUP: Record<string, { id: string; name: string; price: number }[]> = {
+const ITEMS_BY_GROUP: Record<
+  string,
+  { id: string; name: string; price: number }[]
+> = {
   Biryani: [
     { id: "b1", name: "Chicken Biryani", price: 220 },
     { id: "b2", name: "Mutton Biryani", price: 260 },
@@ -97,13 +110,16 @@ export default function IndianKitchen() {
 
   const confirmAdd = () => {
     if (!selectedItem) return;
+
     addToCartGlobal({
-      ...selectedItem,
+      id: selectedItem.id,
+      name: selectedItem.name,
       spicy,
       oil,
       salt,
       note,
     });
+
     setCart([...getCart()]);
     setShowCustomize(false);
   };
@@ -147,7 +163,11 @@ export default function IndianKitchen() {
             horizontal
             keyExtractor={(i) => i.id}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 12, paddingHorizontal: 12, paddingVertical: 10 }}
+            contentContainerStyle={{
+              gap: 12,
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+            }}
             renderItem={({ item }) => {
               const active = item.name === ACTIVE_CUISINE;
               return (
@@ -181,7 +201,11 @@ export default function IndianKitchen() {
             horizontal
             keyExtractor={(i) => i.id}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 10, paddingHorizontal: 12, paddingBottom: 6 }}
+            contentContainerStyle={{
+              gap: 10,
+              paddingHorizontal: 12,
+              paddingBottom: 6,
+            }}
             renderItem={({ item }) => {
               const active = item.name === selectedGroup;
               return (
@@ -192,7 +216,12 @@ export default function IndianKitchen() {
                   ]}
                   onPress={() => setSelectedGroup(item.name)}
                 >
-                  <Text style={{ color: active ? "#052b12" : "#fff", fontWeight: "800" }}>
+                  <Text
+                    style={{
+                      color: active ? "#052b12" : "#fff",
+                      fontWeight: "800",
+                    }}
+                  >
                     {item.name}
                   </Text>
                 </TouchableOpacity>
@@ -270,10 +299,7 @@ export default function IndianKitchen() {
                   <TouchableOpacity
                     key={v}
                     onPress={() => setOil(v as any)}
-                    style={[
-                      styles.optionBtn,
-                      oil === v && styles.optionActive,
-                    ]}
+                    style={[styles.optionBtn, oil === v && styles.optionActive]}
                   >
                     <Text
                       style={[
@@ -327,7 +353,13 @@ export default function IndianKitchen() {
                   onPress={() => setShowCustomize(false)}
                   style={[styles.modalBtn, { backgroundColor: "#444" }]}
                 >
-                  <Text style={{ color: "#fff", fontWeight: "800", textAlign: "center" }}>
+                  <Text
+                    style={{
+                      color: "#fff",
+                      fontWeight: "800",
+                      textAlign: "center",
+                    }}
+                  >
                     Cancel
                   </Text>
                 </TouchableOpacity>
@@ -336,7 +368,13 @@ export default function IndianKitchen() {
                   onPress={confirmAdd}
                   style={[styles.modalBtn, { backgroundColor: "#22c55e" }]}
                 >
-                  <Text style={{ color: "#052b12", fontWeight: "900", textAlign: "center" }}>
+                  <Text
+                    style={{
+                      color: "#052b12",
+                      fontWeight: "900",
+                      textAlign: "center",
+                    }}
+                  >
                     Add to Cart
                   </Text>
                 </TouchableOpacity>
@@ -552,6 +590,6 @@ const styles = StyleSheet.create({
   modalBtn: {
     flex: 1,
     paddingVertical: 10,
-    borderRadius: 10, 
+    borderRadius: 10,
   },
 });

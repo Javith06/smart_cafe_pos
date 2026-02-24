@@ -7,9 +7,11 @@ import {
   Dimensions,
   FlatList,
   ImageBackground,
+  Modal,
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -18,9 +20,19 @@ import {
 /* ================= CUISINES ================= */
 const CUISINES = [
   { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", emoji: "🍜" },
-  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", emoji: "🍛" },
+  {
+    id: "2",
+    name: "INDIAN KITCHEN",
+    route: "/menu/indian_kitchen",
+    emoji: "🍛",
+  },
   { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian", emoji: "🥞" },
-  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", emoji: "🍔" },
+  {
+    id: "4",
+    name: "WESTERN KITCHEN",
+    route: "/menu/western_kitchen",
+    emoji: "🍔",
+  },
   { id: "5", name: "DRINKS", route: "/menu/drinks", emoji: "🥤" },
 ];
 
@@ -33,8 +45,11 @@ const GROUPS = [
   { id: "g3", name: "Curries" },
 ];
 
-/* ================= ITEMS BY GROUP ================= */
-const ITEMS_BY_GROUP: Record<string, { id: string; name: string; price: number }[]> = {
+/* ================= ITEMS (TS ERROR FIXED) ================= */
+const ITEMS_BY_GROUP: Record<
+  string,
+  { id: string; name: string; price: number }[]
+> = {
   Soups: [
     { id: "s1", name: "Tom Yum Soup", price: 160 },
     { id: "s2", name: "Tom Kha Soup", price: 170 },
@@ -59,24 +74,54 @@ export default function ThaiKitchen() {
   const PAD = 16;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
-  /* Cart */
+  /* ===== CART ===== */
   const [cart, setCart] = useState(getCart());
+
   useFocusEffect(
     useCallback(() => {
       setCart([...getCart()]);
     }, []),
   );
 
-  const addToCart = (item: { id: string; name: string }) => {
-    addToCartGlobal(item);
-    setCart([...getCart()]);
-  };
-
   const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
 
-  /* Selected group */
-  const [selectedGroup, setSelectedGroup] = useState<string>("Soups");
+  /* ===== GROUP ===== */
+  const [selectedGroup, setSelectedGroup] = useState("Soups");
   const items = ITEMS_BY_GROUP[selectedGroup] || [];
+
+  /* ===== CUSTOMIZE MODAL ===== */
+  const [showCustomize, setShowCustomize] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+
+  const [spicy, setSpicy] = useState("Medium");
+  const [oil, setOil] = useState("Normal");
+  const [salt, setSalt] = useState("Normal");
+  const [note, setNote] = useState("");
+
+  const openCustomize = (item: any) => {
+    setSelectedItem(item);
+    setSpicy("Medium");
+    setOil("Normal");
+    setSalt("Normal");
+    setNote("");
+    setShowCustomize(true);
+  };
+
+  const confirmAdd = () => {
+    if (!selectedItem) return;
+
+    addToCartGlobal({
+      id: selectedItem.id,
+      name: selectedItem.name,
+      spicy,
+      oil,
+      salt,
+      note,
+    });
+
+    setCart([...getCart()]);
+    setShowCustomize(false);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -117,7 +162,11 @@ export default function ThaiKitchen() {
             horizontal
             keyExtractor={(i) => i.id}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 12, paddingHorizontal: 12, paddingVertical: 10 }}
+            contentContainerStyle={{
+              gap: 12,
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+            }}
             renderItem={({ item }) => {
               const active = item.name === ACTIVE_CUISINE;
               return (
@@ -134,7 +183,7 @@ export default function ThaiKitchen() {
                   <Text
                     style={[
                       styles.cuisineText,
-                      { color: active ? "#052b12" : "#ffffff" },
+                      { color: active ? "#052b12" : "#fff" },
                     ]}
                     numberOfLines={2}
                   >
@@ -151,7 +200,11 @@ export default function ThaiKitchen() {
             horizontal
             keyExtractor={(i) => i.id}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 10, paddingHorizontal: 12, paddingBottom: 6 }}
+            contentContainerStyle={{
+              gap: 10,
+              paddingHorizontal: 12,
+              paddingBottom: 6,
+            }}
             renderItem={({ item }) => {
               const active = item.name === selectedGroup;
               return (
@@ -162,7 +215,12 @@ export default function ThaiKitchen() {
                   ]}
                   onPress={() => setSelectedGroup(item.name)}
                 >
-                  <Text style={{ color: active ? "#052b12" : "#fff", fontWeight: "800" }}>
+                  <Text
+                    style={{
+                      color: active ? "#052b12" : "#fff",
+                      fontWeight: "800",
+                    }}
+                  >
                     {item.name}
                   </Text>
                 </TouchableOpacity>
@@ -181,25 +239,116 @@ export default function ThaiKitchen() {
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={[styles.foodCard, { width: size, height: size * 1.1 }]}
-                onPress={() => addToCart(item)}
+                onPress={() => openCustomize(item)}
                 activeOpacity={0.85}
               >
                 <View style={styles.foodImageBox}>
                   <Text style={{ fontSize: 28 }}>🍽️</Text>
                 </View>
+
                 <View style={styles.foodInfo}>
-                  <Text style={styles.foodName} numberOfLines={2}>
-                    {item.name}
-                  </Text>
+                  <Text style={styles.foodName}>{item.name}</Text>
                   <Text style={styles.foodPrice}>₹ {item.price}</Text>
+
                   <View style={styles.addBtn}>
-                    <Text style={styles.addBtnText}>+ Add</Text>
+                    <Text style={styles.addBtnText}>Customize</Text>
                   </View>
                 </View>
               </TouchableOpacity>
             )}
           />
         </View>
+
+        {/* ===== CUSTOMIZE MODAL ===== */}
+        <Modal visible={showCustomize} transparent animationType="slide">
+          <View style={styles.modalBackdrop}>
+            <View style={styles.modalBox}>
+              <Text style={styles.modalTitle}>
+                Customize: {selectedItem?.name}
+              </Text>
+
+              <Text style={styles.modalLabel}>Spicy</Text>
+              <View style={styles.optionRow}>
+                {["Less", "Medium", "Extra"].map((v) => (
+                  <TouchableOpacity
+                    key={v}
+                    onPress={() => setSpicy(v)}
+                    style={[
+                      styles.optionBtn,
+                      spicy === v && styles.optionActive,
+                    ]}
+                  >
+                    <Text style={styles.optionText}>{v}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <Text style={styles.modalLabel}>Oil</Text>
+              <View style={styles.optionRow}>
+                {["Less", "Normal"].map((v) => (
+                  <TouchableOpacity
+                    key={v}
+                    onPress={() => setOil(v)}
+                    style={[styles.optionBtn, oil === v && styles.optionActive]}
+                  >
+                    <Text style={styles.optionText}>{v}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <Text style={styles.modalLabel}>Salt</Text>
+              <View style={styles.optionRow}>
+                {["Less", "Normal"].map((v) => (
+                  <TouchableOpacity
+                    key={v}
+                    onPress={() => setSalt(v)}
+                    style={[
+                      styles.optionBtn,
+                      salt === v && styles.optionActive,
+                    ]}
+                  >
+                    <Text style={styles.optionText}>{v}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <Text style={styles.modalLabel}>Special Note</Text>
+              <TextInput
+                placeholder="Special instruction..."
+                placeholderTextColor="#888"
+                value={note}
+                onChangeText={setNote}
+                style={styles.noteInput}
+              />
+
+              <View style={{ flexDirection: "row", gap: 10, marginTop: 16 }}>
+                <TouchableOpacity
+                  onPress={() => setShowCustomize(false)}
+                  style={[styles.modalBtn, { backgroundColor: "#444" }]}
+                >
+                  <Text style={{ color: "#fff", textAlign: "center" }}>
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={confirmAdd}
+                  style={[styles.modalBtn, { backgroundColor: "#22c55e" }]}
+                >
+                  <Text
+                    style={{
+                      color: "#052b12",
+                      textAlign: "center",
+                      fontWeight: "900",
+                    }}
+                  >
+                    Add to Cart
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ImageBackground>
     </View>
   );
@@ -218,7 +367,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
 
-  title: { color: "#9ef01a", fontSize: 16, fontWeight: "800" },
+  title: { color: "#9ef01a", fontWeight: "800" },
 
   headerBtn: {
     paddingHorizontal: 12,
@@ -227,7 +376,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.3)",
   },
 
-  headerBtnText: { color: "#fff", fontWeight: "700" },
+  headerBtnText: { color: "#fff" },
 
   cartBtn: {
     paddingHorizontal: 12,
@@ -250,7 +399,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  badgeText: { color: "#fff", fontSize: 12, fontWeight: "800" },
+  badgeText: { color: "#fff", fontSize: 12 },
 
   cuisineCard: {
     width: 120,
@@ -262,23 +411,11 @@ const styles = StyleSheet.create({
     padding: 8,
   },
 
-  cuisineActive: {
-    backgroundColor: "rgba(34,197,94,0.9)",
-    borderColor: "rgba(255,255,255,0.6)",
-  },
-
-  cuisineInactive: {
-    backgroundColor: "rgba(20,20,20,0.7)",
-    borderColor: "rgba(255,255,255,0.25)",
-  },
+  cuisineActive: { backgroundColor: "rgba(34,197,94,0.9)" },
+  cuisineInactive: { backgroundColor: "rgba(20,20,20,0.7)" },
 
   cuisineEmoji: { fontSize: 26, marginBottom: 4 },
-
-  cuisineText: {
-    fontWeight: "800",
-    fontSize: 12,
-    textAlign: "center",
-  },
+  cuisineText: { fontWeight: "800", fontSize: 12, textAlign: "center" },
 
   groupChip: {
     paddingHorizontal: 14,
@@ -287,57 +424,60 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 
-  groupActive: {
-    backgroundColor: "rgba(34,197,94,0.9)",
-    borderColor: "rgba(255,255,255,0.6)",
-  },
-
-  groupInactive: {
-    backgroundColor: "rgba(0,0,0,0.6)",
-    borderColor: "rgba(255,255,255,0.25)",
-  },
+  groupActive: { backgroundColor: "rgba(34,197,94,0.9)" },
+  groupInactive: { backgroundColor: "rgba(0,0,0,0.6)" },
 
   foodCard: {
     borderRadius: 18,
     overflow: "hidden",
     backgroundColor: "rgba(0,0,0,0.75)",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.25)",
   },
 
-  foodImageBox: {
-    flex: 1,
-    backgroundColor: "rgba(255,255,255,0.08)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
+  foodImageBox: { flex: 1, justifyContent: "center", alignItems: "center" },
   foodInfo: { padding: 10 },
 
-  foodName: {
-    color: "#fff",
-    fontWeight: "800",
-    fontSize: 13,
-  },
-
-  foodPrice: {
-    color: "#9ef01a",
-    fontWeight: "700",
-    marginTop: 4,
-    fontSize: 12,
-  },
+  foodName: { color: "#fff", fontWeight: "800" },
+  foodPrice: { color: "#9ef01a", marginTop: 4 },
 
   addBtn: {
     marginTop: 8,
-    backgroundColor: "rgba(34,197,94,0.9)",
+    backgroundColor: "#22c55e",
     paddingVertical: 6,
     borderRadius: 10,
     alignItems: "center",
   },
 
-  addBtnText: {
-    color: "#052b12",
-    fontWeight: "900",
-    fontSize: 12,
+  addBtnText: { color: "#052b12", fontWeight: "900" },
+
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
   },
+
+  modalBox: {
+    width: "90%",
+    backgroundColor: "#111",
+    borderRadius: 16,
+    padding: 16,
+  },
+  modalTitle: { color: "#9ef01a", fontWeight: "900" },
+  modalLabel: { color: "#fff", marginTop: 10 },
+
+  optionRow: { flexDirection: "row", gap: 8, marginTop: 6 },
+  optionBtn: { padding: 6, backgroundColor: "#333", borderRadius: 8 },
+  optionActive: { backgroundColor: "#22c55e" },
+  optionText: { color: "#fff" },
+
+  noteInput: {
+    borderWidth: 1,
+    borderColor: "#444",
+    borderRadius: 8,
+    padding: 8,
+    color: "#fff",
+    marginTop: 6,
+  },
+
+  modalBtn: { flex: 1, padding: 10, borderRadius: 10 },
 });

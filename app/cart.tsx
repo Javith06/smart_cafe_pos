@@ -9,6 +9,11 @@ import {
   Text,
   View,
 } from "react-native";
+<<<<<<< HEAD
+=======
+
+import { addToCartGlobal, getCart, removeFromCartGlobal } from "./cartStore";
+>>>>>>> 58564608e3bf46287c25b31e881dcf18d507289e
 
 /* =========================
    GLOBAL CART (SINGLE FILE)
@@ -85,8 +90,13 @@ export default function CartScreen() {
           <Text style={styles.title}>YOUR CART</Text>
 
           <FlatList
+<<<<<<< HEAD
             data={cartState}
             keyExtractor={(i) => i.id}
+=======
+            data={cart}
+            keyExtractor={(i, index) => i.id + index}
+>>>>>>> 58564608e3bf46287c25b31e881dcf18d507289e
             ListEmptyComponent={
               <Text style={{ color: "#fff", textAlign: "center", marginTop: 40 }}>
                 Cart Empty
@@ -96,6 +106,7 @@ export default function CartScreen() {
               <View style={styles.row}>
                 {/* Food Name */}
                 <Text style={styles.name}>{item.name}</Text>
+<<<<<<< HEAD
 
                 {/* Customize small text */}
                 {(item.spicy || item.oil || item.salt || item.note) && (
@@ -145,6 +156,33 @@ export default function CartScreen() {
 
                 {/* + / - Buttons */}
                 <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
+=======
+
+                {/* ⭐ CUSTOMIZATIONS */}
+                {item.spicy && item.spicy !== "Medium" && (
+                  <Text style={styles.sub}>Spicy: {item.spicy}</Text>
+                )}
+
+                {item.oil && item.oil !== "Normal" && (
+                  <Text style={styles.sub}>Oil: {item.oil}</Text>
+                )}
+
+                {item.salt && item.salt !== "Normal" && (
+                  <Text style={styles.sub}>Salt: {item.salt}</Text>
+                )}
+
+                {/* ⭐ FIXED — sugar display */}
+                {item.sugar && item.sugar !== "Normal" && (
+                  <Text style={styles.sub}>Sugar: {item.sugar}</Text>
+                )}
+
+                {item.note && <Text style={styles.sub}>Note: {item.note}</Text>}
+
+                <Text style={styles.qty}>Qty: {item.qty}</Text>
+
+                {/* + - buttons */}
+                <View style={{ flexDirection: "row", gap: 10 }}>
+>>>>>>> 58564608e3bf46287c25b31e881dcf18d507289e
                   <Pressable
                     style={styles.plus}
                     onPress={() => {
@@ -204,7 +242,27 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.2)",
   },
 
+<<<<<<< HEAD
   name: { color: "#fff", fontWeight: "bold", fontSize: 14 },
+=======
+  name: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+
+  sub: {
+    color: "#ccc",
+    marginTop: 2,
+  },
+
+  qty: {
+    color: "#9ef01a",
+    marginTop: 8,
+    marginBottom: 8,
+    fontWeight: "bold",
+  },
+>>>>>>> 58564608e3bf46287c25b31e881dcf18d507289e
 
   plus: {
     backgroundColor: "#22c55e",
@@ -218,7 +276,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 
+<<<<<<< HEAD
   btnText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+=======
+  btnText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+>>>>>>> 58564608e3bf46287c25b31e881dcf18d507289e
 
   back: {
     marginTop: 20,
