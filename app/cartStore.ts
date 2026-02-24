@@ -1,53 +1,71 @@
-<<<<<<< HEAD
-=======
+// ===== GLOBAL CART STORAGE =====
+
+// Structure of cart item
 export type CartItem = {
   id: string;
   name: string;
-  price?: number; // ✅ allow price
   qty: number;
-
-  // optional customizations
+  price?: number;
   spicy?: string;
   oil?: string;
   salt?: string;
-  sugar?: string;
   note?: string;
 };
 
+// Global cart (shared across app)
 let cart: CartItem[] = [];
 
-export const getCart = (): CartItem[] => cart;
+/* =========================
+   GET CART
+========================= */
+export const getCart = (): CartItem[] => {
+  return cart;
+};
 
-/* ADD ITEM */
-export const addToCartGlobal = (item: Omit<CartItem, "qty">) => {
-  const existing = cart.find(
-    (p) =>
-      p.id === item.id &&
-      p.spicy === item.spicy &&
-      p.oil === item.oil &&
-      p.salt === item.salt &&
-      p.sugar === item.sugar &&
-      p.note === item.note,
-  );
+/* =========================
+   ADD ITEM TO CART
+========================= */
+export const addToCartGlobal = (item: {
+  id: string;
+  name: string;
+  price?: number;
+  spicy?: string;
+  oil?: string;
+  salt?: string;
+  note?: string;
+}) => {
+  const found = cart.find((p) => p.id === item.id);
 
-  if (existing) {
-    existing.qty += 1;
+  if (found) {
+    // increase quantity if already exists
+    cart = cart.map((p) =>
+      p.id === item.id ? { ...p, qty: p.qty + 1 } : p
+    );
   } else {
+    // add new item
     cart.push({ ...item, qty: 1 });
   }
 };
 
-/* REMOVE ITEM */
+/* =========================
+   REMOVE ITEM FROM CART
+========================= */
 export const removeFromCartGlobal = (id: string) => {
-  const item = cart.find((p) => p.id === id);
-  if (!item) return;
+  const found = cart.find((p) => p.id === id);
+  if (!found) return;
 
-  if (item.qty > 1) item.qty -= 1;
-  else cart = cart.filter((p) => p !== item);
+  if (found.qty > 1) {
+    cart = cart.map((p) =>
+      p.id === id ? { ...p, qty: p.qty - 1 } : p
+    );
+  } else {
+    cart = cart.filter((p) => p.id !== id);
+  }
 };
 
-/* CLEAR CART */
+/* =========================
+   CLEAR CART (optional)
+========================= */
 export const clearCart = () => {
   cart = [];
 };
->>>>>>> 58564608e3bf46287c25b31e881dcf18d507289e
