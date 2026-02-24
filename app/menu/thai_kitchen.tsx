@@ -1,6 +1,5 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
-
 import { addToCartGlobal, getCart } from "../cartStore";
 
 import {
@@ -45,22 +44,22 @@ const GROUPS = [
   { id: "g3", name: "Curries" },
 ];
 
-/* ================= ITEMS (TS ERROR FIXED) ================= */
+/* ================= ITEMS ================= */
 const ITEMS_BY_GROUP: Record<
   string,
   { id: string; name: string; price: number }[]
 > = {
   Soups: [
-    { id: "s1", name: "Tom Yum Soup", price: 160 },
-    { id: "s2", name: "Tom Kha Soup", price: 170 },
+    { id: "s1", name: "Tom Yum Soup", price: 8.5 },
+    { id: "s2", name: "Tom Kha Soup", price: 9.0 },
   ],
   Noodles: [
-    { id: "n1", name: "Pad Thai", price: 220 },
-    { id: "n2", name: "Drunken Noodles", price: 210 },
+    { id: "n1", name: "Pad Thai", price: 12.5 },
+    { id: "n2", name: "Drunken Noodles", price: 12.0 },
   ],
   Curries: [
-    { id: "c1", name: "Green Curry", price: 240 },
-    { id: "c2", name: "Red Curry", price: 230 },
+    { id: "c1", name: "Green Curry", price: 13.5 },
+    { id: "c2", name: "Red Curry", price: 13.0 },
   ],
 };
 
@@ -74,7 +73,7 @@ export default function ThaiKitchen() {
   const PAD = 16;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
-  /* ===== CART ===== */
+  /* ================= CART ================= */
   const [cart, setCart] = useState(getCart());
 
   useFocusEffect(
@@ -85,11 +84,11 @@ export default function ThaiKitchen() {
 
   const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
 
-  /* ===== GROUP ===== */
+  /* ================= GROUP ================= */
   const [selectedGroup, setSelectedGroup] = useState("Soups");
   const items = ITEMS_BY_GROUP[selectedGroup] || [];
 
-  /* ===== CUSTOMIZE MODAL ===== */
+  /* ================= CUSTOMIZE ================= */
   const [showCustomize, setShowCustomize] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
 
@@ -113,6 +112,7 @@ export default function ThaiKitchen() {
     addToCartGlobal({
       id: selectedItem.id,
       name: selectedItem.name,
+      price: selectedItem.price, // ✅ important
       spicy,
       oil,
       salt,
@@ -130,7 +130,7 @@ export default function ThaiKitchen() {
         style={{ width: SCREEN_W, height: SCREEN_H }}
       >
         <View style={styles.overlay}>
-          {/* ===== HEADER ===== */}
+          {/* HEADER */}
           <View style={styles.header}>
             <Text style={styles.title}>THAI KITCHEN</Text>
 
@@ -156,17 +156,13 @@ export default function ThaiKitchen() {
             </View>
           </View>
 
-          {/* ===== CUISINE BAR ===== */}
+          {/* CUISINE BAR */}
           <FlatList
             data={CUISINES}
             horizontal
             keyExtractor={(i) => i.id}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              gap: 12,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
-            }}
+            contentContainerStyle={{ gap: 12, padding: 12 }}
             renderItem={({ item }) => {
               const active = item.name === ACTIVE_CUISINE;
               return (
@@ -175,36 +171,22 @@ export default function ThaiKitchen() {
                     styles.cuisineCard,
                     active ? styles.cuisineActive : styles.cuisineInactive,
                   ]}
-                  onPress={() => {
-                    if (!active) router.push(item.route as any);
-                  }}
+                  onPress={() => !active && router.push(item.route as any)}
                 >
                   <Text style={styles.cuisineEmoji}>{item.emoji}</Text>
-                  <Text
-                    style={[
-                      styles.cuisineText,
-                      { color: active ? "#052b12" : "#fff" },
-                    ]}
-                    numberOfLines={2}
-                  >
-                    {item.name}
-                  </Text>
+                  <Text style={styles.cuisineText}>{item.name}</Text>
                 </TouchableOpacity>
               );
             }}
           />
 
-          {/* ===== GROUP BAR ===== */}
+          {/* GROUP BAR */}
           <FlatList
             data={GROUPS}
             horizontal
             keyExtractor={(i) => i.id}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              gap: 10,
-              paddingHorizontal: 12,
-              paddingBottom: 6,
-            }}
+            contentContainerStyle={{ gap: 10, paddingHorizontal: 12 }}
             renderItem={({ item }) => {
               const active = item.name === selectedGroup;
               return (
@@ -228,7 +210,7 @@ export default function ThaiKitchen() {
             }}
           />
 
-          {/* ===== ITEMS GRID ===== */}
+          {/* ITEMS GRID */}
           <FlatList
             data={items}
             numColumns={numColumns}
@@ -240,7 +222,6 @@ export default function ThaiKitchen() {
               <TouchableOpacity
                 style={[styles.foodCard, { width: size, height: size * 1.1 }]}
                 onPress={() => openCustomize(item)}
-                activeOpacity={0.85}
               >
                 <View style={styles.foodImageBox}>
                   <Text style={{ fontSize: 28 }}>🍽️</Text>
@@ -248,7 +229,9 @@ export default function ThaiKitchen() {
 
                 <View style={styles.foodInfo}>
                   <Text style={styles.foodName}>{item.name}</Text>
-                  <Text style={styles.foodPrice}>₹ {item.price}</Text>
+                  <Text style={styles.foodPrice}>
+                    $ {item.price.toFixed(2)}
+                  </Text>
 
                   <View style={styles.addBtn}>
                     <Text style={styles.addBtnText}>Customize</Text>
@@ -259,7 +242,7 @@ export default function ThaiKitchen() {
           />
         </View>
 
-        {/* ===== CUSTOMIZE MODAL ===== */}
+        {/* CUSTOMIZE MODAL */}
         <Modal visible={showCustomize} transparent animationType="slide">
           <View style={styles.modalBackdrop}>
             <View style={styles.modalBox}>
@@ -355,6 +338,7 @@ export default function ThaiKitchen() {
 }
 
 /* ================= STYLES ================= */
+
 const styles = StyleSheet.create({
   overlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.45)" },
 
@@ -415,7 +399,13 @@ const styles = StyleSheet.create({
   cuisineInactive: { backgroundColor: "rgba(20,20,20,0.7)" },
 
   cuisineEmoji: { fontSize: 26, marginBottom: 4 },
-  cuisineText: { fontWeight: "800", fontSize: 12, textAlign: "center" },
+
+  cuisineText: {
+    color: "#fff",
+    fontWeight: "800",
+    fontSize: 12,
+    textAlign: "center",
+  },
 
   groupChip: {
     paddingHorizontal: 14,
@@ -462,6 +452,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
   },
+
   modalTitle: { color: "#9ef01a", fontWeight: "900" },
   modalLabel: { color: "#fff", marginTop: 10 },
 

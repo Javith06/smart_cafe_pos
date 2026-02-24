@@ -53,16 +53,16 @@ const ITEMS_BY_GROUP: Record<
   { id: string; name: string; price: number }[]
 > = {
   Cold: [
-    { id: "c1", name: "Lime Juice", price: 60 },
-    { id: "c2", name: "Soft Drink", price: 50 },
+    { id: "c1", name: "Lime Juice", price: 4.0 },
+    { id: "c2", name: "Soft Drink", price: 3.0 },
   ],
   Hot: [
-    { id: "h1", name: "Tea", price: 25 },
-    { id: "h2", name: "Coffee", price: 40 },
+    { id: "h1", name: "Tea", price: 3.0 },
+    { id: "h2", name: "Coffee", price: 4.5 },
   ],
   Shakes: [
-    { id: "s1", name: "Chocolate Milkshake", price: 120 },
-    { id: "s2", name: "Strawberry Milkshake", price: 120 },
+    { id: "s1", name: "Chocolate Milkshake", price: 7.5 },
+    { id: "s2", name: "Strawberry Milkshake", price: 7.5 },
   ],
 };
 
@@ -246,7 +246,9 @@ export default function Drinks() {
                 </View>
                 <View style={styles.foodInfo}>
                   <Text style={styles.foodName}>{item.name}</Text>
-                  <Text style={styles.foodPrice}>₹ {item.price}</Text>
+                  <Text style={styles.foodPrice}>
+                    $ {item.price.toFixed(2)}
+                  </Text>
                   <View style={styles.addBtn}>
                     <Text style={styles.addBtnText}>Customize</Text>
                   </View>

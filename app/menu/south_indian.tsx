@@ -50,17 +50,17 @@ const ITEMS_BY_GROUP: Record<
   { id: string; name: string; price: number }[]
 > = {
   Tiffin: [
-    { id: "t1", name: "Dosa", price: 60 },
-    { id: "t2", name: "Idli", price: 40 },
-    { id: "t3", name: "Pongal", price: 70 },
+    { id: "t1", name: "Dosa", price: 5.5 },
+    { id: "t2", name: "Idli", price: 4.0 },
+    { id: "t3", name: "Pongal", price: 6.5 },
   ],
   Meals: [
-    { id: "m1", name: "Veg Meals", price: 120 },
-    { id: "m2", name: "Mini Meals", price: 90 },
+    { id: "m1", name: "Veg Meals", price: 9.5 },
+    { id: "m2", name: "Mini Meals", price: 7.5 },
   ],
   Snacks: [
-    { id: "s1", name: "Vada", price: 30 },
-    { id: "s2", name: "Bajji", price: 35 },
+    { id: "s1", name: "Vada", price: 2.5 },
+    { id: "s2", name: "Bajji", price: 3.0 },
   ],
 };
 
@@ -74,7 +74,7 @@ export default function SouthIndian() {
   const PAD = 16;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
-  /* ===== CART ===== */
+  /* ================= CART ================= */
   const [cart, setCart] = useState(getCart());
 
   useFocusEffect(
@@ -85,11 +85,11 @@ export default function SouthIndian() {
 
   const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
 
-  /* ===== GROUP ===== */
+  /* ================= GROUP ================= */
   const [selectedGroup, setSelectedGroup] = useState("Tiffin");
   const items = ITEMS_BY_GROUP[selectedGroup] || [];
 
-  /* ===== CUSTOMIZE MODAL ===== */
+  /* ================= CUSTOMIZE ================= */
   const [showCustomize, setShowCustomize] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
 
@@ -113,6 +113,7 @@ export default function SouthIndian() {
     addToCartGlobal({
       id: selectedItem.id,
       name: selectedItem.name,
+      price: selectedItem.price,
       spicy,
       oil,
       salt,
@@ -162,11 +163,7 @@ export default function SouthIndian() {
             horizontal
             keyExtractor={(i) => i.id}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              gap: 12,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
-            }}
+            contentContainerStyle={{ gap: 12, padding: 12 }}
             renderItem={({ item }) => {
               const active = item.name === ACTIVE_CUISINE;
               return (
@@ -190,11 +187,7 @@ export default function SouthIndian() {
             horizontal
             keyExtractor={(i) => i.id}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              gap: 10,
-              paddingHorizontal: 12,
-              paddingBottom: 6,
-            }}
+            contentContainerStyle={{ gap: 10, paddingHorizontal: 12 }}
             renderItem={({ item }) => {
               const active = item.name === selectedGroup;
               return (
@@ -218,7 +211,7 @@ export default function SouthIndian() {
             }}
           />
 
-          {/* ITEMS */}
+          {/* ITEMS GRID */}
           <FlatList
             data={items}
             numColumns={numColumns}
@@ -237,7 +230,9 @@ export default function SouthIndian() {
 
                 <View style={styles.foodInfo}>
                   <Text style={styles.foodName}>{item.name}</Text>
-                  <Text style={styles.foodPrice}>₹ {item.price}</Text>
+                  <Text style={styles.foodPrice}>
+                    $ {item.price.toFixed(2)}
+                  </Text>
 
                   <View style={styles.addBtn}>
                     <Text style={styles.addBtnText}>Customize</Text>
@@ -267,14 +262,7 @@ export default function SouthIndian() {
                       spicy === v && styles.optionActive,
                     ]}
                   >
-                    <Text
-                      style={[
-                        styles.optionText,
-                        spicy === v && styles.optionTextActive,
-                      ]}
-                    >
-                      {v}
-                    </Text>
+                    <Text style={styles.optionText}>{v}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -287,14 +275,7 @@ export default function SouthIndian() {
                     onPress={() => setOil(v)}
                     style={[styles.optionBtn, oil === v && styles.optionActive]}
                   >
-                    <Text
-                      style={[
-                        styles.optionText,
-                        oil === v && styles.optionTextActive,
-                      ]}
-                    >
-                      {v}
-                    </Text>
+                    <Text style={styles.optionText}>{v}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -310,21 +291,14 @@ export default function SouthIndian() {
                       salt === v && styles.optionActive,
                     ]}
                   >
-                    <Text
-                      style={[
-                        styles.optionText,
-                        salt === v && styles.optionTextActive,
-                      ]}
-                    >
-                      {v}
-                    </Text>
+                    <Text style={styles.optionText}>{v}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
 
               <Text style={styles.modalLabel}>Special Note</Text>
               <TextInput
-                placeholder="e.g. No onion..."
+                placeholder="Special instruction..."
                 placeholderTextColor="#888"
                 value={note}
                 onChangeText={setNote}
@@ -336,14 +310,22 @@ export default function SouthIndian() {
                   onPress={() => setShowCustomize(false)}
                   style={[styles.modalBtn, { backgroundColor: "#444" }]}
                 >
-                  <Text style={{ color: "#fff" }}>Cancel</Text>
+                  <Text style={{ color: "#fff", textAlign: "center" }}>
+                    Cancel
+                  </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   onPress={confirmAdd}
                   style={[styles.modalBtn, { backgroundColor: "#22c55e" }]}
                 >
-                  <Text style={{ color: "#052b12", fontWeight: "900" }}>
+                  <Text
+                    style={{
+                      color: "#052b12",
+                      textAlign: "center",
+                      fontWeight: "900",
+                    }}
+                  >
                     Add to Cart
                   </Text>
                 </TouchableOpacity>
@@ -357,8 +339,10 @@ export default function SouthIndian() {
 }
 
 /* ================= STYLES ================= */
+
 const styles = StyleSheet.create({
   overlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.45)" },
+
   header: {
     height: 60,
     backgroundColor: "rgba(0,0,0,0.6)",
@@ -367,14 +351,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 12,
   },
-  title: { color: "#9ef01a", fontSize: 16, fontWeight: "800" },
+
+  title: { color: "#9ef01a", fontWeight: "800" },
+
   headerBtn: {
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
     backgroundColor: "rgba(255,255,255,0.3)",
   },
-  headerBtnText: { color: "#fff", fontWeight: "700" },
+
+  headerBtnText: { color: "#fff" },
+
   cartBtn: {
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -384,7 +372,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
   },
+
   cartText: { color: "#052b12", fontWeight: "900" },
+
   badge: {
     minWidth: 20,
     height: 20,
@@ -393,7 +383,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
   badgeText: { color: "#fff", fontSize: 12 },
+
   cuisineCard: {
     width: 120,
     height: 90,
@@ -403,32 +395,41 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 8,
   },
+
   cuisineActive: { backgroundColor: "rgba(34,197,94,0.9)" },
   cuisineInactive: { backgroundColor: "rgba(20,20,20,0.7)" },
+
   cuisineEmoji: { fontSize: 26, marginBottom: 4 },
+
   cuisineText: {
     color: "#fff",
     fontWeight: "800",
     fontSize: 12,
     textAlign: "center",
   },
+
   groupChip: {
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 16,
     borderWidth: 1,
   },
+
   groupActive: { backgroundColor: "rgba(34,197,94,0.9)" },
   groupInactive: { backgroundColor: "rgba(0,0,0,0.6)" },
+
   foodCard: {
     borderRadius: 18,
     overflow: "hidden",
     backgroundColor: "rgba(0,0,0,0.75)",
   },
+
   foodImageBox: { flex: 1, justifyContent: "center", alignItems: "center" },
   foodInfo: { padding: 10 },
+
   foodName: { color: "#fff", fontWeight: "800" },
   foodPrice: { color: "#9ef01a", marginTop: 4 },
+
   addBtn: {
     marginTop: 8,
     backgroundColor: "#22c55e",
@@ -436,31 +437,31 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
   },
+
   addBtnText: { color: "#052b12", fontWeight: "900" },
+
   modalBackdrop: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.6)",
     justifyContent: "center",
     alignItems: "center",
   },
+
   modalBox: {
     width: "90%",
     backgroundColor: "#111",
     borderRadius: 16,
     padding: 16,
   },
+
   modalTitle: { color: "#9ef01a", fontWeight: "900" },
   modalLabel: { color: "#fff", marginTop: 10 },
+
   optionRow: { flexDirection: "row", gap: 8, marginTop: 6 },
-  optionBtn: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    backgroundColor: "#333",
-  },
+  optionBtn: { padding: 6, backgroundColor: "#333", borderRadius: 8 },
   optionActive: { backgroundColor: "#22c55e" },
-  optionText: { color: "#fff", fontWeight: "700" },
-  optionTextActive: { color: "#052b12" },
+  optionText: { color: "#fff" },
+
   noteInput: {
     borderWidth: 1,
     borderColor: "#444",
@@ -469,5 +470,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginTop: 6,
   },
-  modalBtn: { flex: 1, padding: 10, borderRadius: 10, alignItems: "center" },
+
+  modalBtn: { flex: 1, padding: 10, borderRadius: 10 },
 });
