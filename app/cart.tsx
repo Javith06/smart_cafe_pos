@@ -9,6 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
+
 import { addToCartGlobal, getCart, removeFromCartGlobal } from "./cartStore";
 
 export default function CartScreen() {
@@ -31,9 +32,9 @@ export default function CartScreen() {
 
           <FlatList
             data={cart}
-            keyExtractor={(i) => i.id}
+            keyExtractor={(i, index) => i.id + index}
             ListEmptyComponent={
-              <Text style={{ color: "#fff", textAlign: "center", marginTop: 40 }}>
+              <Text style={{ color: "#fff", textAlign: "center" }}>
                 Cart Empty
               </Text>
             }
@@ -41,26 +42,30 @@ export default function CartScreen() {
               <View style={styles.row}>
                 <Text style={styles.name}>{item.name}</Text>
 
-                {/* Customize text (if any) */}
-                {(item.spicy || item.oil || item.salt || item.note) && (
-                  <Text style={styles.customText}>
-                    {item.spicy && `Spicy: ${item.spicy} `}
-                    {item.oil && `Oil: ${item.oil} `}
-                    {item.salt && `Salt: ${item.salt} `}
-                    {item.note && `Note: ${item.note}`}
-                  </Text>
+                {/* ⭐ CUSTOMIZATIONS */}
+                {item.spicy && item.spicy !== "Medium" && (
+                  <Text style={styles.sub}>Spicy: {item.spicy}</Text>
                 )}
 
-                <View style={styles.lineRow}>
-                  <Text style={styles.qty}>Qty: {item.qty}</Text>
-                  <Text style={styles.price}>₹ {item.price ?? 0}</Text>
-                </View>
+                {item.oil && item.oil !== "Normal" && (
+                  <Text style={styles.sub}>Oil: {item.oil}</Text>
+                )}
 
-                <Text style={styles.total}>
-                  Total: ₹ {(item.price ?? 0) * item.qty}
-                </Text>
+                {item.salt && item.salt !== "Normal" && (
+                  <Text style={styles.sub}>Salt: {item.salt}</Text>
+                )}
 
-                <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
+                {/* ⭐ FIXED — sugar display */}
+                {item.sugar && item.sugar !== "Normal" && (
+                  <Text style={styles.sub}>Sugar: {item.sugar}</Text>
+                )}
+
+                {item.note && <Text style={styles.sub}>Note: {item.note}</Text>}
+
+                <Text style={styles.qty}>Qty: {item.qty}</Text>
+
+                {/* + - buttons */}
+                <View style={{ flexDirection: "row", gap: 10 }}>
                   <Pressable
                     style={styles.plus}
                     onPress={() => {
@@ -86,7 +91,7 @@ export default function CartScreen() {
           />
 
           <Pressable style={styles.back} onPress={() => router.back()}>
-            <Text style={{ color: "#fff", fontWeight: "800" }}>Back</Text>
+            <Text style={{ color: "#fff" }}>Back</Text>
           </Pressable>
         </View>
       </ImageBackground>
@@ -117,29 +122,22 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.2)",
   },
 
-  name: { color: "#fff", fontWeight: "bold", fontSize: 14 },
+  name: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 
-  customText: {
-    color: "#aaa",
-    fontSize: 11,
+  sub: {
+    color: "#ccc",
     marginTop: 2,
   },
 
-  lineRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  qty: {
+    color: "#9ef01a",
     marginTop: 8,
-  },
-
-  qty: { color: "#fff", fontWeight: "700" },
-
-  price: { color: "#9ef01a", fontWeight: "700" },
-
-  total: {
-    marginTop: 6,
-    color: "#22c55e",
-    fontWeight: "900",
-    textAlign: "right",
+    marginBottom: 8,
+    fontWeight: "bold",
   },
 
   plus: {
@@ -154,7 +152,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 
-  btnText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+  btnText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
 
   back: {
     marginTop: 20,
