@@ -76,7 +76,8 @@ export default function Drinks() {
   const PAD = 16;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
-  /* CART */
+  /* ================= CART ================= */
+
   const [cart, setCart] = useState(getCart());
 
   useFocusEffect(
@@ -87,11 +88,13 @@ export default function Drinks() {
 
   const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
 
-  /* GROUP */
+  /* ================= GROUP ================= */
+
   const [selectedGroup, setSelectedGroup] = useState("Cold");
   const items = ITEMS_BY_GROUP[selectedGroup] || [];
 
-  /* CUSTOMIZE MODAL */
+  /* ================= CUSTOMIZE MODAL ================= */
+
   const [showCustomize, setShowCustomize] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
 
@@ -127,24 +130,33 @@ export default function Drinks() {
         style={{ width: SCREEN_W, height: SCREEN_H }}
       >
         <View style={styles.overlay}>
-          {/* HEADER */}
+          {/* ===== HEADER ===== */}
           <View style={styles.header}>
             <Text style={styles.title}>DRINKS</Text>
 
-            <Pressable
-              onPress={() => router.push("/cart")}
-              style={styles.cartBtn}
-            >
-              <Text style={styles.cartText}>Cart</Text>
-              {totalItems > 0 && (
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}>{totalItems}</Text>
-                </View>
-              )}
-            </Pressable>
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              <Pressable
+                onPress={() => router.replace("/menu/dishes")}
+                style={styles.headerBtn}
+              >
+                <Text style={styles.headerBtnText}>Back</Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => router.push("/cart")}
+                style={styles.cartBtn}
+              >
+                <Text style={styles.cartText}>Cart</Text>
+                {totalItems > 0 && (
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{totalItems}</Text>
+                  </View>
+                )}
+              </Pressable>
+            </View>
           </View>
 
-          {/* CUISINE BAR */}
+          {/* ===== CUISINE BAR ===== */}
           <FlatList
             data={CUISINES}
             horizontal
@@ -181,7 +193,7 @@ export default function Drinks() {
             }}
           />
 
-          {/* GROUP BAR */}
+          {/* ===== GROUP BAR ===== */}
           <FlatList
             data={GROUPS}
             horizontal
@@ -215,7 +227,7 @@ export default function Drinks() {
             }}
           />
 
-          {/* ITEMS GRID */}
+          {/* ===== ITEMS GRID ===== */}
           <FlatList
             data={items}
             numColumns={numColumns}
@@ -244,7 +256,7 @@ export default function Drinks() {
           />
         </View>
 
-        {/* CUSTOMIZE MODAL */}
+        {/* ===== CUSTOMIZE MODAL ===== */}
         <Modal visible={showCustomize} transparent animationType="slide">
           <View style={styles.modalBackdrop}>
             <View style={styles.modalBox}>
@@ -323,7 +335,7 @@ export default function Drinks() {
   );
 }
 
-/* ===== SAME STYLES AS INDIAN KITCHEN ===== */
+/* ================= STYLES ================= */
 
 const styles = StyleSheet.create({
   overlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.45)" },
@@ -338,6 +350,15 @@ const styles = StyleSheet.create({
   },
 
   title: { color: "#9ef01a", fontSize: 16, fontWeight: "800" },
+
+  headerBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: "rgba(255,255,255,0.3)",
+  },
+
+  headerBtnText: { color: "#fff", fontWeight: "700" },
 
   cartBtn: {
     paddingHorizontal: 12,
