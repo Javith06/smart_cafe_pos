@@ -10,17 +10,16 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const pathname = usePathname();
 
-  // 🔴 Tabs ONLY for Home & Explore
-  const showTabs =
-    pathname === "/" || pathname === "/explore";
+  // ✅ Show tabs ONLY inside /(tabs) screens (NOT login "/")
+  const showTabs = pathname.startsWith("/(tabs)");
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false, // 👈 no default header anywhere
+        headerShown: false,
         tabBarButton: HapticTab,
-        tabBarStyle: showTabs ? undefined : { display: "none" }, // 👈 hide tabs for all other screens
+        tabBarStyle: showTabs ? undefined : { display: "none" },
       }}
     >
       <Tabs.Screen
@@ -38,6 +37,15 @@ export default function TabLayout() {
           title: "Explore",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="paperplane.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="category"
+        options={{
+          title: "Category",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="chevron.right" color={color} />
           ),
         }}
       />
