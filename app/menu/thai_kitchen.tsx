@@ -5,6 +5,7 @@ import { addToCartGlobal, getCart } from "../cartStore";
 import {
   Dimensions,
   FlatList,
+  Image,
   ImageBackground,
   Modal,
   Pressable,
@@ -19,19 +20,9 @@ import {
 /* ================= CUISINES ================= */
 const CUISINES = [
   { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", emoji: "🍜" },
-  {
-    id: "2",
-    name: "INDIAN KITCHEN",
-    route: "/menu/indian_kitchen",
-    emoji: "🍛",
-  },
+  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", emoji: "🍛" },
   { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian", emoji: "🥞" },
-  {
-    id: "4",
-    name: "WESTERN KITCHEN",
-    route: "/menu/western_kitchen",
-    emoji: "🍔",
-  },
+  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", emoji: "🍔" },
   { id: "5", name: "DRINKS", route: "/menu/drinks", emoji: "🥤" },
 ];
 
@@ -63,15 +54,28 @@ const ITEMS_BY_GROUP: Record<
   ],
 };
 
+/* ================= FOOD IMAGES (LOCAL) ================= */
+/* Only 1–5 exist. We reuse 5.jpg for c2 as fallback. */
+const FOOD_IMAGES: Record<string, any> = {
+  s1: require("../../assets/images/THAI KItchen/fishes/1.jpg"),
+  s2: require("../../assets/images/THAI KItchen/fishes/2.jpg"),
+  n1: require("../../assets/images/THAI KItchen/fishes/3.jpg"),
+  n2: require("../../assets/images/THAI KItchen/fishes/4.jpg"),
+  c1: require("../../assets/images/THAI KItchen/fishes/5.jpg"),
+  c2: require("../../assets/images/THAI KItchen/fishes/5.jpg"), // fallback
+};
+
 export default function ThaiKitchen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 
-  const numColumns = width >= 1000 ? 5 : width >= 600 ? 4 : 2;
+  const numColumns = width >= 1200 ? 5 : width >= 900 ? 4 : 2;
   const GAP = 12;
   const PAD = 16;
-  const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
+
+  const size =
+    (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
   /* ================= CART ================= */
   const [cart, setCart] = useState(getCart());
@@ -79,10 +83,13 @@ export default function ThaiKitchen() {
   useFocusEffect(
     useCallback(() => {
       setCart([...getCart()]);
-    }, []),
+    }, [])
   );
 
-  const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
+  const totalItems = useMemo(
+    () => cart.reduce((s, i) => s + i.qty, 0),
+    [cart]
+  );
 
   /* ================= GROUP ================= */
   const [selectedGroup, setSelectedGroup] = useState("Soups");
@@ -112,7 +119,7 @@ export default function ThaiKitchen() {
     addToCartGlobal({
       id: selectedItem.id,
       name: selectedItem.name,
-      price: selectedItem.price, // ✅ important
+      price: selectedItem.price,
       spicy,
       oil,
       salt,
@@ -127,7 +134,7 @@ export default function ThaiKitchen() {
     <View style={{ flex: 1 }}>
       <ImageBackground
         source={require("../../assets/images/11.jpg")}
-        style={{ width: SCREEN_W, height: SCREEN_H }}
+        style={{ flex: 1 }}
       >
         <View style={styles.overlay}>
           {/* HEADER */}
@@ -217,14 +224,19 @@ export default function ThaiKitchen() {
             key={numColumns + selectedGroup}
             keyExtractor={(i) => i.id}
             columnWrapperStyle={{ gap: GAP }}
-            contentContainerStyle={{ gap: GAP, padding: PAD }}
+            contentContainerStyle={{ gap: GAP, padding: PAD, paddingBottom: 140 }}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={[styles.foodCard, { width: size, height: size * 1.1 }]}
+                style={[styles.foodCard, { width: size, height: size * 1.21 }]}
                 onPress={() => openCustomize(item)}
               >
                 <View style={styles.foodImageBox}>
-                  <Text style={{ fontSize: 28 }}>🍽️</Text>
+                  <Image
+                    source={FOOD_IMAGES[item.id]}
+                    style={styles.foodImage}
+                    resizeMode="cover"
+                  />
                 </View>
 
                 <View style={styles.foodInfo}>
@@ -272,7 +284,10 @@ export default function ThaiKitchen() {
                   <TouchableOpacity
                     key={v}
                     onPress={() => setOil(v)}
-                    style={[styles.optionBtn, oil === v && styles.optionActive]}
+                    style={[
+                      styles.optionBtn,
+                      oil === v && styles.optionActive,
+                    ]}
                   >
                     <Text style={styles.optionText}>{v}</Text>
                   </TouchableOpacity>
@@ -423,7 +438,17 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.75)",
   },
 
-  foodImageBox: { flex: 1, justifyContent: "center", alignItems: "center" },
+  foodImageBox: {
+    width: "100%",
+    height: "60%",
+    backgroundColor: "#000",
+  },
+
+  foodImage: {
+    width: "100%",
+    height: "100%",
+  },
+
   foodInfo: { padding: 10 },
 
   foodName: { color: "#fff", fontWeight: "800" },
@@ -432,7 +457,7 @@ const styles = StyleSheet.create({
   addBtn: {
     marginTop: 8,
     backgroundColor: "#22c55e",
-    paddingVertical: 6,
+    paddingVertical: 10,
     borderRadius: 10,
     alignItems: "center",
   },
