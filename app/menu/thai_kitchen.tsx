@@ -3,7 +3,6 @@ import React, { useCallback, useMemo, useState } from "react";
 import { addToCartGlobal, getCart } from "../cartStore";
 
 import {
-  Dimensions,
   FlatList,
   Image,
   ImageBackground,
@@ -20,9 +19,19 @@ import {
 /* ================= CUISINES ================= */
 const CUISINES = [
   { id: "1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", emoji: "🍜" },
-  { id: "2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", emoji: "🍛" },
+  {
+    id: "2",
+    name: "INDIAN KITCHEN",
+    route: "/menu/indian_kitchen",
+    emoji: "🍛",
+  },
   { id: "3", name: "SOUTH INDIAN", route: "/menu/south_indian", emoji: "🥞" },
-  { id: "4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", emoji: "🍔" },
+  {
+    id: "4",
+    name: "WESTERN KITCHEN",
+    route: "/menu/western_kitchen",
+    emoji: "🍔",
+  },
   { id: "5", name: "DRINKS", route: "/menu/drinks", emoji: "🥤" },
 ];
 
@@ -54,28 +63,25 @@ const ITEMS_BY_GROUP: Record<
   ],
 };
 
-/* ================= FOOD IMAGES (LOCAL) ================= */
-/* Only 1–5 exist. We reuse 5.jpg for c2 as fallback. */
+/* ================= FOOD IMAGES ================= */
 const FOOD_IMAGES: Record<string, any> = {
   s1: require("../../assets/images/THAI KItchen/fishes/1.jpg"),
   s2: require("../../assets/images/THAI KItchen/fishes/2.jpg"),
   n1: require("../../assets/images/THAI KItchen/fishes/3.jpg"),
   n2: require("../../assets/images/THAI KItchen/fishes/4.jpg"),
   c1: require("../../assets/images/THAI KItchen/fishes/5.jpg"),
-  c2: require("../../assets/images/THAI KItchen/fishes/5.jpg"), // fallback
+  c2: require("../../assets/images/THAI KItchen/fishes/5.jpg"),
 };
 
 export default function ThaiKitchen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 
   const numColumns = width >= 1200 ? 5 : width >= 900 ? 4 : 2;
   const GAP = 12;
   const PAD = 16;
 
-  const size =
-    (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
+  const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
   /* ================= CART ================= */
   const [cart, setCart] = useState(getCart());
@@ -83,13 +89,10 @@ export default function ThaiKitchen() {
   useFocusEffect(
     useCallback(() => {
       setCart([...getCart()]);
-    }, [])
+    }, []),
   );
 
-  const totalItems = useMemo(
-    () => cart.reduce((s, i) => s + i.qty, 0),
-    [cart]
-  );
+  const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
 
   /* ================= GROUP ================= */
   const [selectedGroup, setSelectedGroup] = useState("Soups");
@@ -191,9 +194,14 @@ export default function ThaiKitchen() {
           <FlatList
             data={GROUPS}
             horizontal
-            keyExtractor={(i) => i.id}
+            keyExtractor={(item) => item.id}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 10, paddingHorizontal: 12 }}
+            contentContainerStyle={{
+              gap: 12,
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              alignItems: "center",
+            }}
             renderItem={({ item }) => {
               const active = item.name === selectedGroup;
               return (
@@ -205,9 +213,11 @@ export default function ThaiKitchen() {
                   onPress={() => setSelectedGroup(item.name)}
                 >
                   <Text
+                    numberOfLines={1}
                     style={{
                       color: active ? "#052b12" : "#fff",
                       fontWeight: "800",
+                      fontSize: 14,
                     }}
                   >
                     {item.name}
@@ -224,7 +234,11 @@ export default function ThaiKitchen() {
             key={numColumns + selectedGroup}
             keyExtractor={(i) => i.id}
             columnWrapperStyle={{ gap: GAP }}
-            contentContainerStyle={{ gap: GAP, padding: PAD, paddingBottom: 140 }}
+            contentContainerStyle={{
+              gap: GAP,
+              padding: PAD,
+              paddingBottom: 140,
+            }}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <TouchableOpacity
@@ -284,10 +298,7 @@ export default function ThaiKitchen() {
                   <TouchableOpacity
                     key={v}
                     onPress={() => setOil(v)}
-                    style={[
-                      styles.optionBtn,
-                      oil === v && styles.optionActive,
-                    ]}
+                    style={[styles.optionBtn, oil === v && styles.optionActive]}
                   >
                     <Text style={styles.optionText}>{v}</Text>
                   </TouchableOpacity>
@@ -351,8 +362,6 @@ export default function ThaiKitchen() {
     </View>
   );
 }
-
-/* ================= STYLES ================= */
 
 const styles = StyleSheet.create({
   overlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.45)" },
@@ -423,10 +432,13 @@ const styles = StyleSheet.create({
   },
 
   groupChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 16,
+    height: 42,
+    minWidth: 90,
+    paddingHorizontal: 18,
+    borderRadius: 21,
     borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   groupActive: { backgroundColor: "rgba(34,197,94,0.9)" },

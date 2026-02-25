@@ -39,9 +39,13 @@ const ACTIVE_CUISINE = "INDIAN KITCHEN";
 
 /* ================= GROUPS ================= */
 const GROUPS = [
-  { id: "g1", name: "Starters" },
-  { id: "g2", name: "Main Course" },
-  { id: "g3", name: "Breads" },
+  { id: "g1", name: "Tandoor" },
+  { id: "g2", name: "Breads" },
+  { id: "g3", name: "Basmati" },
+  { id: "g4", name: "Indian Veg" },
+  { id: "g5", name: "Chicken" },
+  { id: "g6", name: "Mutton" },
+  { id: "g7", name: "Seafood" },
 ];
 
 /* ================= ITEMS ================= */
