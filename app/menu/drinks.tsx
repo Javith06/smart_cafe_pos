@@ -1,7 +1,5 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
-import { addToCartGlobal, getCart } from "../cartStore";
-
 import {
   Dimensions,
   FlatList,
@@ -15,6 +13,8 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { addToCartGlobal, getCart } from "../cartStore";
+import { getOrderContext } from "../orderContextStore";
 
 /* ================= CUISINES ================= */
 
@@ -68,6 +68,11 @@ const ITEMS_BY_GROUP: Record<
 
 export default function Drinks() {
   const router = useRouter();
+  const orderContext = getOrderContext();
+
+  if (!orderContext) {
+    router.replace("/(tabs)/category");
+  }
   const { width } = useWindowDimensions();
   const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 

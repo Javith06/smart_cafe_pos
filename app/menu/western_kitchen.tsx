@@ -1,6 +1,7 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
 import { addToCartGlobal, getCart } from "../cartStore";
+import { getOrderContext } from "../orderContextStore";
 
 import {
   Dimensions,
@@ -71,6 +72,11 @@ type MenuItem = {
 
 export default function WesternKitchen() {
   const router = useRouter();
+  const orderContext = getOrderContext();
+
+  if (!orderContext) {
+    router.replace("/(tabs)/category");
+  }
   const { width } = useWindowDimensions();
   const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 

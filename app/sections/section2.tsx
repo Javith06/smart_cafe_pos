@@ -1,16 +1,17 @@
+import { BlurView } from "expo-blur";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   FlatList,
-  TouchableOpacity,
-  useWindowDimensions,
   ImageBackground,
   Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { BlurView } from "expo-blur";
+import { setOrderContext } from "../orderContextStore";
 
 type TableItem = {
   id: string;
@@ -22,12 +23,33 @@ type TableItem = {
 };
 
 const TABLES: TableItem[] = [
-  { id: "1", label: "36", status: "active", time: "17:24 PM", order: "#1725", amount: "$31.00" },
-  { id: "2", label: "37" }, { id: "3", label: "38" }, { id: "4", label: "39" }, { id: "5", label: "40" },
-  { id: "6", label: "41" }, { id: "7", label: "42" }, { id: "8", label: "43" }, { id: "9", label: "44" },
-  { id: "10", label: "45" }, { id: "11", label: "PU1" }, { id: "12", label: "PU2" }, { id: "13", label: "PU3" },
-  { id: "14", label: "PU4" }, { id: "15", label: "PU5" }, { id: "16", label: "PU6" }, { id: "17", label: "PU7" },
-  { id: "18", label: "PU8" }, { id: "19", label: "PU9" }, { id: "20", label: "PU10" },
+  {
+    id: "1",
+    label: "36",
+    status: "active",
+    time: "17:24 PM",
+    order: "#1725",
+    amount: "$31.00",
+  },
+  { id: "2", label: "37" },
+  { id: "3", label: "38" },
+  { id: "4", label: "39" },
+  { id: "5", label: "40" },
+  { id: "6", label: "41" },
+  { id: "7", label: "42" },
+  { id: "8", label: "43" },
+  { id: "9", label: "44" },
+  { id: "10", label: "45" },
+  { id: "11", label: "PU1" },
+  { id: "12", label: "PU2" },
+  { id: "13", label: "PU3" },
+  { id: "14", label: "PU4" },
+  { id: "15", label: "PU5" },
+  { id: "16", label: "PU6" },
+  { id: "17", label: "PU7" },
+  { id: "18", label: "PU8" },
+  { id: "19", label: "PU9" },
+  { id: "20", label: "PU10" },
 ];
 
 export default function Section2() {
@@ -62,7 +84,15 @@ export default function Section2() {
           },
         ]}
         activeOpacity={0.85}
-        onPress={() => router.push("../menu/dishes")}
+        onPress={() => {
+          setOrderContext({
+            orderType: "DINE_IN",
+            section: "SECTION_2",
+            tableNo: item.label,
+          });
+
+          router.push("/menu/dishes");
+        }}
       >
         <BlurView
           intensity={isActive ? 45 : 35}
@@ -141,7 +171,11 @@ export default function Section2() {
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         columnWrapperStyle={{ gap: GAP }}
-        contentContainerStyle={{ gap: GAP, padding: SCREEN_PADDING, paddingBottom: 30 }}
+        contentContainerStyle={{
+          gap: GAP,
+          padding: SCREEN_PADDING,
+          paddingBottom: 30,
+        }}
       />
     </ImageBackground>
   );

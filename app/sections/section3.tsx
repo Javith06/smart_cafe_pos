@@ -1,16 +1,17 @@
+import { BlurView } from "expo-blur";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   FlatList,
-  TouchableOpacity,
-  useWindowDimensions,
   ImageBackground,
   Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { BlurView } from "expo-blur";
+import { setOrderContext } from "../orderContextStore";
 
 type TableItem = {
   id: string;
@@ -22,12 +23,33 @@ type TableItem = {
 };
 
 const TABLES: TableItem[] = [
-  { id: "1", label: "D21", status: "active", time: "17:24 PM", order: "#1725", amount: "$31.00" },
-  { id: "2", label: "D22" }, { id: "3", label: "D23" }, { id: "4", label: "D24" }, { id: "5", label: "D25" },
-  { id: "6", label: "D26" }, { id: "7", label: "D27" }, { id: "8", label: "D28" }, { id: "9", label: "D29" },
-  { id: "10", label: "D30" }, { id: "11", label: "D31" }, { id: "12", label: "D32" }, { id: "13", label: "D33" },
-  { id: "14", label: "D34" }, { id: "15", label: "D35" }, { id: "16", label: "D36" }, { id: "17", label: "D37" },
-  { id: "18", label: "D38" }, { id: "19", label: "D39" }, { id: "20", label: "D40" },
+  {
+    id: "1",
+    label: "D21",
+    status: "active",
+    time: "17:24 PM",
+    order: "#1725",
+    amount: "$31.00",
+  },
+  { id: "2", label: "D22" },
+  { id: "3", label: "D23" },
+  { id: "4", label: "D24" },
+  { id: "5", label: "D25" },
+  { id: "6", label: "D26" },
+  { id: "7", label: "D27" },
+  { id: "8", label: "D28" },
+  { id: "9", label: "D29" },
+  { id: "10", label: "D30" },
+  { id: "11", label: "D31" },
+  { id: "12", label: "D32" },
+  { id: "13", label: "D33" },
+  { id: "14", label: "D34" },
+  { id: "15", label: "D35" },
+  { id: "16", label: "D36" },
+  { id: "17", label: "D37" },
+  { id: "18", label: "D38" },
+  { id: "19", label: "D39" },
+  { id: "20", label: "D40" },
 ];
 
 export default function Section3() {
@@ -62,7 +84,15 @@ export default function Section3() {
           },
         ]}
         activeOpacity={0.85}
-        onPress={() => router.push("/menu/dishes")}   // ✅ Navigate to next page
+        onPress={() => {
+          setOrderContext({
+            orderType: "DINE_IN",
+            section: "SECTION_3",
+            tableNo: item.label,
+          });
+
+          router.push("/menu/dishes");
+        }}
       >
         <BlurView
           intensity={isActive ? 45 : 35}

@@ -1,6 +1,7 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
 import { addToCartGlobal, getCart } from "../cartStore";
+import { getOrderContext } from "../orderContextStore";
 
 import {
   Dimensions,
@@ -66,6 +67,11 @@ const ITEMS_BY_GROUP: Record<
 
 export default function SouthIndian() {
   const router = useRouter();
+  const orderContext = getOrderContext();
+
+  if (!orderContext) {
+    router.replace("/(tabs)/category");
+  }
   const { width } = useWindowDimensions();
   const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 

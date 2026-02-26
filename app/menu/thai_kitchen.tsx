@@ -1,6 +1,7 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { addToCartGlobal, getCart } from "../cartStore";
+import { getOrderContext } from "../orderContextStore";
 
 import {
   FlatList,
@@ -48,11 +49,11 @@ const ITEMS_BY_GROUP: Record<
     { id: "ts2", name: "Tomyam Chicken", priceS: 12.0, priceL: 14.0 },
     { id: "ts3", name: "Tomyam Beef", priceS: 13.0, priceL: 15.0 },
     { id: "ts4", name: "Fish Soup", priceS: 12.0, priceL: 14.0 },
-      { id: "ts1", name: "Tomyam Seafood", priceS: 13.5, priceL: 15.0 },
+    { id: "ts1", name: "Tomyam Seafood", priceS: 13.5, priceL: 15.0 },
     { id: "ts2", name: "Tomyam Chicken", priceS: 12.0, priceL: 14.0 },
     { id: "ts3", name: "Tomyam Beef", priceS: 13.0, priceL: 15.0 },
     { id: "ts4", name: "Fish Soup", priceS: 12.0, priceL: 14.0 },
-      { id: "ts1", name: "Tomyam Seafood", priceS: 13.5, priceL: 15.0 },
+    { id: "ts1", name: "Tomyam Seafood", priceS: 13.5, priceL: 15.0 },
     { id: "ts2", name: "Tomyam Chicken", priceS: 12.0, priceL: 14.0 },
     { id: "ts3", name: "Tomyam Beef", priceS: 13.0, priceL: 15.0 },
     { id: "ts4", name: "Fish Soup", priceS: 12.0, priceL: 14.0 },
@@ -101,10 +102,16 @@ interface FoodItem {
 
 export default function ThaiKitchen() {
   const router = useRouter();
+  const orderContext = getOrderContext();
+
+  if (!orderContext) {
+    router.replace("/(tabs)/category");
+  }
   const { width } = useWindowDimensions();
   const listRef = useRef<FlatList>(null);
 
-  const numColumns = width >= 1200 ? 6 : width >= 900 ? 5 : width >= 600 ? 4 : 2;
+  const numColumns =
+    width >= 1200 ? 6 : width >= 900 ? 5 : width >= 600 ? 4 : 2;
   const GAP = 12;
   const PAD = 12;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
@@ -120,13 +127,13 @@ export default function ThaiKitchen() {
   const items = ITEMS_BY_GROUP[selectedGroup] || [];
   const totalItems = useMemo(
     () => cart.reduce((s, i) => s + (i.qty || 0), 0),
-    [cart]
+    [cart],
   );
 
   useFocusEffect(
     useCallback(() => {
       setCart([...getCart()]);
-    }, [])
+    }, []),
   );
 
   const openCustomize = (item: FoodItem) => {
@@ -206,7 +213,12 @@ export default function ThaiKitchen() {
               style={[styles.chip, active ? styles.active : styles.inactive]}
               onPress={() => !active && router.push(k.route as any)}
             >
-              <Text style={{ color: active ? "#052b12" : "#fff", fontWeight: "800" }}>
+              <Text
+                style={{
+                  color: active ? "#052b12" : "#fff",
+                  fontWeight: "800",
+                }}
+              >
                 {k.name}
               </Text>
             </TouchableOpacity>
@@ -227,7 +239,12 @@ export default function ThaiKitchen() {
                 listRef.current?.scrollToOffset({ offset: 0, animated: true });
               }}
             >
-              <Text style={{ color: active ? "#052b12" : "#fff", fontWeight: "800" }}>
+              <Text
+                style={{
+                  color: active ? "#052b12" : "#fff",
+                  fontWeight: "800",
+                }}
+              >
                 {g.name.replace("_", " ")}
               </Text>
             </TouchableOpacity>
@@ -292,7 +309,13 @@ export default function ThaiKitchen() {
                 onPress={() => setShowCustomize(false)}
                 style={[styles.modalBtn, { backgroundColor: "#444" }]}
               >
-                <Text style={{ color: "#fff", textAlign: "center", fontWeight: "600" }}>
+                <Text
+                  style={{
+                    color: "#fff",
+                    textAlign: "center",
+                    fontWeight: "600",
+                  }}
+                >
                   Cancel
                 </Text>
               </TouchableOpacity>
@@ -302,7 +325,11 @@ export default function ThaiKitchen() {
                 style={[styles.modalBtn, { backgroundColor: "#22c55e" }]}
               >
                 <Text
-                  style={{ color: "#052b12", textAlign: "center", fontWeight: "900" }}
+                  style={{
+                    color: "#052b12",
+                    textAlign: "center",
+                    fontWeight: "900",
+                  }}
                 >
                   Add to Cart
                 </Text>
@@ -372,7 +399,12 @@ const styles = StyleSheet.create({
 
   foodInfo: { padding: 10 },
   foodName: { color: "#fff", fontWeight: "700", fontSize: 13, marginBottom: 4 },
-  foodPrice: { color: "#9ef01a", fontWeight: "800", fontSize: 13, marginBottom: 8 },
+  foodPrice: {
+    color: "#9ef01a",
+    fontWeight: "800",
+    fontSize: 13,
+    marginBottom: 8,
+  },
 
   addBtn: {
     backgroundColor: "#22c55e",
@@ -388,8 +420,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  modalBox: { width: "90%", backgroundColor: "#111", borderRadius: 20, padding: 20 },
-  modalTitle: { color: "#9ef01a", fontWeight: "900", fontSize: 18, marginBottom: 10 },
+  modalBox: {
+    width: "90%",
+    backgroundColor: "#111",
+    borderRadius: 20,
+    padding: 20,
+  },
+  modalTitle: {
+    color: "#9ef01a",
+    fontWeight: "900",
+    fontSize: 18,
+    marginBottom: 10,
+  },
 
   sizeBtn: {
     paddingVertical: 10,

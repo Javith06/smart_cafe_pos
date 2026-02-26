@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   Dimensions,
   FlatList,
@@ -10,35 +10,40 @@ import {
   View,
 } from "react-native";
 
-import {
-  addToCartGlobal,
-  clearCart,
-  getCart,
-  removeFromCartGlobal,
-} from "./cartStore";
+import { getCart } from "./cartStore";
 import { getOrderContext } from "./orderContextStore";
 
-export default function CartScreen() {
+export default function SummaryScreen() {
   const router = useRouter();
   const orderContext = getOrderContext();
+  const cart = getCart();
 
   const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 
-  // ✅ Hooks MUST be declared before any conditional return
-  const [cart, setCart] = useState(getCart());
-  const refreshCart = () => setCart([...getCart()]);
+  /* ================= CALCULATIONS ================= */
 
-  const subtotal = useMemo(() => {
-    return cart.reduce((sum, item) => {
-      return sum + (item.price || 0) * item.qty;
-    }, 0);
-  }, [cart]);
+  const totalItems = useMemo(
+    () => cart.reduce((sum, item) => sum + item.qty, 0),
+    [cart],
+  );
 
-  // ✅ Guard AFTER hooks
-  if (!orderContext) {
-    router.replace("/(tabs)/category");
+  const subtotal = useMemo(
+    () => cart.reduce((sum, item) => sum + (item.price || 0) * item.qty, 0),
+    [cart],
+  );
+
+  const GST_RATE = 0.09;
+  const gst = subtotal * GST_RATE;
+  const grandTotal = subtotal + gst;
+
+  /* ================= GUARD ================= */
+
+  if (!orderContext || cart.length === 0) {
+    router.replace("/(tabs)/category" as any);
     return null;
   }
+
+  /* ================= UI ================= */
 
   return (
     <View style={{ flex: 1 }}>
@@ -48,26 +53,14 @@ export default function CartScreen() {
         resizeMode="cover"
       >
         <View style={styles.overlay}>
-          {/* TOP BAR */}
+          {/* Top Bar */}
           <View style={styles.topBar}>
-            <View style={styles.topRightGroup}>
-              <Pressable style={styles.back} onPress={() => router.back()}>
-                <Text style={styles.topBtnText}>Back</Text>
-              </Pressable>
-
-              <Pressable
-                style={styles.clear}
-                onPress={() => {
-                  clearCart();
-                  refreshCart();
-                }}
-              >
-                <Text style={styles.topBtnText}>Clear Cart</Text>
-              </Pressable>
-            </View>
+            <Pressable style={styles.back} onPress={() => router.back()}>
+              <Text style={styles.topBtnText}>Back</Text>
+            </Pressable>
           </View>
 
-          {/* ORDER CONTEXT HEADER */}
+          {/* Order Info */}
           {orderContext.orderType === "DINE_IN" && (
             <Text style={styles.contextText}>
               DINE-IN | {orderContext.section} | Table {orderContext.tableNo}
@@ -80,15 +73,12 @@ export default function CartScreen() {
             </Text>
           )}
 
-          <Text style={styles.title}>YOUR CART</Text>
+          <Text style={styles.title}>ORDER SUMMARY</Text>
 
-          {/* ITEMS */}
+          {/* Items */}
           <FlatList
             data={cart}
-            keyExtractor={(i, index) => i.id + index}
-            ListEmptyComponent={
-              <Text style={styles.emptyText}>Cart Empty</Text>
-            }
+            keyExtractor={(item, index) => item.id + index}
             renderItem={({ item }) => (
               <View style={styles.row}>
                 <View style={{ flex: 1 }}>
@@ -115,53 +105,48 @@ export default function CartScreen() {
                   )}
 
                   <Text style={styles.qty}>Qty: {item.qty}</Text>
-
-                  <Text style={styles.price}>
-                    SGD {(item.price || 0).toFixed(2)}
-                  </Text>
                 </View>
 
-                <View style={styles.actionRow}>
-                  <Pressable
-                    style={styles.plus}
-                    onPress={() => {
-                      addToCartGlobal(item);
-                      refreshCart();
-                    }}
-                  >
-                    <Text style={styles.btnText}>+</Text>
-                  </Pressable>
-
-                  <Pressable
-                    style={styles.minus}
-                    onPress={() => {
-                      removeFromCartGlobal(item.id);
-                      refreshCart();
-                    }}
-                  >
-                    <Text style={styles.btnText}>−</Text>
-                  </Pressable>
-                </View>
+                <Text style={styles.price}>
+                  SGD {((item.price || 0) * item.qty).toFixed(2)}
+                </Text>
               </View>
             )}
           />
 
           <View style={styles.divider} />
 
-          {/* SUBTOTAL */}
+          {/* Totals */}
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>Total Items</Text>
+            <Text style={styles.summaryValue}>{totalItems}</Text>
+          </View>
+
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Subtotal</Text>
             <Text style={styles.summaryValue}>SGD {subtotal.toFixed(2)}</Text>
           </View>
 
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>GST (9%)</Text>
+            <Text style={styles.summaryValue}>SGD {gst.toFixed(2)}</Text>
+          </View>
+
           <View style={styles.divider} />
 
-          {/* PROCEED BUTTON */}
+          <View style={styles.summaryRow}>
+            <Text style={styles.grandLabel}>Grand Total</Text>
+            <Text style={styles.grandValue}>SGD {grandTotal.toFixed(2)}</Text>
+          </View>
+
+          <View style={styles.divider} />
+
+          {/* Proceed */}
           <Pressable
             style={styles.proceedBtn}
-            onPress={() => router.push("/summary" as any)}
+            onPress={() => router.push("/payment" as any)}
           >
-            <Text style={styles.proceedText}>Proceed to Summary</Text>
+            <Text style={styles.proceedText}>Proceed to Payment</Text>
           </Pressable>
         </View>
       </ImageBackground>
@@ -180,23 +165,11 @@ const styles = StyleSheet.create({
 
   topBar: {
     flexDirection: "row",
-    justifyContent: "flex-end",
-  },
-
-  topRightGroup: {
-    flexDirection: "row",
-    gap: 10,
+    justifyContent: "flex-start",
   },
 
   back: {
     backgroundColor: "rgba(255,255,255,0.3)",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-
-  clear: {
-    backgroundColor: "#ef4444",
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
@@ -209,6 +182,7 @@ const styles = StyleSheet.create({
 
   contextText: {
     color: "#d7ff9a",
+    marginTop: 10,
     marginBottom: 8,
     fontWeight: "800",
   },
@@ -217,32 +191,26 @@ const styles = StyleSheet.create({
     color: "#9ef01a",
     fontSize: 22,
     fontWeight: "bold",
-    marginVertical: 15,
-  },
-
-  emptyText: {
-    color: "#fff",
-    textAlign: "center",
+    marginBottom: 15,
   },
 
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.75)",
-    padding: 15,
-    marginBottom: 12,
+    padding: 12,
     borderRadius: 12,
+    marginBottom: 10,
   },
 
   name: {
     color: "#fff",
     fontWeight: "bold",
-    fontSize: 16,
   },
 
   sub: {
     color: "#ccc",
+    fontSize: 12,
     marginTop: 2,
   },
 
@@ -254,38 +222,7 @@ const styles = StyleSheet.create({
 
   price: {
     color: "#fff",
-    marginTop: 4,
-    fontWeight: "700",
-  },
-
-  actionRow: {
-    flexDirection: "row",
-    gap: 10,
-    alignItems: "center",
-  },
-
-  plus: {
-    backgroundColor: "#22c55e",
-    width: 45,
-    height: 45,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  minus: {
-    backgroundColor: "#ef4444",
-    width: 45,
-    height: 45,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  btnText: {
-    color: "#fff",
     fontWeight: "bold",
-    fontSize: 18,
   },
 
   divider: {
@@ -297,18 +234,29 @@ const styles = StyleSheet.create({
   summaryRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: 8,
   },
 
   summaryLabel: {
     color: "#fff",
-    fontSize: 16,
     fontWeight: "700",
   },
 
   summaryValue: {
     color: "#9ef01a",
-    fontSize: 16,
     fontWeight: "900",
+  },
+
+  grandLabel: {
+    color: "#fff",
+    fontWeight: "900",
+    fontSize: 18,
+  },
+
+  grandValue: {
+    color: "#22c55e",
+    fontWeight: "900",
+    fontSize: 18,
   },
 
   proceedBtn: {
