@@ -8,6 +8,7 @@ import {
   Image,
   Modal,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -18,14 +19,14 @@ import {
 
 /* ================= KITCHENS ================= */
 const KITCHENS = [
-  { id: "k1", name: "INDIAN", route: "/menu/indian_kitchen" },
-  { id: "k2", name: "SOUTH INDIAN", route: "/menu/south_indian" },
-  { id: "k3", name: "WESTERN", route: "/menu/western_kitchen" },
-  { id: "k4", name: "THAI", route: "/menu/thai_kitchen" },
-  { id: "k5", name: "DRINKS", route: "/menu/drinks" },
+  { id: "k4", name: "THAI KITCHEN", route: "/menu/thai_kitchen", icon: "🍜" },
+  { id: "k1", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", icon: "🍛" },
+  { id: "k2", name: "SOUTH INDIAN", route: "/menu/south_indian", icon: "🥞" },
+  { id: "k3", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", icon: "🍔" },
+  { id: "k5", name: "DRINKS", route: "/menu/drinks", icon: "🥤" },
 ];
 
-const ACTIVE_KITCHEN = "THAI";
+const ACTIVE_KITCHEN = "THAI KITCHEN";
 
 /* ================= GROUPS ================= */
 const GROUPS = [
@@ -49,11 +50,11 @@ const ITEMS_BY_GROUP: Record<
     { id: "ts2", name: "Tomyam Chicken", priceS: 12.0, priceL: 14.0 },
     { id: "ts3", name: "Tomyam Beef", priceS: 13.0, priceL: 15.0 },
     { id: "ts4", name: "Fish Soup", priceS: 12.0, priceL: 14.0 },
-    { id: "ts1", name: "Tomyam Seafood", priceS: 13.5, priceL: 15.0 },
+        { id: "ts1", name: "Tomyam Seafood", priceS: 13.5, priceL: 15.0 },
     { id: "ts2", name: "Tomyam Chicken", priceS: 12.0, priceL: 14.0 },
     { id: "ts3", name: "Tomyam Beef", priceS: 13.0, priceL: 15.0 },
     { id: "ts4", name: "Fish Soup", priceS: 12.0, priceL: 14.0 },
-    { id: "ts1", name: "Tomyam Seafood", priceS: 13.5, priceL: 15.0 },
+        { id: "ts1", name: "Tomyam Seafood", priceS: 13.5, priceL: 15.0 },
     { id: "ts2", name: "Tomyam Chicken", priceS: 12.0, priceL: 14.0 },
     { id: "ts3", name: "Tomyam Beef", priceS: 13.0, priceL: 15.0 },
     { id: "ts4", name: "Fish Soup", priceS: 12.0, priceL: 14.0 },
@@ -203,27 +204,48 @@ export default function ThaiKitchen() {
         </Pressable>
       </View>
 
-      {/* KITCHENS */}
-      <View style={styles.row}>
-        {KITCHENS.map((k) => {
-          const active = k.name === ACTIVE_KITCHEN;
-          return (
-            <TouchableOpacity
-              key={k.id}
-              style={[styles.chip, active ? styles.active : styles.inactive]}
-              onPress={() => !active && router.push(k.route as any)}
-            >
-              <Text
-                style={{
-                  color: active ? "#052b12" : "#fff",
-                  fontWeight: "800",
+      {/* KITCHENS - UPDATED DESIGN */}
+      <View style={styles.kitchensContainer}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.kitchensScroll}
+        >
+          {KITCHENS.map((k) => {
+            const isActive = k.name === ACTIVE_KITCHEN;
+            
+            return (
+              <TouchableOpacity
+                key={k.id}
+                style={[
+                  styles.kitchenCard,
+                  isActive ? styles.kitchenCardActive : styles.kitchenCardInactive,
+                  { width: width < 600 ? 80 : 100 }
+                ]}
+                onPress={() => {
+                  if (!isActive) router.push(k.route as any);
                 }}
               >
-                {k.name}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
+                <View style={[
+                  styles.iconContainer,
+                  { backgroundColor: isActive ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.3)" }
+                ]}>
+                  <Text style={styles.kitchenIcon}>{k.icon}</Text>
+                </View>
+                                <Text 
+                  style={[
+                    styles.kitchenName,
+                    { color: isActive ? "#052b12" : "#fff" },
+                    { textAlign: "center" }  // ✅ MOVE IT HERE
+                  ]}
+                  numberOfLines={2}
+                >
+                  {k.name.replace("_", " ")}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
       </View>
 
       {/* GROUPS */}
@@ -374,6 +396,50 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   badgeText: { color: "#fff", fontSize: 12, fontWeight: "600" },
+
+  // --- KITCHEN STYLES ---
+  kitchensContainer: {
+    backgroundColor: "#111",
+    paddingVertical: 12,
+  },
+  kitchensScroll: {
+    paddingHorizontal: 8,
+    gap: 8,
+  },
+  kitchenCard: {
+    borderRadius: 16,
+    padding: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.1)",
+  },
+  kitchenCardActive: {
+    backgroundColor: "#22c55e",
+    borderColor: "#22c55e",
+  },
+  kitchenCardInactive: {
+    backgroundColor: "#2a2a2a",
+    borderColor: "#333",
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  kitchenIcon: {
+    fontSize: 24,
+  },
+  kitchenName: {
+    fontWeight: "800",
+    fontSize: 11,
+    textAlign: "center",
+  },
+  // ----------------------
 
   row: {
     flexDirection: "row",
