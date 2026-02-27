@@ -111,7 +111,7 @@ export default function Section1() {
             tableNo: item.label,
           });
 
-          router.push("/menu/dishes");
+          router.push("/menu/thai_kitchen");
         }}
       >
         <BlurView

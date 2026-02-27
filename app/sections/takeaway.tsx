@@ -110,7 +110,7 @@ export default function Takeaway() {
             takeawayNo: item.label,
           });
 
-          router.push("/menu/dishes");
+          router.push("/menu/thai_kitchen");
         }}
       >
         <BlurView

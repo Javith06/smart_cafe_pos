@@ -141,22 +141,24 @@ export default function Drinks() {
   return (
     <View style={{ flex: 1, backgroundColor: "#0b0b0b" }}>
       {/* HEADER */}
-      <View style={styles.header}>
-        <Pressable onPress={() => router.back()} style={styles.backBtn}>
-          <Text style={styles.backText}>← Back</Text>
-        </Pressable>
+<View style={styles.header}>
+  <Text style={styles.title}>DRINKS</Text>
 
-        <Text style={styles.title}>DRINKS</Text>
+  <View style={{ flexDirection: "row", gap: 8 }}>
+    <Pressable onPress={() => router.back()} style={styles.backBtn}>
+      <Text style={styles.backText}>Back</Text>
+    </Pressable>
 
-        <Pressable onPress={() => router.push("/cart")} style={styles.cartBtn}>
-          <Text style={styles.cartText}>Cart</Text>
-          {totalItems > 0 && (
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{totalItems}</Text>
-            </View>
-          )}
-        </Pressable>
-      </View>
+    <Pressable onPress={() => router.push("/cart")} style={styles.cartBtn}>
+      <Text style={styles.cartText}>Cart</Text>
+      {totalItems > 0 && (
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>{totalItems}</Text>
+        </View>
+      )}
+    </Pressable>
+  </View>
+</View>
 
       {/* KITCHENS */}
       <View style={styles.kitchensContainer}>
