@@ -2,7 +2,6 @@ import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   FlatList,
-  Image,
   Modal,
   Pressable,
   ScrollView,
@@ -19,9 +18,19 @@ import { getOrderContext } from "../orderContextStore";
 /* ================= KITCHENS ================= */
 const KITCHENS = [
   { id: "k1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", icon: "🍜" },
-  { id: "k2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", icon: "🍛" },
+  {
+    id: "k2",
+    name: "INDIAN KITCHEN",
+    route: "/menu/indian_kitchen",
+    icon: "🍛",
+  },
   { id: "k3", name: "SOUTH INDIAN", route: "/menu/south_indian", icon: "🥞" },
-  { id: "k4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", icon: "🍔" },
+  {
+    id: "k4",
+    name: "WESTERN KITCHEN",
+    route: "/menu/western_kitchen",
+    icon: "🍔",
+  },
   { id: "k5", name: "DRINKS", route: "/menu/drinks", icon: "🥤" },
 ];
 
@@ -29,13 +38,20 @@ const ACTIVE_KITCHEN = "INDIAN KITCHEN";
 
 /* ================= GROUPS ================= */
 const GROUPS = [
-  { id: "g1", name: "Starters" },
-  { id: "g2", name: "Main Course" },
-  { id: "g3", name: "Breads" },
+  { id: "g1", name: "TanDoor" },
+  { id: "g2", name: "Breads" },
+  { id: "g3", name: "Basmathi Rice" },
+  { id: "g4", name: "Indian Veg" },
+  { id: "g5", name: "Chicken" },
+  { id: "g6", name: "Mutton" },
+  { id: "g7", name: "Seafood" },
 ];
 
 /* ================= ITEMS ================= */
-const ITEMS_BY_GROUP: Record<string, { id: string; name: string; price: number }[]> = {
+const ITEMS_BY_GROUP: Record<
+  string,
+  { id: string; name: string; price: number }[]
+> = {
   Starters: [
     { id: "st1", name: "Paneer Tikka", price: 9.5 },
     { id: "st2", name: "Chicken 65", price: 10.5 },
@@ -67,7 +83,8 @@ export default function IndianKitchen() {
   const { width } = useWindowDimensions();
   const listRef = useRef<FlatList>(null);
 
-  const numColumns = width >= 1200 ? 6 : width >= 900 ? 5 : width >= 600 ? 4 : 2;
+  const numColumns =
+    width >= 1200 ? 6 : width >= 900 ? 5 : width >= 600 ? 4 : 2;
   const GAP = 12;
   const PAD = 12;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
@@ -87,13 +104,13 @@ export default function IndianKitchen() {
 
   const totalItems = useMemo(
     () => cart.reduce((s, i) => s + (i.qty || 0), 0),
-    [cart]
+    [cart],
   );
 
   useFocusEffect(
     useCallback(() => {
       setCart([...getCart()]);
-    }, [])
+    }, []),
   );
 
   const openCustomize = (item: FoodItem) => {
@@ -166,7 +183,11 @@ export default function IndianKitchen() {
 
       {/* KITCHENS */}
       <View style={styles.kitchensContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.kitchensScroll}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.kitchensScroll}
+        >
           {KITCHENS.map((k) => {
             const isActive = k.name === ACTIVE_KITCHEN;
             return (
@@ -174,7 +195,9 @@ export default function IndianKitchen() {
                 key={k.id}
                 style={[
                   styles.kitchenCard,
-                  isActive ? styles.kitchenCardActive : styles.kitchenCardInactive,
+                  isActive
+                    ? styles.kitchenCardActive
+                    : styles.kitchenCardInactive,
                   { width: width < 600 ? 80 : 100 },
                 ]}
                 onPress={() => {
@@ -184,7 +207,11 @@ export default function IndianKitchen() {
                 <View
                   style={[
                     styles.iconContainer,
-                    { backgroundColor: isActive ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.3)" },
+                    {
+                      backgroundColor: isActive
+                        ? "rgba(255,255,255,0.2)"
+                        : "rgba(0,0,0,0.3)",
+                    },
                   ]}
                 >
                   <Text style={styles.kitchenIcon}>{k.icon}</Text>
@@ -192,7 +219,10 @@ export default function IndianKitchen() {
                 <Text
                   style={[
                     styles.kitchenName,
-                    { color: isActive ? "#052b12" : "#fff", textAlign: "center" },
+                    {
+                      color: isActive ? "#052b12" : "#fff",
+                      textAlign: "center",
+                    },
                   ]}
                   numberOfLines={2}
                 >
@@ -217,7 +247,12 @@ export default function IndianKitchen() {
                 listRef.current?.scrollToOffset({ offset: 0, animated: true });
               }}
             >
-              <Text style={{ color: active ? "#052b12" : "#fff", fontWeight: "800" }}>
+              <Text
+                style={{
+                  color: active ? "#052b12" : "#fff",
+                  fontWeight: "800",
+                }}
+              >
                 {g.name}
               </Text>
             </TouchableOpacity>
@@ -293,12 +328,34 @@ export default function IndianKitchen() {
             />
 
             <View style={{ flexDirection: "row", gap: 10, marginTop: 20 }}>
-              <TouchableOpacity onPress={() => setShowCustomize(false)} style={[styles.modalBtn, { backgroundColor: "#444" }]}>
-                <Text style={{ color: "#fff", textAlign: "center", fontWeight: "600" }}>Cancel</Text>
+              <TouchableOpacity
+                onPress={() => setShowCustomize(false)}
+                style={[styles.modalBtn, { backgroundColor: "#444" }]}
+              >
+                <Text
+                  style={{
+                    color: "#fff",
+                    textAlign: "center",
+                    fontWeight: "600",
+                  }}
+                >
+                  Cancel
+                </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={confirmAdd} style={[styles.modalBtn, { backgroundColor: "#22c55e" }]}>
-                <Text style={{ color: "#052b12", textAlign: "center", fontWeight: "900" }}>Add to Cart</Text>
+              <TouchableOpacity
+                onPress={confirmAdd}
+                style={[styles.modalBtn, { backgroundColor: "#22c55e" }]}
+              >
+                <Text
+                  style={{
+                    color: "#052b12",
+                    textAlign: "center",
+                    fontWeight: "900",
+                  }}
+                >
+                  Add to Cart
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -375,7 +432,13 @@ const styles = StyleSheet.create({
   kitchenIcon: { fontSize: 24 },
   kitchenName: { fontWeight: "800", fontSize: 11, textAlign: "center" },
 
-  row: { flexDirection: "row", flexWrap: "wrap", gap: 10, paddingHorizontal: 10, paddingTop: 10 },
+  row: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
   chip: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 },
   active: { backgroundColor: "#22c55e" },
   inactive: { backgroundColor: "#333" },
@@ -387,21 +450,57 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.08)",
   },
-  foodImageBox: { width: "100%", aspectRatio: 1.2, backgroundColor: "#000", justifyContent: "center", alignItems: "center" },
+  foodImageBox: {
+    width: "100%",
+    aspectRatio: 1.2,
+    backgroundColor: "#000",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   foodInfo: { padding: 10 },
   foodName: { color: "#fff", fontWeight: "700", fontSize: 13, marginBottom: 4 },
-  foodPrice: { color: "#9ef01a", fontWeight: "800", fontSize: 13, marginBottom: 8 },
+  foodPrice: {
+    color: "#9ef01a",
+    fontWeight: "800",
+    fontSize: 13,
+    marginBottom: 8,
+  },
 
-  addBtn: { backgroundColor: "#22c55e", paddingVertical: 8, borderRadius: 10, alignItems: "center" },
+  addBtn: {
+    backgroundColor: "#22c55e",
+    paddingVertical: 8,
+    borderRadius: 10,
+    alignItems: "center",
+  },
   addBtnText: { color: "#052b12", fontWeight: "900", fontSize: 12 },
 
-  modalBackdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.8)", justifyContent: "center", alignItems: "center" },
-  modalBox: { width: "90%", backgroundColor: "#111", borderRadius: 20, padding: 20 },
-  modalTitle: { color: "#9ef01a", fontWeight: "900", fontSize: 18, marginBottom: 10 },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.8)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalBox: {
+    width: "90%",
+    backgroundColor: "#111",
+    borderRadius: 20,
+    padding: 20,
+  },
+  modalTitle: {
+    color: "#9ef01a",
+    fontWeight: "900",
+    fontSize: 18,
+    marginBottom: 10,
+  },
   modalLabel: { color: "#fff", marginTop: 10, fontWeight: "700" },
 
   optionRow: { flexDirection: "row", gap: 8, marginTop: 6 },
-  optionBtn: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: 16, backgroundColor: "#333" },
+  optionBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 16,
+    backgroundColor: "#333",
+  },
   optionActive: { backgroundColor: "#22c55e" },
   optionText: { color: "#fff", fontWeight: "700" },
 
