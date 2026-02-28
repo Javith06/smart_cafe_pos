@@ -109,7 +109,21 @@ const ITEMS_BY_GROUP: Record<
     
 
   ],
-  Noodles: [{ id: "n3", name: "Pad See Ew", priceS: 13.5 }],
+  Noodles: [
+  { id: "no1", name: "Tomyam", priceS: 13.5 },
+  { id: "no2", name: "Pattaya", priceS: 13.5 },
+  { id: "no3", name: "Soup", priceS: 13.5 },
+  { id: "no4", name: "Bandung", priceS: 13.5 },
+  { id: "no5", name: "Hong Kong", priceS: 13.5 },
+  { id: "no6", name: "Hailam B Pepper", priceS: 13.5 },
+  { id: "no7", name: "Thai", priceS: 13.5 },
+  { id: "no8", name: "Mamak Style", priceS: 13.5 },
+  { id: "no9", name: "Hokkien", priceS: 13.5 },
+  { id: "no10", name: "Cockles", priceS: 13.5 },
+  { id: "no11", name: "Ikan Bilis", priceS: 13.5 },
+ 
+  ],
+
   Omellete: [
     { id: "o1", name: "Onion Chilli", priceS: 11.5 },
     { id: "o2", name: "Crab Stick", priceS: 14.0 },
@@ -137,8 +151,24 @@ const ITEMS_BY_GROUP: Record<
     { id: "r12", name: "Package @$38.00", priceS: 4.0 },
   ],
   Thai_Veg: [
-    { id: "v1", name: "Stir Fried Veg", priceS: 11.0 },
-    { id: "v2", name: "Thai Veg Curry", priceS: 12.0 },
+    { id: "v1", name: "Mix Veg SF (S)", priceS: 11.0 },
+    { id: "v2", name: "Mix Veg SF (L)", priceS: 12.0 },
+    { id: "v3", name: "Kai Salted Fish (S)", priceS: 11.0 },
+    { id: "v4", name: "Kai Salted Fish (L)", priceS: 12.0 },
+    { id: "v5", name: "Kailan SF (S)", priceS: 11.0 },
+    { id: "v6", name: "Kailan SF (L)", priceS: 12.0 },
+    { id: "v7", name: "Kailan Beef (S)", priceS: 11.0 },
+    { id: "v8", name: "Kailan Beef (L)", priceS: 12.0 },
+    { id: "v9", name: "Kang Kong (S)", priceS: 11.0 },
+    { id: "v10", name: "Kang Kong (L)", priceS: 12.0 },
+    { id: "v11", name: "Tauge Masin (S)", priceS: 11.0 },
+    { id: "v12", name: "Tauge Masin (L)", priceS: 12.0 },
+    { id: "v13", name: "L.Beans Egg (S)", priceS: 11.0 },
+    { id: "v14", name: "L.Beans Egg (L)", priceS: 12.0 },
+    { id: "v15", name: "Kai Shrimp (S)", priceS: 11.0 },
+    { id: "v16", name: "Kai Shrimp (L)", priceS: 12.0 },
+    
+    
   ],
 };
 
@@ -216,6 +246,39 @@ const FOOD_IMAGES: Record<string, any> = {
   fr21: require("../../assets/images/THAI KItchen/fried rice/2.jpg"),
   fr22: require("../../assets/images/THAI KItchen/fried rice/23.jpg"),
   fr23: require("../../assets/images/THAI KItchen/fried rice/17.jpg"),
+
+  //Noodles//
+
+  no1: require("../../assets/images/THAI KItchen/noodles/4.jpg"),
+ no2: require("../../assets/images/THAI KItchen/noodles/8.jpg"),
+ no3: require("../../assets/images/THAI KItchen/noodles/5.jpg"),
+ no4: require("../../assets/images/THAI KItchen/noodles/6.jpg"),
+ no5: require("../../assets/images/THAI KItchen/noodles/7.jpg"),
+ no6: require("../../assets/images/THAI KItchen/noodles/11.jpg"),
+ no7: require("../../assets/images/THAI KItchen/noodles/1.jpg"),
+ no8: require("../../assets/images/THAI KItchen/noodles/2.jpg"),
+ no9: require("../../assets/images/THAI KItchen/noodles/3.jpg"),
+ no10: require("../../assets/images/THAI KItchen/noodles/10.jpg"),
+ no11: require("../../assets/images/THAI KItchen/noodles/9.jpg"),
+
+ //  THAI VEG  //
+v1: require("../../assets/images/THAI KItchen/thai veg/mix veg sf s.jpg"),
+v2: require("../../assets/images/THAI KItchen/thai veg/mix veg sf L.jpg"),
+v3: require("../../assets/images/THAI KItchen/thai veg/Salt Baked Fish.jpg"),
+v4: require("../../assets/images/THAI KItchen/thai veg/Salt baked fish L.jpg"),
+v5: require("../../assets/images/THAI KItchen/thai veg/kai Shrimp s.jpg"),
+v6: require("../../assets/images/THAI KItchen/thai veg/kai Shrimp L.jpg"),
+v7: require("../../assets/images/THAI KItchen/thai veg/kailan beef.jpg"),
+v8: require("../../assets/images/THAI KItchen/thai veg/kailan beef 2.jpg"),
+v9: require("../../assets/images/THAI KItchen/thai veg/kang Kong s.jpg"),
+v10: require("../../assets/images/THAI KItchen/thai veg/kang Kong L.jpg"),
+v11: require("../../assets/images/THAI KItchen/thai veg/tauge masin s.jpg"),
+v12: require("../../assets/images/THAI KItchen/thai veg/tauge masin L.jpg"),
+v13: require("../../assets/images/THAI KItchen/thai veg/l.Beans egg S.jpg"),
+v14: require("../../assets/images/THAI KItchen/thai veg/l.Beans egg L.jpg"),
+v15: require("../../assets/images/THAI KItchen/thai veg/kai Shrimp s.jpg"),
+v16: require("../../assets/images/THAI KItchen/thai veg/kai Shrimp L.jpg"),
+
     
 };
 
