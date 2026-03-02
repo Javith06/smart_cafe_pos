@@ -19,9 +19,19 @@ import {
 /* ================= KITCHENS ================= */
 const KITCHENS = [
   { id: "k1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", icon: "🍜" },
-  { id: "k2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", icon: "🍛" },
+  {
+    id: "k2",
+    name: "INDIAN KITCHEN",
+    route: "/menu/indian_kitchen",
+    icon: "🍛",
+  },
   { id: "k3", name: "SOUTH INDIAN", route: "/menu/south_indian", icon: "🥞" },
-  { id: "k4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", icon: "🍔" },
+  {
+    id: "k4",
+    name: "WESTERN KITCHEN",
+    route: "/menu/western_kitchen",
+    icon: "🍔",
+  },
   { id: "k5", name: "DRINKS", route: "/menu/drinks", icon: "🥤" },
 ];
 
@@ -29,26 +39,90 @@ const ACTIVE_KITCHEN = "SOUTH INDIAN";
 
 /* ================= GROUPS ================= */
 const GROUPS = [
-  { id: "g1", name: "Tiffin" },
-  { id: "g2", name: "Meals" },
-  { id: "g3", name: "Snacks" },
+  { id: "g1", name: "Prata" },
+  { id: "g2", name: "Murtabak" },
+  { id: "g3", name: "Roti John Menu" },
+  { id: "g4", name: "Dosai" },
+  { id: "g5", name: "Bites" },
+  { id: "g6", name: "Prata Main Course" },
+  { id: "g7", name: "Roti John Combo" },
 ];
 
 /* ================= ITEMS ================= */
-const ITEMS_BY_GROUP: Record<string, { id: string; name: string; price: number }[]> = {
-  Tiffin: [
-    { id: "t1", name: "Dosa", price: 5.5 },
-    { id: "t2", name: "Idli", price: 4.0 },
-    { id: "t3", name: "Pongal", price: 6.5 },
+const ITEMS_BY_GROUP: Record<string, FoodItem[]> = {
+  Prata: [
+    { id: "prata_1", name: "Plain", price: 5.5 },
+    { id: "prata_2", name: "Onion Plain", price: 4.0 },
+    { id: "prata_3", name: "Egg Prata", price: 6.5 },
+    { id: "prata_4", name: "Egg Onion", price: 6.5 },
+    { id: "prata_5", name: "Plaster Prata", price: 6.5 },
+    { id: "prata_6", name: "Bomb Prata", price: 6.5 },
+    { id: "prata_7", name: "Tissue Classic Prata", price: 6.5 },
+    { id: "prata_8", name: "Banana Prata", price: 6.5 },
+    { id: "prata_9", name: "Cheese Prata", price: 6.5 },
+    { id: "prata_10", name: "Cheese Mushroom Prata", price: 6.5 },
+    { id: "prata_11", name: "Cheese Egg Prata", price: 6.5 },
+    { id: "prata_12", name: "Tissue Prata", price: 6.5 },
+    { id: "prata_13", name: "Cheese Sausage Prata", price: 6.5 },
+    { id: "prata_14", name: "Open Item Prata", price: 6.5 },
+    { id: "prata_15", name: "Bomb & Cheese Prata", price: 6.5 },
+    { id: "prata_16", name: "Ice Cream Prata", price: 6.5 },
+    { id: "prata_17", name: "Square Prata", price: 6.5 },
+    { id: "prata_18", name: "Cheese Onion Prata", price: 6.5 },
+    { id: "prata_19", name: "Prata Tsunami", price: 6.5 },
   ],
-  Meals: [
-    { id: "m1", name: "Veg Meals", price: 9.5 },
-    { id: "m2", name: "Mini Meals", price: 7.5 },
+
+  Murtabak: [
+    { id: "murta_1", name: "Murtabak Sardine", price: 9.5 },
+    { id: "murta_2", name: "Murtabak Sardine (L)", price: 11.5 },
+    { id: "murta_3", name: "Murtabak Corn Beef", price: 9.5 },
+    { id: "murta_4", name: "Murtabak Corn Beef (L)", price: 11.5 },
+    { id: "murta_5", name: "Murtabak Tuna", price: 9.5 },
+    { id: "murta_6", name: "Murtabak Chicken", price: 9.5 },
+    { id: "murta_7", name: "Murtabak Chicken (L)", price: 11.5 },
+    { id: "murta_8", name: "Murtabak Mutton", price: 10.5 },
+    { id: "murta_9", name: "Murtabak Mutton (L)", price: 12.5 },
+    { id: "murta_10", name: "Murtabak Veggie", price: 8.5 },
+    { id: "murta_11", name: "Murtabak Veggie (L)", price: 10.5 },
+    { id: "murta_12", name: "Add-on Cheese", price: 1.5 },
+    { id: "murta_13", name: "Murtabak Tuna in Mayonnaise (L)", price: 12.5 },
   ],
-  Snacks: [
-    { id: "s1", name: "Vada", price: 2.5 },
-    { id: "s2", name: "Bajji", price: 3.0 },
+
+  "Roti John Menu": [
+    { id: "rj_1", name: "RJ Classic", price: 2.5 },
+    { id: "rj_2", name: "Chicken Sausage Cheese", price: 3.0 },
+    { id: "rj_3", name: "Beef Ball Cheese", price: 3.5 },
+    { id: "rj_4", name: "Teriyaki Chicken with Cheese", price: 3.5 },
   ],
+
+  Dosai: [
+    { id: "dosai_1", name: "Dosai", price: 2.5 },
+    { id: "dosai_2", name: "Onion Dosai", price: 3.0 },
+    { id: "dosai_3", name: "Egg Dosai", price: 3.5 },
+    { id: "dosai_4", name: "Egg & Onion Dosai", price: 4.0 },
+    { id: "dosai_5", name: "Paper Roast", price: 3.5 },
+    { id: "dosai_6", name: "Masala Dosai", price: 4.5 },
+    { id: "dosai_7", name: "Cheese Dosai", price: 4.5 },
+    { id: "dosai_8", name: "Egg Masala Dosai", price: 5.0 },
+    { id: "dosai_9", name: "2 Idli Vadai", price: 4.5 },
+  ],
+
+  Bites: [
+    { id: "bite_1", name: "Laksa", price: 6.5 },
+    { id: "bite_2", name: "Mee Siam", price: 6.0 },
+    { id: "bite_3", name: "Mee Soto", price: 6.5 },
+    { id: "bite_4", name: "Mee Rebus", price: 6.5 },
+    { id: "bite_5", name: "Lontong", price: 6.0 },
+    { id: "bite_6", name: "Nasi Lemak Ayam", price: 7.5 },
+  ],
+
+  "Prata Main Course": [
+    { id: "pmc_1", name: "Chicken Masala (S)", price: 5.5 },
+    { id: "pmc_2", name: "Mutton Masala (S)", price: 6.5 },
+    { id: "pmc_3", name: "Fish Masala (S)", price: 6.0 },
+  ],
+
+  "Roti John Combo": [{ id: "combo_1", name: "Roti John Combo", price: 8.5 }],
 };
 
 interface FoodItem {
@@ -68,13 +142,14 @@ export default function SouthIndian() {
   const { width } = useWindowDimensions();
   const listRef = useRef<FlatList>(null);
 
-  const numColumns = width >= 1200 ? 6 : width >= 900 ? 5 : width >= 600 ? 4 : 2;
+  const numColumns =
+    width >= 1200 ? 6 : width >= 900 ? 5 : width >= 600 ? 4 : 2;
   const GAP = 12;
   const PAD = 12;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
   const [cart, setCart] = useState(getCart());
-  const [selectedGroup, setSelectedGroup] = useState("Tiffin");
+  const [selectedGroup, setSelectedGroup] = useState("Prata");
 
   const [showCustomize, setShowCustomize] = useState(false);
   const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
@@ -88,13 +163,13 @@ export default function SouthIndian() {
 
   const totalItems = useMemo(
     () => cart.reduce((s, i) => s + (i.qty || 0), 0),
-    [cart]
+    [cart],
   );
 
   useFocusEffect(
     useCallback(() => {
       setCart([...getCart()]);
-    }, [])
+    }, []),
   );
 
   const openCustomize = (item: FoodItem) => {
@@ -179,7 +254,9 @@ export default function SouthIndian() {
                 key={k.id}
                 style={[
                   styles.kitchenCard,
-                  isActive ? styles.kitchenCardActive : styles.kitchenCardInactive,
+                  isActive
+                    ? styles.kitchenCardActive
+                    : styles.kitchenCardInactive,
                   { width: width < 600 ? 80 : 100 },
                 ]}
                 onPress={() => {
@@ -201,7 +278,10 @@ export default function SouthIndian() {
                 <Text
                   style={[
                     styles.kitchenName,
-                    { color: isActive ? "#052b12" : "#fff", textAlign: "center" },
+                    {
+                      color: isActive ? "#052b12" : "#fff",
+                      textAlign: "center",
+                    },
                   ]}
                   numberOfLines={2}
                 >
@@ -226,7 +306,12 @@ export default function SouthIndian() {
                 listRef.current?.scrollToOffset({ offset: 0, animated: true });
               }}
             >
-              <Text style={{ color: active ? "#052b12" : "#fff", fontWeight: "800" }}>
+              <Text
+                style={{
+                  color: active ? "#052b12" : "#fff",
+                  fontWeight: "800",
+                }}
+              >
                 {g.name}
               </Text>
             </TouchableOpacity>
@@ -306,7 +391,13 @@ export default function SouthIndian() {
                 onPress={() => setShowCustomize(false)}
                 style={[styles.modalBtn, { backgroundColor: "#444" }]}
               >
-                <Text style={{ color: "#fff", textAlign: "center", fontWeight: "600" }}>
+                <Text
+                  style={{
+                    color: "#fff",
+                    textAlign: "center",
+                    fontWeight: "600",
+                  }}
+                >
                   Cancel
                 </Text>
               </TouchableOpacity>
@@ -427,7 +518,12 @@ const styles = StyleSheet.create({
   },
   foodInfo: { padding: 10 },
   foodName: { color: "#fff", fontWeight: "700", fontSize: 13, marginBottom: 4 },
-  foodPrice: { color: "#9ef01a", fontWeight: "800", fontSize: 13, marginBottom: 8 },
+  foodPrice: {
+    color: "#9ef01a",
+    fontWeight: "800",
+    fontSize: 13,
+    marginBottom: 8,
+  },
 
   addBtn: {
     backgroundColor: "#22c55e",

@@ -19,9 +19,19 @@ import {
 /* ================= KITCHENS ================= */
 const KITCHENS = [
   { id: "k1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", icon: "🍜" },
-  { id: "k2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", icon: "🍛" },
+  {
+    id: "k2",
+    name: "INDIAN KITCHEN",
+    route: "/menu/indian_kitchen",
+    icon: "🍛",
+  },
   { id: "k3", name: "SOUTH INDIAN", route: "/menu/south_indian", icon: "🥞" },
-  { id: "k4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", icon: "🍔" },
+  {
+    id: "k4",
+    name: "WESTERN KITCHEN",
+    route: "/menu/western_kitchen",
+    icon: "🍔",
+  },
   { id: "k5", name: "DRINKS", route: "/menu/drinks", icon: "🥤" },
 ];
 
@@ -29,24 +39,159 @@ const ACTIVE_KITCHEN = "DRINKS";
 
 /* ================= GROUPS ================= */
 const GROUPS = [
-  { id: "g1", name: "Cold" },
-  { id: "g2", name: "Hot" },
-  { id: "g3", name: "Shakes" },
+  { id: "g1", name: "Smoothies" },
+  { id: "g2", name: "Local Favourite" },
+  { id: "g3", name: "Lassi" },
+  { id: "g4", name: "Milk Shake" },
+  { id: "g5", name: "Hot Beverages" },
+  { id: "g6", name: "Ice Cream" },
+  { id: "g7", name: "Cold Beverages" },
+  { id: "g8", name: "Fruit Juices" },
+  { id: "g9", name: "Sodas" },
 ];
 
 /* ================= ITEMS ================= */
-const ITEMS_BY_GROUP: Record<string, { id: string; name: string; price: number }[]> = {
-  Cold: [
-    { id: "c1", name: "Lime Juice", price: 4.0 },
-    { id: "c2", name: "Soft Drink", price: 3.0 },
+const ITEMS_BY_GROUP: Record<string, DrinkItem[]> = {
+  Smoothies: [
+    { id: "sm_1", name: "Apple Smoothie", price: 160 },
+    { id: "sm_2", name: "Pineapple Smoothie", price: 160 },
+    { id: "sm_3", name: "Kiwi Smoothie", price: 160 },
+    { id: "sm_4", name: "Orange Smoothie", price: 160 },
+    { id: "sm_5", name: "Rambutan Smoothie", price: 160 },
+    { id: "sm_6", name: "Lychee Smoothie", price: 160 },
+    { id: "sm_7", name: "Longan Smoothie", price: 160 },
+    { id: "sm_8", name: "Blue Lime Smoothie", price: 160 },
+    { id: "sm_9", name: "Soursop Smoothie", price: 160 },
   ],
-  Hot: [
-    { id: "h1", name: "Tea", price: 3.0 },
-    { id: "h2", name: "Coffee", price: 4.5 },
+
+  "Local Favourite": [
+    { id: "lf_1", name: "Milo Dinosaur", price: 180 },
+    { id: "lf_2", name: "M.Godzilla", price: 200 },
+    { id: "lf_3", name: "Root Beer Float", price: 180 },
+    { id: "lf_4", name: "TO Ice Longan", price: 170 },
+    { id: "lf_5", name: "TO Ice Lychee", price: 170 },
+    { id: "lf_6", name: "Blueberry Ice Longan", price: 180 },
+    { id: "lf_7", name: "Blueberry Ice Lychee", price: 180 },
+    { id: "lf_8", name: "Syrup Ice Longan", price: 160 },
+    { id: "lf_9", name: "Syrup Ice Lychee", price: 160 },
+    { id: "lf_10", name: "Lime Sour Plum", price: 150 },
+    { id: "lf_11", name: "Super Cooler", price: 190 },
+    { id: "lf_12", name: "TOA Honey", price: 160 },
+    { id: "lf_13", name: "Chendol", price: 170 },
+    { id: "lf_14", name: "ABC", price: 170 },
+    { id: "lf_15", name: "Air Kathira", price: 160 },
+    { id: "lf_16", name: "Kathira @ $10 3 Bottles", price: 250 },
   ],
-  Shakes: [
-    { id: "s1", name: "Chocolate Milkshake", price: 7.5 },
-    { id: "s2", name: "Strawberry Milkshake", price: 7.5 },
+
+  Lassi: [
+    { id: "ls_1", name: "Plain Lassi", price: 150 },
+    { id: "ls_2", name: "Mango Lassi", price: 160 },
+    { id: "ls_3", name: "Strawberry Lassi", price: 160 },
+    { id: "ls_4", name: "Blackcurrant Lassi", price: 160 },
+  ],
+
+  "Milk Shake": [
+    { id: "ms_1", name: "Banana Shake", price: 170 },
+    { id: "ms_2", name: "Sweet Corn Shake", price: 170 },
+    { id: "ms_3", name: "Strawberry Shake", price: 170 },
+    { id: "ms_4", name: "Chocolate Shake", price: 170 },
+    { id: "ms_5", name: "Vanilla Shake", price: 170 },
+    { id: "ms_6", name: "Kiwi Shake", price: 170 },
+    { id: "ms_7", name: "Apple Shake", price: 170 },
+    { id: "ms_8", name: "Mango Shake", price: 170 },
+    { id: "ms_9", name: "Orange Shake", price: 170 },
+    { id: "ms_10", name: "Yam Shake", price: 180 },
+    { id: "ms_11", name: "Mocha Shake", price: 180 },
+    { id: "ms_12", name: "Latte Shake", price: 180 },
+    { id: "ms_13", name: "Oreo Shake", price: 190 },
+    { id: "ms_14", name: "Avocado Shake", price: 190 },
+    { id: "ms_15", name: "Durian Shake", price: 200 },
+    { id: "ms_16", name: "Cookie Shake", price: 180 },
+    { id: "ms_17", name: "Dates Shake", price: 180 },
+    { id: "ms_18", name: "Coconut Shake", price: 170 },
+  ],
+
+  "Hot Beverages": [
+    { id: "hb_1", name: "Tea", price: 60 },
+    { id: "hb_2", name: "Coffee", price: 70 },
+    { id: "hb_3", name: "Nescafe", price: 80 },
+    { id: "hb_4", name: "Milo", price: 90 },
+    { id: "hb_5", name: "Horlicks", price: 90 },
+    { id: "hb_6", name: "Hot Chocolate", price: 100 },
+    { id: "hb_7", name: "Tea O", price: 60 },
+    { id: "hb_8", name: "Coffee O", price: 70 },
+    { id: "hb_9", name: "Ginger Tea", price: 70 },
+    { id: "hb_10", name: "Green Lime", price: 70 },
+    { id: "hb_11", name: "Tea O Lime", price: 75 },
+    { id: "hb_12", name: "Halia O Panas", price: 75 },
+    { id: "hb_13", name: "Susu Halia", price: 85 },
+    { id: "hb_14", name: "Masala Tea", price: 90 },
+    { id: "hb_15", name: "Tea Chino", price: 90 },
+    { id: "hb_16", name: "Kopi Chino", price: 90 },
+    { id: "hb_17", name: "TO Halia", price: 75 },
+    { id: "hb_18", name: "Tea C", price: 70 },
+    { id: "hb_19", name: "Rose Syrup Lime", price: 80 },
+    { id: "hb_20", name: "Honey Lemon", price: 85 },
+    { id: "hb_21", name: "Nes Lo Panas", price: 80 },
+  ],
+
+  "Ice Cream": [
+    { id: "ic_1", name: "Banana Split", price: 180 },
+    { id: "ic_2", name: "Mix Ice Cream", price: 160 },
+    { id: "ic_3", name: "2 Scoop Ice Cream", price: 150 },
+    { id: "ic_4", name: "Single Scoop Ice Cream", price: 90 },
+    { id: "ic_5", name: "Malay Dessert", price: 170 },
+  ],
+
+  "Cold Beverages": [
+    { id: "cb_1", name: "Tea Ice", price: 70 },
+    { id: "cb_2", name: "Coffee Ice", price: 80 },
+    { id: "cb_3", name: "Nescafe Ice", price: 85 },
+    { id: "cb_4", name: "Milo Ice", price: 90 },
+    { id: "cb_5", name: "Bandung Ice", price: 80 },
+    { id: "cb_6", name: "Horlicks Ice", price: 90 },
+    { id: "cb_7", name: "Chocolate Ice", price: 90 },
+    { id: "cb_8", name: "Tea O Ice", price: 70 },
+    { id: "cb_9", name: "Coffee O Ice", price: 80 },
+    { id: "cb_10", name: "Tea O Lime Ice", price: 75 },
+    { id: "cb_11", name: "Tea Chino Ice", price: 90 },
+    { id: "cb_12", name: "Coffee Chino Ice", price: 90 },
+    { id: "cb_13", name: "Soft Drinks", price: 60 },
+    { id: "cb_14", name: "Mineral Water", price: 40 },
+    { id: "cb_15", name: "Water", price: 20 },
+    { id: "cb_16", name: "Syrup Lime Ice", price: 75 },
+    { id: "cb_17", name: "Ginger Tea Ice", price: 75 },
+    { id: "cb_18", name: "Nes Lo Ice", price: 80 },
+    { id: "cb_19", name: "Limau Ice", price: 75 },
+    { id: "cb_20", name: "Halia O Ice", price: 75 },
+    { id: "cb_21", name: "Honey Lemon Ice", price: 85 },
+    { id: "cb_22", name: "Syrup Ice", price: 70 },
+    { id: "cb_23", name: "Blueberry Ice", price: 80 },
+  ],
+
+  "Fruit Juices": [
+    { id: "fj_1", name: "Orange Juice", price: 120 },
+    { id: "fj_2", name: "Apple Juice", price: 120 },
+    { id: "fj_3", name: "Pineapple Juice", price: 120 },
+    { id: "fj_4", name: "Watermelon Juice", price: 120 },
+    { id: "fj_5", name: "Starfruit Juice", price: 130 },
+    { id: "fj_6", name: "Honeydew Juice", price: 130 },
+    { id: "fj_7", name: "Longan Juice", price: 130 },
+    { id: "fj_8", name: "Lychee Juice", price: 130 },
+    { id: "fj_9", name: "Rambutan Juice", price: 140 },
+    { id: "fj_10", name: "Carrot Juice", price: 110 },
+    { id: "fj_11", name: "Celery Juice", price: 110 },
+    { id: "fj_12", name: "Lime Juice", price: 100 },
+    { id: "fj_13", name: "Fresh Coconut", price: 100 },
+    { id: "fj_14", name: "Mix Fruit Juice", price: 150 },
+  ],
+
+  Sodas: [
+    { id: "sd_1", name: "Lemon Soda", price: 90 },
+    { id: "sd_2", name: "Blackcurrant Soda", price: 95 },
+    { id: "sd_3", name: "Strawberry Soda", price: 95 },
+    { id: "sd_4", name: "Blueberry Soda", price: 95 },
+    { id: "sd_5", name: "Kiwi Soda", price: 95 },
   ],
 };
 
@@ -67,13 +212,14 @@ export default function Drinks() {
   const { width } = useWindowDimensions();
   const listRef = useRef<FlatList>(null);
 
-  const numColumns = width >= 1200 ? 6 : width >= 900 ? 5 : width >= 600 ? 4 : 2;
+  const numColumns =
+    width >= 1200 ? 6 : width >= 900 ? 5 : width >= 600 ? 4 : 2;
   const GAP = 12;
   const PAD = 12;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
   const [cart, setCart] = useState(getCart());
-  const [selectedGroup, setSelectedGroup] = useState("Cold");
+  const [selectedGroup, setSelectedGroup] = useState("Smoothies");
 
   const [showCustomize, setShowCustomize] = useState(false);
   const [selectedItem, setSelectedItem] = useState<DrinkItem | null>(null);
@@ -85,13 +231,13 @@ export default function Drinks() {
 
   const totalItems = useMemo(
     () => cart.reduce((s, i) => s + (i.qty || 0), 0),
-    [cart]
+    [cart],
   );
 
   useFocusEffect(
     useCallback(() => {
       setCart([...getCart()]);
-    }, [])
+    }, []),
   );
 
   const openCustomize = (item: DrinkItem) => {
@@ -141,24 +287,27 @@ export default function Drinks() {
   return (
     <View style={{ flex: 1, backgroundColor: "#0b0b0b" }}>
       {/* HEADER */}
-<View style={styles.header}>
-  <Text style={styles.title}>DRINKS</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>DRINKS</Text>
 
-  <View style={{ flexDirection: "row", gap: 8 }}>
-    <Pressable onPress={() => router.back()} style={styles.backBtn}>
-      <Text style={styles.backText}>Back</Text>
-    </Pressable>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Pressable onPress={() => router.back()} style={styles.backBtn}>
+            <Text style={styles.backText}>Back</Text>
+          </Pressable>
 
-    <Pressable onPress={() => router.push("/cart")} style={styles.cartBtn}>
-      <Text style={styles.cartText}>Cart</Text>
-      {totalItems > 0 && (
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>{totalItems}</Text>
+          <Pressable
+            onPress={() => router.push("/cart")}
+            style={styles.cartBtn}
+          >
+            <Text style={styles.cartText}>Cart</Text>
+            {totalItems > 0 && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{totalItems}</Text>
+              </View>
+            )}
+          </Pressable>
         </View>
-      )}
-    </Pressable>
-  </View>
-</View>
+      </View>
 
       {/* KITCHENS */}
       <View style={styles.kitchensContainer}>
@@ -174,7 +323,9 @@ export default function Drinks() {
                 key={k.id}
                 style={[
                   styles.kitchenCard,
-                  isActive ? styles.kitchenCardActive : styles.kitchenCardInactive,
+                  isActive
+                    ? styles.kitchenCardActive
+                    : styles.kitchenCardInactive,
                   { width: width < 600 ? 80 : 100 },
                 ]}
                 onPress={() => {
@@ -196,7 +347,10 @@ export default function Drinks() {
                 <Text
                   style={[
                     styles.kitchenName,
-                    { color: isActive ? "#052b12" : "#fff", textAlign: "center" },
+                    {
+                      color: isActive ? "#052b12" : "#fff",
+                      textAlign: "center",
+                    },
                   ]}
                   numberOfLines={2}
                 >
@@ -221,7 +375,12 @@ export default function Drinks() {
                 listRef.current?.scrollToOffset({ offset: 0, animated: true });
               }}
             >
-              <Text style={{ color: active ? "#052b12" : "#fff", fontWeight: "800" }}>
+              <Text
+                style={{
+                  color: active ? "#052b12" : "#fff",
+                  fontWeight: "800",
+                }}
+              >
                 {g.name}
               </Text>
             </TouchableOpacity>
@@ -282,7 +441,13 @@ export default function Drinks() {
                 onPress={() => setShowCustomize(false)}
                 style={[styles.modalBtn, { backgroundColor: "#444" }]}
               >
-                <Text style={{ color: "#fff", textAlign: "center", fontWeight: "600" }}>
+                <Text
+                  style={{
+                    color: "#fff",
+                    textAlign: "center",
+                    fontWeight: "600",
+                  }}
+                >
                   Cancel
                 </Text>
               </TouchableOpacity>
@@ -403,7 +568,12 @@ const styles = StyleSheet.create({
   },
   foodInfo: { padding: 10 },
   foodName: { color: "#fff", fontWeight: "700", fontSize: 13, marginBottom: 4 },
-  foodPrice: { color: "#9ef01a", fontWeight: "800", fontSize: 13, marginBottom: 8 },
+  foodPrice: {
+    color: "#9ef01a",
+    fontWeight: "800",
+    fontSize: 13,
+    marginBottom: 8,
+  },
 
   addBtn: {
     backgroundColor: "#22c55e",

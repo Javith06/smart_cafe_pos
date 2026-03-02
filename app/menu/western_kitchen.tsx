@@ -19,9 +19,19 @@ import {
 /* ================= KITCHENS ================= */
 const KITCHENS = [
   { id: "k1", name: "THAI KITCHEN", route: "/menu/thai_kitchen", icon: "🍜" },
-  { id: "k2", name: "INDIAN KITCHEN", route: "/menu/indian_kitchen", icon: "🍛" },
+  {
+    id: "k2",
+    name: "INDIAN KITCHEN",
+    route: "/menu/indian_kitchen",
+    icon: "🍛",
+  },
   { id: "k3", name: "SOUTH INDIAN", route: "/menu/south_indian", icon: "🥞" },
-  { id: "k4", name: "WESTERN KITCHEN", route: "/menu/western_kitchen", icon: "🍔" },
+  {
+    id: "k4",
+    name: "WESTERN KITCHEN",
+    route: "/menu/western_kitchen",
+    icon: "🍔",
+  },
   { id: "k5", name: "DRINKS", route: "/menu/drinks", icon: "🥤" },
 ];
 
@@ -29,24 +39,140 @@ const ACTIVE_KITCHEN = "WESTERN KITCHEN";
 
 /* ================= GROUPS ================= */
 const GROUPS = [
+  { id: "g1", name: "Appetizer" },
+  { id: "g3", name: "Pasta" },
   { id: "g1", name: "Burgers" },
   { id: "g2", name: "Pizza" },
-  { id: "g3", name: "Pasta" },
+  { id: "g2", name: "Baked Rice" },
+  { id: "g2", name: "Salad" },
+  { id: "g2", name: "Chicken" },
+  { id: "g2", name: "Lamb" },
 ];
 
 /* ================= ITEMS ================= */
-const ITEMS_BY_GROUP: Record<string, { id: string; name: string; price: number }[]> = {
-  Burgers: [
-    { id: "b1", name: "Chicken Burger", price: 9.5 },
-    { id: "b2", name: "Veg Burger", price: 8.0 },
+const ITEMS_BY_GROUP: Record<
+  string,
+  { id: string; name: string; price: number }[]
+> = {
+  Appetizer: [
+    { id: "app_1", name: "Soup Garlic Bread", price: 12.5 },
+    { id: "app_2", name: "Fries", price: 12.5 },
+    { id: "app_3", name: "Cheese Fries", price: 12.5 },
+    { id: "app_4", name: "Wedges", price: 12.5 },
+    { id: "app_5", name: "Cheese Wedges", price: 12.5 },
+    { id: "app_6", name: "Mash CrabMeat", price: 12.5 },
+    { id: "app_7", name: "Mash Potato", price: 12.5 },
+    { id: "app_8", name: "Nuggets", price: 12.5 },
+    { id: "app_9", name: "2 Wings N Fries", price: 12.5 },
+    { id: "app_10", name: "3pcs Buffalo Wings n Fries", price: 12.5 },
+    { id: "app_11", name: "Popcorn Chicken", price: 12.5 },
+    { id: "app_12", name: "Coleslaw", price: 12.5 },
+    { id: "app_13", name: "Calamari Rings", price: 12.5 },
+    { id: "app_14", name: "Scallops", price: 12.5 },
+    { id: "app_15", name: "Mix Tempura", price: 12.5 },
+    { id: "app_16", name: "Prawn Fritters", price: 12.5 },
+    { id: "app_17", name: "Spring Chicken", price: 12.5 },
+    { id: "app_18", name: "Roasted Chicken", price: 12.5 },
+    { id: "app_19", name: "Udang Merah & Bread", price: 12.5 },
+    { id: "app_20", name: "Pisang Goreng 2pcs", price: 3.0 },
+    { id: "app_21", name: "Curry Puff 2pcs", price: 2.0 },
+    { id: "app_22", name: "Kueh Ramadan", price: 12.5 },
+    { id: "app_23", name: "Kueh Ramadan 3 pcs", price: 5.0 },
   ],
-  Pizza: [
-    { id: "p1", name: "Margherita Pizza", price: 14.5 },
-    { id: "p2", name: "Chicken Pizza", price: 17.5 },
-  ],
+
   Pasta: [
-    { id: "pa1", name: "White Sauce Pasta", price: 12.5 },
-    { id: "pa2", name: "Red Sauce Pasta", price: 11.5 },
+    { id: "pasta_1", name: "Veg Pomodoro", price: 12.5 },
+    { id: "pasta_2", name: "Creamy Mushroom", price: 12.5 },
+    { id: "pasta_3", name: "Mush Aglio Olio", price: 12.5 },
+    { id: "pasta_4", name: "Teriyaki Pasta", price: 12.5 },
+    { id: "pasta_5", name: "SF Olio", price: 12.5 },
+    { id: "pasta_6", name: "Beef Bolognese", price: 12.5 },
+    { id: "pasta_7", name: "Spicy Corn Beef", price: 12.5 },
+    { id: "pasta_8", name: "SeaFood Marinara", price: 12.5 },
+    { id: "pasta_9", name: "Sausage Carbonara", price: 12.5 },
+    { id: "pasta_10", name: "Beefball Redang", price: 12.5 },
+  ],
+
+  Burgers: [
+    { id: "burger_1", name: "Lamb Rock", price: 12.5 },
+    { id: "burger_2", name: "Chicken Burger", price: 12.5 },
+    { id: "burger_3", name: "Home Made Beef", price: 12.5 },
+    { id: "burger_4", name: "Mushroom Cheese", price: 12.5 },
+    { id: "burger_5", name: "Bold Crunchy Fish", price: 12.5 },
+    { id: "burger_6", name: "Chicken Sandwich", price: 12.5 },
+    { id: "burger_7", name: "CornBeef Sandwich", price: 12.5 },
+    { id: "burger_8", name: "Tuna Sandwich", price: 12.5 },
+    { id: "burger_9", name: "Veg Sandwich Cheese", price: 12.5 },
+  ],
+
+  Pizza: [
+    { id: "pizza_1", name: "Haiwan Chicken", price: 12.5 },
+    { id: "pizza_2", name: "Pepperoni Beef", price: 12.5 },
+    { id: "pizza_3", name: "BBQ Chicken", price: 12.5 },
+    { id: "pizza_4", name: "Veggie Lovers", price: 12.5 },
+  ],
+
+  "Baked Rice": [
+    { id: "baked_1", name: "Baked Mushroom Chicken", price: 12.5 },
+    { id: "baked_2", name: "Arborio Beef", price: 12.5 },
+    { id: "baked_3", name: "Risotto Veggie", price: 12.5 },
+  ],
+
+  Salad: [
+    { id: "salad_1", name: "Healthy Fruit Salad", price: 12.5 },
+    { id: "salad_2", name: "Chicken Salad", price: 12.5 },
+    { id: "salad_3", name: "Prawn Salad", price: 12.5 },
+  ],
+
+  Chicken: [
+    { id: "chicken_1", name: "Grill Pepper Chicken", price: 12.5 },
+    { id: "chicken_2", name: "Breaded Chicken", price: 12.5 },
+    { id: "chicken_3", name: "Chicken & Mushroom", price: 12.5 },
+  ],
+
+  Lamb: [
+    { id: "lamb_1", name: "Pepper Lamb", price: 12.5 },
+    { id: "lamb_2", name: "Mushroom Lamb", price: 12.5 },
+    { id: "lamb_3", name: "BBQ Lamb Cheese", price: 12.5 },
+  ],
+
+  Ribeye: [
+    { id: "Ribeye_1", name: "Ribeye B. Pepper", price: 12.5 },
+    { id: "Ribeye_1", name: "Ribeye Mushroom", price: 12.5 },
+    { id: "Ribeye_1", name: "Ribeye Cheese", price: 12.5 },
+  ],
+
+  Fish: [
+    { id: "fish_1", name: "Fish N Chips", price: 12.5 },
+    { id: "fish_2", name: "Green Fish Curry", price: 12.5 },
+    { id: "fish_3", name: "Grilled Salmon", price: 12.5 },
+  ],
+
+  Dessert: [
+    { id: "dessert_1", name: "Dark Lava Cake", price: 12.5 },
+    { id: "dessert_2", name: "MixBerry Cheese Cake", price: 12.5 },
+    { id: "dessert_3", name: "P Pannacotta", price: 12.5 },
+    { id: "dessert_4", name: "Sticky Dates", price: 12.5 },
+    { id: "dessert_23", name: "OPEN WESTERN", price: 12.5 },
+
+    { id: "dessert_5", name: "Nasi Padang @ $5.00", price: 5.0 },
+    { id: "dessert_6", name: "Nasi Padang @ $5.50", price: 5.5 },
+    { id: "dessert_7", name: "Nasi Padang @ $6.00", price: 6.0 },
+    { id: "dessert_8", name: "Nasi Padang @ $6.50", price: 6.5 },
+    { id: "dessert_9", name: "Nasi Padang @ $7.00", price: 7.0 },
+    { id: "dessert_10", name: "Nasi Padang @ $7.50", price: 7.5 },
+    { id: "dessert_11", name: "Nasi Padang @ $8.00", price: 8.0 },
+    { id: "dessert_12", name: "Nasi Padang @ $8.50", price: 8.5 },
+    { id: "dessert_13", name: "Nasi Padang @ $9.00", price: 9.0 },
+    { id: "dessert_14", name: "Nasi Padang @ $9.50", price: 9.5 },
+    { id: "dessert_15", name: "Nasi Padang @ $10.00", price: 10.0 },
+    { id: "dessert_16", name: "Nasi Padang @ $10.50", price: 10.5 },
+    { id: "dessert_17", name: "Nasi Padang @ $11.00", price: 11.0 },
+    { id: "dessert_18", name: "Nasi Padang @ $11.50", price: 11.5 },
+    { id: "dessert_19", name: "Nasi Padang @ $12.00", price: 12.0 },
+    { id: "dessert_20", name: "Nasi Padang @ $12.50", price: 12.5 },
+    { id: "dessert_21", name: "Nasi Padang @ $15.00", price: 15.0 },
+    { id: "dessert_22", name: "Nasi Minyak", price: 12.5 },
   ],
 };
 
@@ -67,13 +193,14 @@ export default function WesternKitchen() {
   const { width } = useWindowDimensions();
   const listRef = useRef<FlatList>(null);
 
-  const numColumns = width >= 1200 ? 6 : width >= 900 ? 5 : width >= 600 ? 4 : 2;
+  const numColumns =
+    width >= 1200 ? 6 : width >= 900 ? 5 : width >= 600 ? 4 : 2;
   const GAP = 12;
   const PAD = 12;
   const size = (width - PAD * 2 - GAP * (numColumns - 1)) / numColumns;
 
   const [cart, setCart] = useState(getCart());
-  const [selectedGroup, setSelectedGroup] = useState("Burgers");
+  const [selectedGroup, setSelectedGroup] = useState("Appetizer");
 
   const [showCustomize, setShowCustomize] = useState(false);
   const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
@@ -87,13 +214,13 @@ export default function WesternKitchen() {
 
   const totalItems = useMemo(
     () => cart.reduce((s, i) => s + (i.qty || 0), 0),
-    [cart]
+    [cart],
   );
 
   useFocusEffect(
     useCallback(() => {
       setCart([...getCart()]);
-    }, [])
+    }, []),
   );
 
   const openCustomize = (item: FoodItem) => {
@@ -178,7 +305,9 @@ export default function WesternKitchen() {
                 key={k.id}
                 style={[
                   styles.kitchenCard,
-                  isActive ? styles.kitchenCardActive : styles.kitchenCardInactive,
+                  isActive
+                    ? styles.kitchenCardActive
+                    : styles.kitchenCardInactive,
                   { width: width < 600 ? 80 : 100 },
                 ]}
                 onPress={() => {
@@ -200,7 +329,10 @@ export default function WesternKitchen() {
                 <Text
                   style={[
                     styles.kitchenName,
-                    { color: isActive ? "#052b12" : "#fff", textAlign: "center" },
+                    {
+                      color: isActive ? "#052b12" : "#fff",
+                      textAlign: "center",
+                    },
                   ]}
                   numberOfLines={2}
                 >
@@ -225,7 +357,12 @@ export default function WesternKitchen() {
                 listRef.current?.scrollToOffset({ offset: 0, animated: true });
               }}
             >
-              <Text style={{ color: active ? "#052b12" : "#fff", fontWeight: "800" }}>
+              <Text
+                style={{
+                  color: active ? "#052b12" : "#fff",
+                  fontWeight: "800",
+                }}
+              >
                 {g.name}
               </Text>
             </TouchableOpacity>
@@ -305,7 +442,13 @@ export default function WesternKitchen() {
                 onPress={() => setShowCustomize(false)}
                 style={[styles.modalBtn, { backgroundColor: "#444" }]}
               >
-                <Text style={{ color: "#fff", textAlign: "center", fontWeight: "600" }}>
+                <Text
+                  style={{
+                    color: "#fff",
+                    textAlign: "center",
+                    fontWeight: "600",
+                  }}
+                >
                   Cancel
                 </Text>
               </TouchableOpacity>
@@ -426,7 +569,12 @@ const styles = StyleSheet.create({
   },
   foodInfo: { padding: 10 },
   foodName: { color: "#fff", fontWeight: "700", fontSize: 13, marginBottom: 4 },
-  foodPrice: { color: "#9ef01a", fontWeight: "800", fontSize: 13, marginBottom: 8 },
+  foodPrice: {
+    color: "#9ef01a",
+    fontWeight: "800",
+    fontSize: 13,
+    marginBottom: 8,
+  },
 
   addBtn: {
     backgroundColor: "#22c55e",
