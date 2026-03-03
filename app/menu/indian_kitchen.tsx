@@ -10,7 +10,7 @@ import {
   TextInput,
   TouchableOpacity,
   useWindowDimensions,
-  View,
+  View
 } from "react-native";
 import { addToCartGlobal, getCart } from "../cartStore";
 import { getOrderContext } from "../orderContextStore";
@@ -208,6 +208,7 @@ const ITEMS_BY_GROUP: Record<
   ],
 };
 
+
 interface FoodItem {
   id: string;
   name: string;
@@ -289,7 +290,7 @@ export default function IndianKitchen() {
       >
         <View style={styles.foodImageBox}>
           <Text style={{ fontSize: 40 }}>🍽️</Text>
-        </View>
+        </View> 
         <View style={styles.foodInfo}>
           <Text style={styles.foodName} numberOfLines={2}>
             {item.name}
