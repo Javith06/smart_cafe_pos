@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   View,
+  Image,
 } from "react-native";
 
 /* ================= KITCHENS ================= */
@@ -195,6 +196,11 @@ const ITEMS_BY_GROUP: Record<string, DrinkItem[]> = {
   ],
 };
 
+const FOOD_IMAGES: Record<string, any> = {
+};
+
+const DEFAULT_IMAGE = require("../../assets/images/indian/basmati_rice/Chicken Briyani.jpg");
+
 interface DrinkItem {
   id: string;
   name: string;
@@ -268,9 +274,13 @@ export default function Drinks() {
         style={[styles.foodCard, { width: size }]}
         onPress={() => openCustomize(item)}
       >
-        <View style={styles.foodImageBox}>
-          <Text style={{ fontSize: 40 }}>🥤</Text>
-        </View>
+           <View style={styles.foodImageBox}>
+  <Image
+    source={FOOD_IMAGES[item.id] || DEFAULT_IMAGE}
+    style={styles.foodImage}
+    resizeMode="cover"
+  />
+</View>
         <View style={styles.foodInfo}>
           <Text style={styles.foodName} numberOfLines={2}>
             {item.name}
@@ -566,6 +576,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+   foodImage: {
+  width: "100%",
+  height: "100%",
+},
+
   foodInfo: { padding: 10 },
   foodName: { color: "#fff", fontWeight: "700", fontSize: 13, marginBottom: 4 },
   foodPrice: {

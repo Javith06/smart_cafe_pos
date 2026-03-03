@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   View,
+  Image,
 } from "react-native";
 
 /* ================= KITCHENS ================= */
@@ -137,10 +138,10 @@ const ITEMS_BY_GROUP: Record<
   ],
 
   Ribeye: [
-    { id: "Ribeye_1", name: "Ribeye B. Pepper", price: 12.5 },
-    { id: "Ribeye_1", name: "Ribeye Mushroom", price: 12.5 },
-    { id: "Ribeye_1", name: "Ribeye Cheese", price: 12.5 },
-  ],
+  { id: "ribeye_1", name: "Ribeye B. Pepper", price: 12.5 },
+  { id: "ribeye_2", name: "Ribeye Mushroom", price: 12.5 },
+  { id: "ribeye_3", name: "Ribeye Cheese", price: 12.5 },
+],
 
   Fish: [
     { id: "fish_1", name: "Fish N Chips", price: 12.5 },
@@ -175,6 +176,100 @@ const ITEMS_BY_GROUP: Record<
     { id: "dessert_22", name: "Nasi Minyak", price: 12.5 },
   ],
 };
+
+const FOOD_IMAGES: Record<string, any> = {
+
+  /* ================= APPETIZER ================= */
+  app_1: require("../../assets/images/western/Appetizer/Soup garlic bread.jpg"),
+  app_2: require("../../assets/images/western/Appetizer/Fries.jpg"),
+  app_3: require("../../assets/images/western/Appetizer/cheese_fries.jpg"),
+  app_4: require("../../assets/images/western/Appetizer/Wedges.jpg"),
+  app_5: require("../../assets/images/western/Appetizer/cheese_wedges.jpg"),
+  app_6: require("../../assets/images/western/Appetizer/mash_crab_meat.jpg"),
+  app_7: require("../../assets/images/western/Appetizer/mash_potato.jpg"),
+  app_8: require("../../assets/images/western/Appetizer/Nuggets.jpg"),
+  app_9: require("../../assets/images/western/Appetizer/2wings_fries.jpg"),
+  app_10: require("../../assets/images/western/Appetizer/3pcs_buffalo wings_n_fries.jpg"),
+  app_11: require("../../assets/images/western/Appetizer/Popcorn Chicken.jpg"),
+  app_12: require("../../assets/images/western/Appetizer/Coleslaw.jpg"),
+  app_13: require("../../assets/images/western/Appetizer/calamari_rings.jpg"),
+  app_14: require("../../assets/images/western/Appetizer/Scallops.jpg"),
+  app_15: require("../../assets/images/western/Appetizer/mix_tempura.jpg"),
+  app_16: require("../../assets/images/western/Appetizer/Prawn Pritters.jpg"),
+  app_17: require("../../assets/images/western/Appetizer/Spring Chicken.jpg"),
+  app_18: require("../../assets/images/western/Appetizer/Roasted Chicken.jpg"),
+  app_19: require("../../assets/images/western/Appetizer/Tulang merah and bread.jpg"),
+  app_20: require("../../assets/images/western/Appetizer/Pisang goreng 2pcs @ $3.jpg"),
+  app_21: require("../../assets/images/western/Appetizer/currypuff_2pcs @$2.jpg"),
+  app_22: require("../../assets/images/western/Appetizer/kueh_ramadan.jpg"),
+  app_23: require("../../assets/images/western/Appetizer/Kueh Ramadan 3@ $5.jpg"),
+
+  /* ================= PASTA ================= */
+  pasta_1: require("../../assets/images/western/Pasta/Veg PomoDoro Pasta.jpg"),
+  pasta_2: require("../../assets/images/western/Pasta/Creamy Mushroom.jpg"),
+  pasta_3: require("../../assets/images/western/Pasta/Mush agila olio.jpg"),
+  pasta_4: require("../../assets/images/western/Pasta/Teriyaki Pasta.jpg"),
+  pasta_5: require("../../assets/images/western/Pasta/SF Olio.jpg"),
+  pasta_6: require("../../assets/images/western/Pasta/Beef Bolgnese.jpg"),
+  pasta_7: require("../../assets/images/western/Pasta/Spicy corn beef.jpg"),
+  pasta_8: require("../../assets/images/western/Pasta/Seafood Marinara.jpg"),
+  pasta_9: require("../../assets/images/western/Pasta/SAUSAGE CABANORA.jpg"),
+  pasta_10: require("../../assets/images/western/Pasta/Beef ball Redang.jpg"),
+
+  /* ================= BURGER ================= */
+  burger_1: require("../../assets/images/western/Burger/Lamb Rock.jpg"),
+  burger_2: require("../../assets/images/western/Burger/Chicken Burger.jpg"),
+  burger_3: require("../../assets/images/western/Burger/Homemade Beef.jpg"),
+  burger_4: require("../../assets/images/western/Burger/Mushroom Cheese.jpg"),
+  burger_5: require("../../assets/images/western/Burger/Bold Crunchy Fish.jpg"),
+  burger_6: require("../../assets/images/western/Burger/Chicken sandwich.jpg"),
+  burger_7: require("../../assets/images/western/Burger/Cornbeef Sandwich.jpg"),
+  burger_8: require("../../assets/images/western/Burger/Tuna Sandwich.jpg"),
+  burger_9: require("../../assets/images/western/Burger/Cheese Sandwich.jpg"),
+
+  /* ================= PIZZA ================= */
+  pizza_1: require("../../assets/images/western/Pizza/Haiwan chicken pizza.jpg"),
+  pizza_2: require("../../assets/images/western/Pizza/Pepparoni Beef Pizza.jpg"),
+  pizza_3: require("../../assets/images/western/Pizza/BBQ chicken pizza.jpg"),
+  pizza_4: require("../../assets/images/western/Pizza/Veggie Lovers.jpg"),
+
+  /* ================= BAKED RICE ================= */
+  baked_1: require("../../assets/images/western/Baked Rice/Baked Mushroom Chicken.jpg"),
+  baked_2: require("../../assets/images/western/Baked Rice/arborio beef.jpg"),
+  baked_3: require("../../assets/images/western/Baked Rice/Rissoto Veggie.jpg"),
+
+  /* ================= SALAD ================= */
+  salad_1: require("../../assets/images/western/Salad/Healthy Fruit Salad.jpg"),
+  salad_2: require("../../assets/images/western/Salad/Chicken salad.jpg"),
+  salad_3: require("../../assets/images/western/Salad/Prawn salad.jpg"),
+
+  /* ================= CHICKEN ================= */
+  chicken_1: require("../../assets/images/western/Chicken/Grill pepper chicken.jpg"),
+  chicken_2: require("../../assets/images/western/Chicken/Breaded Chicken.jpg"),
+  chicken_3: require("../../assets/images/western/Chicken/Chicken & Mushroom.jpg"),
+
+  /* ================= LAMB ================= */
+  lamb_1: require("../../assets/images/western/Lamb/Pepper Lamb.jpg"),
+  lamb_2: require("../../assets/images/western/Lamb/Mushrom Lamb.jpg"),
+  lamb_3: require("../../assets/images/western/Lamb/BBQ Lamb Cheese.jpg"),
+
+  /* ================= RIBEYE ================= */
+  ribeye_1: require("../../assets/images/western/Ribeye/Ribeye B. Pepper.jpg"),
+  ribeye_2: require("../../assets/images/western/Ribeye/Ribeye Mushroom.jpg"),
+  ribeye_3: require("../../assets/images/western/Ribeye/Ribeye Cheese.jpg"),
+
+  /* ================= FISH ================= */
+  fish_1: require("../../assets/images/western/Fish/Fish N Chips.jpg"),
+  fish_2: require("../../assets/images/western/Fish/Green Fishcurry.jpg"),
+  fish_3: require("../../assets/images/western/Fish/Grilled Salamon.jpg"),
+
+  /* ================= DESSERT ================= */
+  dessert_1: require("../../assets/images/western/Dessert/Dark Lava Cake.jpg"),
+  dessert_2: require("../../assets/images/western/Dessert/Mixberry Cheese Cake.jpg"),
+  dessert_3: require("../../assets/images/western/Dessert/P.Panocotta.jpg"),
+  dessert_4: require("../../assets/images/western/Dessert/Sticky Dates.jpg"),
+};
+const DEFAULT_IMAGE = require("../../assets/images/indian/basmati_rice/Chicken Briyani.jpg");
 
 interface FoodItem {
   id: string;
@@ -256,8 +351,12 @@ export default function WesternKitchen() {
         onPress={() => openCustomize(item)}
       >
         <View style={styles.foodImageBox}>
-          <Text style={{ fontSize: 40 }}>🍽️</Text>
-        </View>
+  <Image
+    source={FOOD_IMAGES[item.id] || DEFAULT_IMAGE}
+    style={styles.foodImage}
+    resizeMode="cover"
+  />
+</View>
         <View style={styles.foodInfo}>
           <Text style={styles.foodName} numberOfLines={2}>
             {item.name}
@@ -567,6 +666,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+   foodImage: {
+  width: "100%",
+  height: "100%",
+},
   foodInfo: { padding: 10 },
   foodName: { color: "#fff", fontWeight: "700", fontSize: 13, marginBottom: 4 },
   foodPrice: {

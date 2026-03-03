@@ -1,4 +1,5 @@
 import { useFocusEffect, useRouter } from "expo-router";
+import { useRootNavigationState } from "expo-router";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   FlatList,
@@ -41,8 +42,8 @@ const ACTIVE_KITCHEN = "INDIAN KITCHEN";
 const GROUPS = [
   { id: "g1", name: "TanDoor" },
   { id: "g2", name: "Breads" },
-  { id: "g3", name: "Basmathi_Rice" },
-  { id: "g4", name: "Indian_Veg" },
+  { id: "g3", name: "Basmathi Rice" },
+  { id: "g4", name: "Indian Veg" },
   { id: "g5", name: "Chicken" },
   { id: "g6", name: "Mutton" },
   { id: "g7", name: "Seafood" },
@@ -53,42 +54,56 @@ const GROUPS = [
   { id: string; name: string; price: number }[]
 > = {
   TanDoor: [
-    { id: "td1", name: "Tandoori Chicken(S)", price: 9.5 },
-    { id: "td2", name: "Tandoori Chicken(M)", price: 9.5 },
-    { id: "td3", name: "Tandoori Chicken(L)", price: 9.5 },
-    { id: "td4", name: "Mix Chicken(S)", price: 9.5 },
-    { id: "td5", name: "Mix Chicken(M)", price: 9.5 },
-    { id: "td6", name: "Mix Chicken(L)", price: 9.5 },
-    { id: "td7", name: "Chicken Hariyali(S)", price: 9.5 },
-    { id: "td8", name: "Chicken Hariyali(M)", price: 9.5 },
-    { id: "td9", name: "Chicken Hariyali(L)", price: 9.5 },
-    { id: "td10", name: "Chicken Reshmi(S)", price: 9.5 },
-    { id: "td11", name: "Chicken Reshmi(M)", price: 9.5 },
-    { id: "td12", name: "Chicken Reshmi(L)", price: 9.5 },
-    { id: "td13", name: "Chicken Iranian(S)", price: 9.5 },
-    { id: "td14", name: "Chicken Iranian(M)", price: 9.5 },
-    { id: "td15", name: "Chicken Iranian(L)", price: 9.5 },
-    { id: "td16", name: "Seekh Kebab(S)", price: 9.5 },
-    { id: "td17", name: "Seekh Kebab(M)", price: 9.5 },
-    { id: "td18", name: "Seekh Kebab(L)", price: 9.5 },
-    { id: "td19", name: "Paneer Tikka(S)", price: 9.5 },
-    { id: "td20", name: "Paneer Tikka(M)", price: 9.5 },
-    { id: "td21", name: "Paneer Tikka(L)", price: 9.5 },
-    { id: "td22", name: "Fish Tikka(S)", price: 9.5 },
-    { id: "td23", name: "Fish Tikka(M)", price: 9.5 },
-    { id: "td24", name: "Fish Tikka(L)", price: 9.5 },
-    { id: "td25", name: "Fish Hariyali(S)", price: 9.5 },
-    { id: "td26", name: "Fish Hariyali(M)", price: 9.5 },
-    { id: "td27", name: "Fish Hariyali(L)", price: 9.5 },
-    { id: "td28", name: "Fish Reshmi(S)", price: 9.5 },
-    { id: "td29", name: "Fish Reshmi(M)", price: 9.5 },
-    { id: "td30", name: "Fish Reshmi(L)", price: 9.5 },
-    { id: "td31", name: "Mix Fish (S)", price: 9.5 },
-    { id: "td32", name: "Mix Fish (M)", price: 9.5 },
-    { id: "td33", name: "Mix Fish (L)", price: 9.5 },
-    { id: "td34", name: "Open Item", price: 9.5 },
-  ],
+  { id: "td1", name: "Tandoori Chicken(S)", price: 9.5 },
+  { id: "td2", name: "Tandoori Chicken(M)", price: 9.5 },
+  { id: "td3", name: "Tandoori Chicken(L)", price: 9.5 },
 
+  { id: "td4", name: "Mix Chicken(S)", price: 9.5 },
+  { id: "td5", name: "Mix Chicken(M)", price: 9.5 },
+  { id: "td6", name: "Mix Chicken(L)", price: 9.5 },
+
+  { id: "td7", name: "Chicken Hariyali(S)", price: 9.5 },
+  { id: "td8", name: "Chicken Hariyali(M)", price: 9.5 },
+  { id: "td9", name: "Chicken Hariyali(L)", price: 9.5 },
+
+  { id: "td10", name: "Chicken Reshmi(S)", price: 9.5 },
+  { id: "td11", name: "Chicken Reshmi(M)", price: 9.5 },
+  { id: "td12", name: "Chicken Reshmi(L)", price: 9.5 },
+
+  { id: "td13", name: "Chicken Iranian(S)", price: 9.5 },
+  { id: "td14", name: "Chicken Iranian(M)", price: 9.5 },
+  { id: "td15", name: "Chicken Iranian(L)", price: 9.5 },
+
+  { id: "td16", name: "Seekh Kebab(S)", price: 9.5 },
+  { id: "td17", name: "Seekh Kebab(M)", price: 9.5 },
+  { id: "td18", name: "Seekh Kebab(L)", price: 9.5 },
+
+  { id: "td19", name: "Chicken Tikka(S)", price: 9.5 },
+  { id: "td20", name: "Chicken Tikka(M)", price: 9.5 },
+  { id: "td21", name: "Chicken Tikka(L)", price: 9.5 },
+
+  { id: "td22", name: "Paneer Tikka(S)", price: 9.5 },
+  { id: "td23", name: "Paneer Tikka(M)", price: 9.5 },
+  { id: "td24", name: "Paneer Tikka(L)", price: 9.5 },
+
+  { id: "td25", name: "Fish Tikka(S)", price: 9.5 },
+  { id: "td26", name: "Fish Tikka(M)", price: 9.5 },
+  { id: "td27", name: "Fish Tikka(L)", price: 9.5 },
+
+  { id: "td28", name: "Fish Hariyali(S)", price: 9.5 },
+  { id: "td29", name: "Fish Hariyali(M)", price: 9.5 },
+  { id: "td30", name: "Fish Hariyali(L)", price: 9.5 },
+
+  { id: "td31", name: "Fish Reshmi(S)", price: 9.5 },
+  { id: "td32", name: "Fish Reshmi(M)", price: 9.5 },
+  { id: "td33", name: "Fish Reshmi(L)", price: 9.5 },
+
+  { id: "td34", name: "Mix Fish (S)", price: 9.5 },
+  { id: "td35", name: "Mix Fish (M)", price: 9.5 },
+  { id: "td36", name: "Mix Fish (L)", price: 9.5 },
+
+  { id: "td37", name: "Open Item", price: 9.5 },
+],
   Breads: [
     { id: "br1", name: "Naan", price: 2.5 },
     { id: "br2", name: "Butter Naan", price: 2.5 },
@@ -105,7 +120,7 @@ const GROUPS = [
     { id: "br13", name: "Poodhina Pratha", price: 2.5 },
   ],
 
-  Basmathi_Rice: [
+  "Basmathi Rice": [
     { id: "ri1", name: "Chicken Biriyani", price: 2.5 },
     { id: "ri2", name: "Fish Biriyani", price: 2.5 },
     { id: "ri3", name: "Mutton Biriyani", price: 2.5 },
@@ -119,7 +134,7 @@ const GROUPS = [
     { id: "ri11", name: "PapaDam Set", price: 2.5 },
   ],
 
-  Indian_Veg: [
+  "Indian Veg": [
     { id: "iv1", name: "Paneer Butter Masala", price: 2.5 },
     { id: "iv2", name: "Bhindi Masala", price: 2.5 },
     { id: "iv3", name: "Brinjal Masala", price: 2.5 },
@@ -206,13 +221,158 @@ const GROUPS = [
 
 /* ================= IMAGES ================= */
 const FOOD_IMAGES: Record<string, any> = {
-  td1: require("../../assets/images/indian/TanDoor/chicken_reshmmi_l.jpg"),
-  td2: require("../../assets/images/indian/TanDoor/mix Chicken S.jpg"),
 
+                   //------------Tandoor---------//
+  td1: require("../../assets/images/indian/TanDoor/tandoor S.jpg"),
+  td2: require("../../assets/images/indian/TanDoor/Tandroor M.jpg"),
+  td3: require("../../assets/images/indian/TanDoor/Tandroor L.jpg"),
+  td4: require("../../assets/images/indian/TanDoor/mix Chicken S.jpg"),
+  td5: require("../../assets/images/indian/TanDoor/mix Chicken M.jpg"),
+  td6: require("../../assets/images/indian/TanDoor/mix Chicken L.jpg"),
+  td7: require("../../assets/images/indian/TanDoor/Tikka S.jpg"),
+  td8: require("../../assets/images/indian/TanDoor/Tikka M.jpg"),
+  td9: require("../../assets/images/indian/TanDoor/Tikka L.jpg"),
+  td10: require("../../assets/images/indian/TanDoor/hariyali_chicken_s.jpg"),
+  td11: require("../../assets/images/indian/TanDoor/hariyali_chicken_m.jpg"),
+  td12: require("../../assets/images/indian/TanDoor/hariyali_chicken_l.jpg"),
+  td13: require("../../assets/images/indian/TanDoor/chicken_reshmmi_s.jpg"),
+  td14: require("../../assets/images/indian/TanDoor/chicken_reshmmi_m.jpg"),
+  td15: require("../../assets/images/indian/TanDoor/chicken_reshmmi_l.jpg"),
+  td16: require("../../assets/images/indian/TanDoor/iranian chicken  S.jpg"),
+  td17: require("../../assets/images/indian/TanDoor/iranian chicken  M.jpg"),
+  td18: require("../../assets/images/indian/TanDoor/iranian chicken  L.jpg"),
+  td19: require("../../assets/images/indian/TanDoor/seekh kabab S.jpg"),
+  td20: require("../../assets/images/indian/TanDoor/seekh kabab M.jpg"),
+  td21: require("../../assets/images/indian/TanDoor/seekh kabab L.jpg"),
+  td22: require("../../assets/images/indian/TanDoor/panner tikka S.jpg"),
+  td23: require("../../assets/images/indian/TanDoor/panner tikka M.jpg"),
+  td24: require("../../assets/images/indian/TanDoor/panner tikka L.jpg"),
+  td25: require("../../assets/images/indian/TanDoor/fish_tikka_s.jpg"),
+  td26: require("../../assets/images/indian/TanDoor/fish_tikka_m.jpg"),
+  td27: require("../../assets/images/indian/TanDoor/fish_tikka_l.jpg"),
+  td28: require("../../assets/images/indian/TanDoor/fish_hariyali_s.jpg"),
+  td29: require("../../assets/images/indian/TanDoor/fish_hariyali_m.jpg"),
+  td30: require("../../assets/images/indian/TanDoor/fish_hariyali_l.jpg"),
+  td31: require("../../assets/images/indian/TanDoor/fish_reshmi_s.jpg"),
+  td32: require("../../assets/images/indian/TanDoor/fish_reshmi_m.jpg"),
+  td33: require("../../assets/images/indian/TanDoor/fish_reshmi_l.jpg"),
+  td34: require("../../assets/images/indian/TanDoor/MIx Fish S.jpg"),
+  td35: require("../../assets/images/indian/TanDoor/Mix Fish M.jpg"),
+  td36: require("../../assets/images/indian/TanDoor/Mix Fish L.jpg"),
+  td37: require("../../assets/images/indian/TanDoor/Open Item.jpg"),
 
+  //----------Breads--------//
+
+br1: require("../../assets/images/indian/Breads/Plain Naan.jpg"),
+br2: require("../../assets/images/indian/Breads/Butter Naan.jpg"),
+br3: require("../../assets/images/indian/Breads/Garlic Naan.jpg"),
+br4: require("../../assets/images/indian/Breads/Cheese Naan.jpg"),
+br5: require("../../assets/images/indian/Breads/Kashmiri Naan.jpg"),
+br6: require("../../assets/images/indian/Breads/Keema Naan.jpg"),
+br7: require("../../assets/images/indian/Breads/paneer Kulcha.jpg"),
+br8: require("../../assets/images/indian/Breads/garlic onion kulcha.jpg"),
+br9: require("../../assets/images/indian/Breads/t.roti.jpg"),
+br10: require("../../assets/images/indian/Breads/B.Roti.jpg"),
+br11: require("../../assets/images/indian/Breads/aloo  parathe.jpg"),
+br12: require("../../assets/images/indian/Breads/methi pratha.jpg"),
+br13: require("../../assets/images/indian/Breads/Poodhina Pratha.jpg"),
+
+//------------------Basmati_Rice-------------//
+
+ri1: require("../../assets/images/indian/basmati_rice/Chicken Briyani.jpg"),
+ri2: require("../../assets/images/indian/basmati_rice/Fish Biryani.jpg"),
+ri3: require("../../assets/images/indian/basmati_rice/mutton biryani.jpg"),
+ri4: require("../../assets/images/indian/basmati_rice/Prawn Biryani.jpg"),
+ri5: require("../../assets/images/indian/basmati_rice/veg biryani.jpg"),
+ri6: require("../../assets/images/indian/basmati_rice/Pea Pulao.jpg"),
+ri7: require("../../assets/images/indian/basmati_rice/jeera rice.jpg"),
+ri8: require("../../assets/images/indian/basmati_rice/Kashmiri Pulav.jpg"),
+ri9: require("../../assets/images/indian/basmati_rice/Biryani Rice.jpg"),
+ri10: require("../../assets/images/indian/basmati_rice/basmati rice (plain).jpg"),
+ri11: require("../../assets/images/indian/basmati_rice/papaDam Set.jpg"),
+
+//----------Indian Veg -----------//
+iv1: require("../../assets/images/indian/Indian Veg/Paneer  B Masala.jpg"),
+iv2: require("../../assets/images/indian/Indian Veg/Bhindi Masala.jpg"),
+iv3: require("../../assets/images/indian/Indian Veg/Baingan Masala.jpg"),
+iv4: require("../../assets/images/indian/Indian Veg/palak paneer.jpg"),
+iv5: require("../../assets/images/indian/Indian Veg/Navratan Korma.jpg"),
+iv6: require("../../assets/images/indian/Indian Veg/Kadai Paneer.jpg"),
+iv7: require("../../assets/images/indian/Indian Veg/malai Kofta.jpg"),
+iv8: require("../../assets/images/indian/Indian Veg/Shahi Paneer.jpg"),
+iv9: require("../../assets/images/indian/Indian Veg/Paneer Tikka Masala.jpg"),
+iv10: require("../../assets/images/indian/Indian Veg/Matar Paneer.jpg"),
+iv11: require("../../assets/images/indian/Indian Veg/Aloo Gobi.jpg"),
+iv12: require("../../assets/images/indian/Indian Veg/Aloo Matra Makani.jpg"),
+iv13: require("../../assets/images/indian/Indian Veg/Peas Mushroom.jpg"),
+iv14: require("../../assets/images/indian/Indian Veg/Chana Masala.jpg"),
+iv15: require("../../assets/images/indian/Indian Veg/Bitter Gourd Stir Fy.jpg"),
+iv16: require("../../assets/images/indian/Indian Veg/yellow dal.jpg"),
+iv17: require("../../assets/images/indian/Indian Veg/mix Raitha.jpg"),
+iv18: require("../../assets/images/indian/Indian Veg/Dal Makani.jpg"),
+iv19: require("../../assets/images/indian/Indian Veg/plain yoghurt.jpg"),
+iv20: require("../../assets/images/indian/Indian Veg/Dal Palak.jpg"),
+iv21: require("../../assets/images/indian/Indian Veg/chilli paneer.jpg"),
+iv22: require("../../assets/images/indian/Indian Veg/Aloo Palak.jpg"),
+iv23: require("../../assets/images/indian/Indian Veg/Gobi Manchurian.jpg"),
+iv24: require("../../assets/images/indian/Indian Veg/veg kofta curry.jpg"),
+iv25: require("../../assets/images/indian/Indian Veg/mix veg curry.jpg"),
+iv26: require("../../assets/images/indian/Indian Veg/kadai vegtable.jpg"),
+iv27: require("../../assets/images/indian/Indian Veg/Bhindi Jaipuri.jpg"),
+
+//-------------CHICKEN---------//
+ch1: require("../../assets/images/indian/Chicken/Chicken Korma.jpg"),
+ch2: require("../../assets/images/indian/Chicken/chicken spinach.jpg"),
+ch3: require("../../assets/images/indian/Chicken/Chicken  Masala.jpg"),
+ch4: require("../../assets/images/indian/Chicken/chicken vartha.jpg"),
+ch5: require("../../assets/images/indian/Chicken/Chicken Jalfrezi.jpg"),
+ch6: require("../../assets/images/indian/Chicken/butter_chicken.jpg"),
+ch7: require("../../assets/images/indian/Chicken/Chicken Tikka Masala.jpg"),
+ch8: require("../../assets/images/indian/Chicken/Kadai Chicken.jpg"),
+ch9: require("../../assets/images/indian/Chicken/Chicken Vindaloo.jpg"),
+ch10: require("../../assets/images/indian/Chicken/Chicken Mughlai.jpg"),
+ch11: require("../../assets/images/indian/Chicken/chilli chicken.jpg"),
+ch12: require("../../assets/images/indian/Chicken/pepper chicken.jpg"),
+ch13: require("../../assets/images/indian/Chicken/chicken dahiwala.jpg"),
+ch14: require("../../assets/images/indian/Chicken/chicken tawa masala.jpg"),
+ch15: require("../../assets/images/indian/Chicken/Chicken Hyderabadi.jpg"),
+
+//----------MUTTON----------//
+mu1: require("../../assets/images/indian/Mutton/mutton korma.jpg"),
+mu2: require("../../assets/images/indian/Mutton/mutton masala.jpg"),
+mu3: require("../../assets/images/indian/Mutton/Mutton Do Pyaza.jpg"),
+mu4: require("../../assets/images/indian/Mutton/mutton keema.jpg"),
+mu5: require("../../assets/images/indian/Mutton/kadai mutton.jpg"),
+mu6: require("../../assets/images/indian/Mutton/mutton rogan josh.jpg"),
+mu7: require("../../assets/images/indian/Mutton/Mutton Jalfrezi.jpg"),
+mu8: require("../../assets/images/indian/Mutton/mutton vindaloo.jpg"),
+mu9: require("../../assets/images/indian/Mutton/Mughlai Mutton.jpg"),
+mu10: require("../../assets/images/indian/Mutton/mutton spinach.jpg"),
+mu11: require("../../assets/images/indian/Mutton/chilli mutton.jpg"),
+mu12: require("../../assets/images/indian/Mutton/Mutton Pepper.jpg"),
+
+//---------SEA FOOD---------//
+sf1: require("../../assets/images/indian/Sea Food/Kadai Fish.jpg"),
+sf2: require("../../assets/images/indian/Sea Food/Fish Vindaloo.jpg"),
+sf3: require("../../assets/images/indian/Sea Food/Madras Fish Curry.jpg"),
+sf4: require("../../assets/images/indian/Sea Food/Fish Masala.jpg"),
+sf5: require("../../assets/images/indian/Sea Food/Prawn  Vindaloo.jpg"),
+sf6: require("../../assets/images/indian/Sea Food/Kadai Prawn.jpg"),
+sf7: require("../../assets/images/indian/Sea Food/prawns masala.jpg"),
+sf8: require("../../assets/images/indian/Sea Food/prawns curry.jpg"),
+sf9: require("../../assets/images/indian/Sea Food/Prawn Do Piaza.jpg"),
+sf10: require("../../assets/images/indian/Sea Food/Prawn Jalfrezi.jpg"),
+sf11: require("../../assets/images/indian/Sea Food/prawn Malwani.jpg"),
+sf12: require("../../assets/images/indian/Sea Food/prawn jhinga Tomato.jpg"),
+sf13: require("../../assets/images/indian/Sea Food/Prawn Hydrabadi.jpg"),
+sf14: require("../../assets/images/indian/Sea Food/chilli Fish.jpg"),
+sf15: require("../../assets/images/indian/Sea Food/Pepper Fish.jpg"),
+sf16: require("../../assets/images/indian/Sea Food/Chilli Prawn.jpg"),
+sf17: require("../../assets/images/indian/Sea Food/Pepper Prawn.jpg"),
+sf18: require("../../assets/images/indian/Sea Food/Fish Head Curry.jpg"),
 };
 
-const DEFAULT_IMAGE = require("../../assets/images/indian/basmati_rice/1.jpg");
+const DEFAULT_IMAGE = require("../../assets/images/indian/basmati_rice/Chicken Briyani.jpg");
 
 
 interface FoodItem {
@@ -225,9 +385,11 @@ export default function IndianKitchen() {
   const router = useRouter();
   const orderContext = getOrderContext();
 
+  React.useEffect(() => {
   if (!orderContext) {
     router.replace("/(tabs)/category");
   }
+}, [orderContext]);
 
   const { width } = useWindowDimensions();
   const listRef = useRef<FlatList>(null);

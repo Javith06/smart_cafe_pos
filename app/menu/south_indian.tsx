@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   View,
+  Image,
 } from "react-native";
 
 /* ================= KITCHENS ================= */
@@ -125,6 +126,86 @@ const ITEMS_BY_GROUP: Record<string, FoodItem[]> = {
   "Roti John Combo": [{ id: "combo_1", name: "Roti John Combo", price: 8.5 }],
 };
 
+
+/* ================= IMAGES ================= */
+const FOOD_IMAGES: Record<string, any> = { 
+
+  //--------------PRATA---------//
+
+ prata_1: require("../../assets/images/south_indian/Prata/Plain Parotta.jpg"),
+prata_2: require("../../assets/images/south_indian/Prata/onion prata.jpg"),
+prata_3: require("../../assets/images/south_indian/Prata/Egg Paratha.jpg"),
+prata_4: require("../../assets/images/south_indian/Prata/Egg Onion Prata.jpg"),
+prata_5: require("../../assets/images/south_indian/Prata/plaster prata.jpg"),
+prata_6: require("../../assets/images/south_indian/Prata/Bomb Prata.jpg"),
+prata_7: require("../../assets/images/south_indian/Prata/Tissue Classic Prata.jpg"),
+prata_8: require("../../assets/images/south_indian/Prata/Banana prata.jpg"),
+prata_9: require("../../assets/images/south_indian/Prata/cheese prata.jpg"),
+prata_10: require("../../assets/images/south_indian/Prata/cheese mush prata.jpg"),
+prata_11: require("../../assets/images/south_indian/Prata/Cheese Egg Prata.jpg"),
+prata_12: require("../../assets/images/south_indian/Prata/Tissue Prata.jpg"),
+prata_13: require("../../assets/images/south_indian/Prata/cheese Sausage parota.jpg"),
+prata_14: require("../../assets/images/south_indian/Prata/OPEN ITEM PRATA.jpg"),
+prata_15: require("../../assets/images/south_indian/Prata/bomb & Cheese Parotta.jpg"),
+prata_16: require("../../assets/images/south_indian/Prata/ice cream Parotta.jpg"),
+prata_17: require("../../assets/images/south_indian/Prata/Square prata.jpg"),
+prata_18: require("../../assets/images/south_indian/Prata/cheese onion parotta.jpg"),
+prata_19: require("../../assets/images/south_indian/Prata/parotta tsunami.jpg"),
+
+//---------MUTABAK------//
+
+murta_1: require("../../assets/images/south_indian/Mutabak/murtabak sardine.jpg"),
+murta_3: require("../../assets/images/south_indian/Mutabak/murtabak corn beef.jpg"),
+murta_5: require("../../assets/images/south_indian/Mutabak/murtabak Tuna.jpg"),
+murta_6: require("../../assets/images/south_indian/Mutabak/murtabak chicken.jpg"),
+murta_8: require("../../assets/images/south_indian/Mutabak/murtabak mutton.jpg"),
+murta_10: require("../../assets/images/south_indian/Mutabak/murtabak veggie.jpg"),
+murta_12: require("../../assets/images/south_indian/Mutabak/ADD ON CHEESE.jpg"),
+murta_13: require("../../assets/images/south_indian/Mutabak/murtabak Tuna.jpg"),
+
+//----------BITES-------//
+
+bite_1: require("../../assets/images/south_indian/Bites/laksa.jpg"),
+bite_2: require("../../assets/images/south_indian/Bites/Mee Siam.jpg"),
+bite_3: require("../../assets/images/south_indian/Bites/mee soto.jpg"),
+bite_4: require("../../assets/images/south_indian/Bites/Mee Rebus.jpg"),
+bite_5: require("../../assets/images/south_indian/Bites/Lontong.jpg"),
+bite_6: require("../../assets/images/south_indian/Bites/Nasi Lemak Ayam.jpg"),
+
+//----------DOSAI--------//
+
+dosai_1: require("../../assets/images/south_indian/Dosi/dosai.jpg"),
+dosai_2: require("../../assets/images/south_indian/Dosi/onion dosai.jpg"),
+dosai_3: require("../../assets/images/south_indian/Dosi/Egg Dosa Recipe.jpg"),
+dosai_4: require("../../assets/images/south_indian/Dosi/egg & onion dosai.jpg"),
+dosai_5: require("../../assets/images/south_indian/Dosi/Paper Roast.jpg"),
+dosai_6: require("../../assets/images/south_indian/Dosi/masala.jpg"),
+dosai_7: require("../../assets/images/south_indian/Dosi/cheese dosa.jpg"),
+dosai_8: require("../../assets/images/south_indian/Dosi/Egg Masala.jpg"),
+dosai_9: require("../../assets/images/south_indian/Dosi/2 idili vadai.jpg"),
+
+//---------PRATA MAIN COURSE-------//
+
+pmc_1: require("../../assets/images/south_indian/Prata Main Course/chicken masala.jpg"),
+pmc_2: require("../../assets/images/south_indian/Prata Main Course/mutton masala.jpg"),
+pmc_3: require("../../assets/images/south_indian/Prata Main Course/fish masala.jpg"),
+
+//--------ROTI JOHN MENU-------//
+
+rj_1: require("../../assets/images/south_indian/Roti John Menu/roti john classic.jpg"),
+rj_2: require("../../assets/images/south_indian/Roti John Menu/chicken Sausage cheese.jpg"),
+rj_3: require("../../assets/images/south_indian/Roti John Menu/beefball cheese.jpg"),
+rj_4: require("../../assets/images/south_indian/Roti John Menu/Teriyaki Chicken W Cheese.jpg"),
+
+//---------ROTI JOHN COMBO--------//
+
+combo_1: require("../../assets/images/south_indian/Roti John Combo/roti john combo.jpg"),
+
+
+
+};
+const DEFAULT_IMAGE = require("../../assets/images/indian/basmati_rice/Chicken Briyani.jpg");
+
 interface FoodItem {
   id: string;
   name: string;
@@ -205,8 +286,12 @@ export default function SouthIndian() {
         onPress={() => openCustomize(item)}
       >
         <View style={styles.foodImageBox}>
-          <Text style={{ fontSize: 40 }}>🍽️</Text>
-        </View>
+  <Image
+    source={FOOD_IMAGES[item.id] || DEFAULT_IMAGE}
+    style={styles.foodImage}
+    resizeMode="cover"
+  />
+</View>
         <View style={styles.foodInfo}>
           <Text style={styles.foodName} numberOfLines={2}>
             {item.name}
@@ -509,6 +594,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.08)",
   },
+
   foodImageBox: {
     width: "100%",
     aspectRatio: 1.2,
@@ -516,6 +602,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  foodImage: {
+  width: "100%",
+  height: "100%",
+},
   foodInfo: { padding: 10 },
   foodName: { color: "#fff", fontWeight: "700", fontSize: 13, marginBottom: 4 },
   foodPrice: {
